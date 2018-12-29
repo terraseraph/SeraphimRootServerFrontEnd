@@ -1,0 +1,67 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <!-- <ng-template *ngIf="loaded"> -->
+      <button *ngFor="let script of scripts" (click)="loadScript(script.name)">{{script.name}}</button>
+      <!-- </ng-template> -->
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2>{{script.name}}</h2>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="timer_duration">
+          Timer duration
+        </label>
+        <input type='text' class="form-control" [(ngModel)]="hours" id="timer_duration_hours" value='1' placeholder='Hours' />
+        <input type='text' class="form-control" [(ngModel)]="minutes" id="timer_duration_minutes" placeholder='minutes' />
+        <input type='text' class="form-control" [(ngModel)]="seconds" id="timer_duration_seconds" placeholder='seconds' />
+      </div>
+      <hr>
+      <button id='start_game_timer' type="button" class="btn btn-success-outline" (click)="startCustomTimer()">
+        Start Game timer
+      </button>
+      <button id='stop_game_timer' type="button" class="btn btn-danger-outline">
+        Stop Game Timer
+      </button>
+      <hr>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="hintInput">
+          Hint
+        </label>
+        <input type="text" class="form-control" id="hintInput" [(ngModel)]="hintText" name="hintInput" />
+      </div>
+      <button class="btn-info" (click)="sendHint()">Send Hint</button>
+      <button type="button" class="btn btn-default" (click)="clearHint()">
+        Clear message
+      </button>
+    </div>
+    <div class="col-md-6">
+      Audio buttons?
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+        <div *ngIf="script">
+          <template *ngFor="let event of script.events">
+            <ngb-panel title="{{event.name}} : {{event.status}}">
+              <ng-template ngbPanelContent>
+                <button (click)="sendForcedEvent(event.name)">Force event {{event.name}}</button>
+                <hr>
+                <button *ngFor="let action of event.actions" (click)="sendForcedAction(action)">{{action}}</button>
+              </ng-template>
+            </ngb-panel>
+          </template>
+        </div>
+      </ngb-accordion>
+    </div>
+  </div>
+</div>
