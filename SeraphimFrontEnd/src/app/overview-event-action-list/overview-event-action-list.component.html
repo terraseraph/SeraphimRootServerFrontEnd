@@ -1,0 +1,11 @@
+<ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+      <template *ngFor="let event of script.events">
+        <ngb-panel title="{{event.name}} : {{event.status}}">
+          <ng-template ngbPanelContent>
+            <button (click)="sendForcedEvent(event.name)">Force event {{event.name}}</button>
+            <hr>
+            <button *ngFor="let action of event.actions" (click)="sendForcedAction(action)">{{action}}</button>
+          </ng-template>
+        </ngb-panel>
+      </template>
+  </ngb-accordion>

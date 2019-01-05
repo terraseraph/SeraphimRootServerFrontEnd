@@ -12,6 +12,8 @@ import { MenuComponent } from "./menu/menu.component";
 import { LogComponent } from "./log/log.component";
 import { EventActionScriptComponent } from "./event-action-script/event-action-script.component";
 import { InitService } from "./init.service";
+import { OverviewEventActionListComponent } from './overview-event-action-list/overview-event-action-list.component';
+import { OverviewInstanceListComponent } from './overview-instance-list/overview-instance-list.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import { InitService } from "./init.service";
     OverviewComponent,
     MenuComponent,
     LogComponent,
-    EventActionScriptComponent
+    EventActionScriptComponent,
+    OverviewEventActionListComponent,
+    OverviewInstanceListComponent
   ],
   imports: [
     BrowserModule,

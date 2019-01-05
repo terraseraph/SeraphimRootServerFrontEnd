@@ -1,0 +1,9 @@
+<div *ngIf="isDataAvailable">
+  <div class="row">
+    <div class="col-md-12">
+      <button *ngFor="let script of scripts" (click)="loadScript(script.name)">
+        {{ script.name }}
+      </button>
+    </div>
+  </div>
+</div>

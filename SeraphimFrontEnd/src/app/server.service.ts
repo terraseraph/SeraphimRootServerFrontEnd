@@ -1,17 +1,31 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable, of } from "rxjs";
-import { ArrayType } from "@angular/compiler";
+import { Observable } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 
 @Injectable({
   providedIn: "root"
 })
 export class ServerService {
-  public api = `http://localhost:5001`;
+  public api = `http://localhost:4300`;
   public scripts: any;
   public selectedScript: any;
+  public observableScript: any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Seleceted will throw errors otherwise... TODO: put elsewhere
+    this.selectedScript = { name: "Select a script" };
+    this.observableScript = new BehaviorSubject<any>(this.selectedScript);
+  }
+
+  scriptChange() {
+    this.observableScript.next(this.selectedScript);
+  }
+
+  setSelectedScript(script) {
+    this.selectedScript = script;
+    this.scriptChange();
+  }
 
   // Script CRUD
   createScript(script): Observable<any> {
@@ -68,5 +82,17 @@ export class ServerService {
       seconds: s
     };
     return this.http.put(`${this.api}/game/time`, msg);
+  }
+
+  startNewGame(scriptName: any, h: any, m: any, s: any): Observable<any> {
+    const msg = {
+      name: scriptName,
+      timeLimit: {
+        hrs: h,
+        min: m,
+        sec: s
+      }
+    };
+    return this.http.post(`${this.api}/game`, msg);
   }
 }

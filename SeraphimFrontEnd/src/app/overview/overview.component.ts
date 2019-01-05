@@ -3,6 +3,13 @@ import { ServerService } from "../server.service";
 import { SocketsService } from "../sockets.service";
 import { InitService } from "../init.service";
 import { Subscription } from "rxjs";
+import {
+  RouterModule,
+  Routes,
+  Router,
+  NavigationStart,
+  ActivatedRoute
+} from "@angular/router";
 
 @Component({
   selector: "app-overview",
@@ -11,12 +18,13 @@ import { Subscription } from "rxjs";
 })
 export class OverviewComponent implements OnInit {
   socketSubscription: Subscription;
+  scriptSubscription: Subscription;
   hintText: any;
   time: any;
   script: any;
   scripts: any;
   scriptName: any;
-  loaded: boolean;
+  isDataAvailable = false;
 
   hours: any;
   minutes: any;
@@ -25,13 +33,24 @@ export class OverviewComponent implements OnInit {
   constructor(
     public server: ServerService,
     public socket: SocketsService,
-    public init: InitService
-  ) {}
+    public init: InitService,
+    public router: Router,
+    private route: ActivatedRoute
+  ) {
+    // this.loadScriptSubscribe();
+  }
 
   ngOnInit() {
-    this.loaded = false;
-    this.loadAllScripts();
+    // this.scriptSubscription = this.server.observableScript.subscribe(script => {
+    //   this.script = script;
+    //   this.isDataAvailable = true;
+    // });
     this.socketSubscribe();
+    this.loadScriptSubscribe();
+  }
+
+  get scriptChange(): any {
+    return this.server.selectedScript;
   }
 
   socketSubscribe() {
@@ -70,21 +89,16 @@ export class OverviewComponent implements OnInit {
     this.hintText = "";
   }
 
-  loadScript(name) {
-    this.server.loadScript(name).subscribe(script => {
-      this.script = script;
-      this.loaded = true;
-      console.log(script);
+  loadScript() {
+    return new Promise((resolve, reject) => {
+      resolve(this.server.selectedScript);
     });
   }
 
-  loadAllScripts() {
-    this.server.loadScripts().subscribe(scripts => {
-      this.scripts = scripts;
-      this.loaded = true;
-      this.script = scripts[0];
-      console.log(scripts, "loaded: ", this.loaded);
-      // this.loadScript(this.scripts[0]);
+  loadScriptSubscribe() {
+    this.scriptSubscription = this.server.observableScript.subscribe(script => {
+      this.script = script;
+      this.isDataAvailable = true;
     });
   }
 
@@ -95,7 +109,7 @@ export class OverviewComponent implements OnInit {
       .subscribe(action => {
         console.log(action);
       });
-    // this.socket.sendForcedAction(this.script.name, actionName);
+    this.socket.sendForcedAction(this.script.name, actionName);
   }
 
   sendForcedEvent(eventName) {
@@ -105,7 +119,7 @@ export class OverviewComponent implements OnInit {
       .subscribe(event => {
         console.log(event);
       });
-    // this.socket.sendForcedEvent(this.script.name, eventName);
+    this.socket.sendForcedEvent(this.script.name, eventName);
   }
 
   startCustomTimer() {
@@ -119,6 +133,14 @@ export class OverviewComponent implements OnInit {
     if (this.seconds === "") {
       sec = 0;
     }
-    this.server.startCustomTime(this.script.name, hrs, mins, sec);
+    this.server.startCustomTime(this.script.name, hrs, mins, sec).subscribe(time=>{
+      console.log(time);
+    });
+  }
+
+  startNewGame(){
+    this.server.startNewGame(this.script, 0, 60, 0).subscribe(status => {
+      console.log(status);
+    });
   }
 }
