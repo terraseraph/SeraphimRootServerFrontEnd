@@ -95,4 +95,9 @@ export class ServerService {
     };
     return this.http.post(`${this.api}/game`, msg);
   }
+
+  endGame(scriptName:any): Observable<any>{
+
+    return this.http.delete(`${this.api}/game/${scriptName}`)
+  }
 }

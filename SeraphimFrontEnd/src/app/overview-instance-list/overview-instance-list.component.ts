@@ -26,6 +26,9 @@ export class OverviewInstanceListComponent implements OnInit {
     this.loadAllScripts().then((scripts) => {
       this.isDataAvailable = true;
       this.scripts = scripts;
+      for(let s of this.scripts){
+        s.timeUpdate = {hrs:0, min:0, sec:0}
+      }
       this.socketSubscribe();
     });
   }
@@ -57,7 +60,7 @@ export class OverviewInstanceListComponent implements OnInit {
     console.log("instance_update")
     for (let script of this.scripts){
       if(script.name == msg.instance_update.name.name){
-        console.log("time updated", script)
+        console.log("time updated", msg.instance_update.time)
         script.timeUpdate = msg.instance_update.time
       }
     }

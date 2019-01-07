@@ -143,4 +143,11 @@ export class OverviewComponent implements OnInit {
       console.log(status);
     });
   }
+
+  endGame(){
+    this.server.endGame(this.script.name).subscribe(result => {
+      console.log(result)
+      //reset the game params here
+    });
+  }
 }
