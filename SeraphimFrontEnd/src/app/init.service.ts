@@ -11,6 +11,7 @@ export class InitService {
 
   init() {
     this.startSocket();
+    // this.socket.init();
     console.log("Init service");
   }
 

@@ -6,7 +6,7 @@ import { Observable, of } from "rxjs";
   providedIn: "root"
 })
 export class SocketsService {
-  private url = "localhost:5001";
+  private url = "localhost:4300";
   private socket;
 
   constructor() {
@@ -65,7 +65,7 @@ export class SocketsService {
   getMessages() {
     return Observable.create(observer => {
       this.socket.on("message", message => {
-        console.log("Got message", message);
+        // console.log("Socket", message);
         observer.next(message);
       });
     });

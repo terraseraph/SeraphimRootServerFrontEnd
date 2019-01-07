@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { InitService } from "./init.service";
+// import { SocketsService } from "./sockets.service"
 
 @Component({
   selector: "app-root",
@@ -10,5 +11,6 @@ export class AppComponent {
   title = "SeraphimFrontEnd";
   constructor(public init: InitService) {
     init.init();
+    // socket.init();
   }
 }

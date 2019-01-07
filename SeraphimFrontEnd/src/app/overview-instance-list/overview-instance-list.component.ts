@@ -26,6 +26,7 @@ export class OverviewInstanceListComponent implements OnInit {
     this.loadAllScripts().then((scripts) => {
       this.isDataAvailable = true;
       this.scripts = scripts;
+      this.socketSubscribe();
     });
   }
 
@@ -44,8 +45,22 @@ export class OverviewInstanceListComponent implements OnInit {
     this.socketSubscription = this.socket
       .getMessages()
       .subscribe((message: any) => {
+        this.parseSocketMessage(message);
         // foreach instance check if the name matches, then update the time
       });
+  }
+
+  parseSocketMessage(msg: any){
+    if(!msg.hasOwnProperty('instance_update')){
+      return;
+    }
+    console.log("instance_update")
+    for (let script of this.scripts){
+      if(script.name == msg.instance_update.name.name){
+        console.log("time updated", script)
+        script.timeUpdate = msg.instance_update.time
+      }
+    }
   }
 
   loadScript(name) {
