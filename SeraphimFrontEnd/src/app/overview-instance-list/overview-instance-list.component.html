@@ -1,9 +1,8 @@
 <div *ngIf="isDataAvailable">
   <div class="row">
     <div class="col-md-12">
-      <button *ngFor="let script of scripts" (click)="loadScript(script.name)">
+      <button *ngFor="let script of scripts" class="btn btn-success" (click)="loadScript(script.name)">
         {{ script.name }} :: {{script.timeUpdate.hrs}} : {{script.timeUpdate.min}} : {{script.timeUpdate.sec}}
-        <!-- {{script.timeUpdate.hrs}} -->
       </button>
     </div>
   </div>

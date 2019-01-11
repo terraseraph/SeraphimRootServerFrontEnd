@@ -23,11 +23,13 @@ export class OverviewInstanceListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadAllScripts().then((scripts) => {
+    this.loadAllScripts().then(scripts => {
       this.isDataAvailable = true;
       this.scripts = scripts;
-      for(let s of this.scripts){
-        s.timeUpdate = {hrs:0, min:0, sec:0}
+      for (const s of this.scripts) {
+        // NOTE: add specific values to check here
+        s.timeUpdate = { hrs: 0, min: 0, sec: 0 };
+        s.ended = false;
       }
       this.socketSubscribe();
     });
@@ -36,7 +38,6 @@ export class OverviewInstanceListComponent implements OnInit {
   loadAllScripts() {
     return new Promise((resolve, reject) => {
       this.server.loadScripts().subscribe(scripts => {
-        // this.scripts = scripts;
         console.log(scripts, "loaded");
         resolve(scripts);
       });
@@ -53,25 +54,24 @@ export class OverviewInstanceListComponent implements OnInit {
       });
   }
 
-  parseSocketMessage(msg: any){
-    if(!msg.hasOwnProperty('instance_update')){
+  parseSocketMessage(msg: any) {
+    if (!msg.hasOwnProperty("instance_update")) {
       return;
     }
-    console.log("instance_update")
-    for (let script of this.scripts){
-      if(script.name == msg.instance_update.name.name){
-        console.log("time updated", msg.instance_update.time)
-        script.timeUpdate = msg.instance_update.time
+    for (const script of this.scripts) {
+      if (script.name === msg.instance_update.script.name) {
+        script.timeUpdate = msg.instance_update.time;
+        script.ended = msg.instance_update.ended;
+        // this.server.selectedScript.timeUpdate = msg.instance_update.time;
       }
     }
+    this.server.updateLocalScripts(msg.instance_update);
   }
 
   loadScript(name) {
     this.server.loadScript(name).subscribe(script => {
-      // this.server.selectedScript = script;
       this.server.setSelectedScript(script);
       this.router.navigateByUrl(`/overview`);
-      // put the overview view loader here!!!
       console.log(script);
     });
   }

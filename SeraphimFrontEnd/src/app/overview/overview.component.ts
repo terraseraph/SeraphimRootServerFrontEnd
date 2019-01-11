@@ -10,6 +10,7 @@ import {
   NavigationStart,
   ActivatedRoute
 } from "@angular/router";
+import { promise } from "protractor";
 
 @Component({
   selector: "app-overview",
@@ -41,12 +42,8 @@ export class OverviewComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.scriptSubscription = this.server.observableScript.subscribe(script => {
-    //   this.script = script;
-    //   this.isDataAvailable = true;
-    // });
-    this.socketSubscribe();
     this.loadScriptSubscribe();
+    this.socketSubscribe();
   }
 
   get scriptChange(): any {
@@ -57,12 +54,25 @@ export class OverviewComponent implements OnInit {
     this.socketSubscription = this.socket
       .getMessages()
       .subscribe((message: any) => {
-        if (message.script_name === this.script.name) {
-          if (message.event !== undefined || message.event !== "") {
+        if (message.instance_update.name === this.script.name) {
+          this.parseSocketMessage(message);
+          if (message.hasOwnProperty("event")) {
             this.eventStatus(message.event);
           }
         }
       });
+  }
+
+  parseSocketMessage(msg: any) {
+    return new Promise((resolve, reject) => {
+      if (!msg.hasOwnProperty("instance_update")) {
+        return;
+      }
+      console.log("==== socket message", msg, this.script);
+      this.script.timeUpdate = msg.instance_update.time;
+      this.script.ended = msg.instance_update.ended;
+      resolve();
+    });
   }
 
   eventStatus(event) {
@@ -126,28 +136,72 @@ export class OverviewComponent implements OnInit {
     let hrs, mins, sec;
     if (this.hours === "") {
       hrs = 0;
+    } else {
+      hrs = parseInt(this.hours, 10);
     }
     if (this.minutes === "") {
       mins = 0;
+    } else {
+      mins = parseInt(this.minutes, 10);
     }
     if (this.seconds === "") {
       sec = 0;
+    } else {
+      sec = parseInt(this.seconds, 10);
     }
-    this.server.startCustomTime(this.script.name, hrs, mins, sec).subscribe(time=>{
-      console.log(time);
-    });
+    this.server
+      .startCustomTime(this.script.name, hrs, mins, sec)
+      .subscribe(time => {
+        console.log(time);
+      });
   }
 
-  startNewGame(){
+  updateCustomTimer() {
+    let hrs, mins, sec;
+    if (this.hours === "") {
+      hrs = 0;
+    } else {
+      hrs = parseInt(this.hours, 10);
+    }
+    if (this.minutes === "") {
+      mins = 0;
+    } else {
+      mins = parseInt(this.minutes, 10);
+    }
+    if (this.seconds === "") {
+      sec = 0;
+    } else {
+      sec = parseInt(this.seconds, 10);
+    }
+    this.server
+      .updateCustomTime(this.script.name, hrs, mins, sec)
+      .subscribe(time => {
+        console.log("======= Updated time =======", time);
+      });
+  }
+
+  startNewGame() {
     this.server.startNewGame(this.script, 0, 60, 0).subscribe(status => {
       console.log(status);
     });
   }
 
-  endGame(){
+  endGame() {
     this.server.endGame(this.script.name).subscribe(result => {
-      console.log(result)
-      //reset the game params here
+      console.log(result);
+      // reset the game params here
+    });
+  }
+
+  pauseGameTimer() {
+    this.server.pauseGameTimer(this.script.name).subscribe(result => {
+      console.log(result);
+    });
+  }
+
+  resumeGameTimer() {
+    this.server.resumeGameTimer(this.script.name).subscribe(result => {
+      console.log(result);
     });
   }
 }

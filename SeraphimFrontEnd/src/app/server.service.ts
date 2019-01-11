@@ -8,14 +8,19 @@ import { BehaviorSubject } from "rxjs";
 })
 export class ServerService {
   public api = `http://localhost:4300`;
-  public scripts: any;
+  public scriptInstances: any;
   public selectedScript: any;
+  public selectedScriptInstance: any;
   public observableScript: any;
 
   constructor(private http: HttpClient) {
     // Seleceted will throw errors otherwise... TODO: put elsewhere
-    this.selectedScript = { name: "Select a script" };
+    this.selectedScript = {
+      name: "Select a script",
+      timeUpdate: { hrs: 0, min: 0, sec: 0 }
+    };
     this.observableScript = new BehaviorSubject<any>(this.selectedScript);
+    this.scriptInstances = [];
   }
 
   scriptChange() {
@@ -33,11 +38,15 @@ export class ServerService {
   }
 
   loadScript(name): Observable<any> {
-    // this.selectedScript =
+    this.http.get(`${this.api}/game/name`).subscribe(scriptInstance => {
+      this.selectedScriptInstance = scriptInstance;
+    });
     return this.http.get(`${this.api}/script/${name}`);
   }
   loadScripts(): Observable<any> {
-    // this.scripts =
+    this.http.get(`${this.api}/game`).subscribe(scriptInstances => {
+      this.scriptInstances = scriptInstances;
+    });
     return this.http.get(`${this.api}/script`);
   }
 
@@ -77,9 +86,16 @@ export class ServerService {
   startCustomTime(scriptName: any, h: any, m: any, s: any): Observable<any> {
     const msg = {
       name: scriptName,
-      hours: h,
-      minutes: m,
-      seconds: s
+      time: { hours: h, minutes: m, seconds: s }
+    };
+    return this.http.put(`${this.api}/game/time`, msg);
+  }
+
+  updateCustomTime(scriptName: any, h: any, m: any, s: any): Observable<any> {
+    const msg = {
+      name: scriptName,
+      update: "true",
+      time: { hours: h, minutes: m, seconds: s }
     };
     return this.http.put(`${this.api}/game/time`, msg);
   }
@@ -96,8 +112,33 @@ export class ServerService {
     return this.http.post(`${this.api}/game`, msg);
   }
 
-  endGame(scriptName:any): Observable<any>{
+  pauseGameTimer(scriptName: any): Observable<any> {
+    return this.http.get(`${this.api}/game/time/pause/${scriptName}`);
+  }
 
-    return this.http.delete(`${this.api}/game/${scriptName}`)
+  resumeGameTimer(scriptName: any): Observable<any> {
+    return this.http.get(`${this.api}/game/time/resume/${scriptName}`);
+  }
+
+  endGame(scriptName: any): Observable<any> {
+    return this.http.delete(`${this.api}/game/${scriptName}`);
+  }
+
+  updateLocalScripts(instanceUpdate: any) {
+    let exist = false;
+    this.scriptInstances.forEach(script => {
+      if (script.name === instanceUpdate.name) {
+        script = instanceUpdate;
+
+        if (this.selectedScript.name === instanceUpdate.name) {
+          this.selectedScript.timeUpdate = instanceUpdate.timeUpdate;
+        }
+
+        exist = true;
+      }
+    });
+    if (!exist) {
+      this.scriptInstances.push(instanceUpdate);
+    }
   }
 }

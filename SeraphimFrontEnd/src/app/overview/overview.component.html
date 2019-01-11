@@ -3,6 +3,10 @@
     <div class="row">
       <div class="col-md-6">
         <h2>{{ script.name }}</h2>
+        <hr/>
+        <div *ngIf="script.timeUpdate">
+            <h2>{{script.timeUpdate.hrs}} : {{script.timeUpdate.min}} : {{script.timeUpdate.sec}}</h2>
+        </div>
       </div>
       <div class="col-md-6">
         <div class="form-group">
@@ -32,10 +36,18 @@
         </div>
         <hr />
         <button
+        id="update_game_timer"
+        type="button"
+        class="btn btn-success-outline"
+        (click)="updateCustomTimer()"
+      >
+        Update Game timer
+      </button>
+        <button
           id="start_game_timer"
           type="button"
           class="btn btn-success-outline"
-          (click)="startCustomTimer()"
+          (click)="resumeGameTimer()"
         >
           Start Game timer
         </button>
@@ -43,8 +55,9 @@
           id="stop_game_timer"
           type="button"
           class="btn btn-danger-outline"
+          (click)="pauseGameTimer()"
         >
-          Stop Game Timer
+          Pause Game Timer
         </button>
         <hr />
         <button
@@ -69,6 +82,13 @@
     <div class="row">
       <div class="col-md-6">
         <div class="form-group">
+          <ul>
+            <li *ngFor="let hint of script.hints">{{hint.name}} : {{hint.hint}}</li>
+          </ul>
+
+          <ul>
+              <li *ngFor="let trigger of script.triggers">{{trigger.name}} : {{trigger.hint}} : {{trigger.audio}} : {{trigger.video}} : {{trigger.can_toggle}}</li>
+            </ul>
           <label for="hintInput"> Hint </label>
           <input
             type="text"
