@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ServerService } from "../server.service";
 import { SocketsService } from "../sockets.service";
+import { DataService } from "../data.service";
 import { InitService } from "../init.service";
 import { Subscription } from "rxjs";
 import { RouterModule, Routes, Router } from "@angular/router";
@@ -16,6 +17,7 @@ export class OverviewInstanceListComponent implements OnInit {
   isDataAvailable = false;
 
   constructor(
+    public dataService: DataService,
     public server: ServerService,
     public socket: SocketsService,
     public init: InitService,
