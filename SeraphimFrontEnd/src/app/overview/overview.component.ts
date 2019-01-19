@@ -3,6 +3,7 @@ import { ServerService } from "../server.service";
 import { SocketsService } from "../sockets.service";
 import { InitService } from "../init.service";
 import { Subscription } from "rxjs";
+import { DataService } from "../data.service";
 import {
   RouterModule,
   Routes,
@@ -36,7 +37,8 @@ export class OverviewComponent implements OnInit {
     public socket: SocketsService,
     public init: InitService,
     public router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public dataService: DataService
   ) {
     // this.loadScriptSubscribe();
   }

@@ -3,79 +3,35 @@
     <div class="row">
       <div class="col-md-6">
         <h2>{{ script.name }}</h2>
-        <hr/>
+        <hr />
         <div *ngIf="script.timeUpdate">
-            <h2>{{script.timeUpdate.hrs}} : {{script.timeUpdate.min}} : {{script.timeUpdate.sec}}</h2>
+          <h2>{{script.timeUpdate.hrs}} : {{script.timeUpdate.min}} : {{script.timeUpdate.sec}}</h2>
         </div>
       </div>
       <div class="col-md-6">
         <div class="form-group">
           <label for="timer_duration"> Timer duration </label>
-          <input
-            type="text"
-            class="form-control"
-            [(ngModel)]="hours"
-            id="timer_duration_hours"
-            value="1"
-            placeholder="Hours"
-          />
-          <input
-            type="text"
-            class="form-control"
-            [(ngModel)]="minutes"
-            id="timer_duration_minutes"
-            placeholder="minutes"
-          />
-          <input
-            type="text"
-            class="form-control"
-            [(ngModel)]="seconds"
-            id="timer_duration_seconds"
-            placeholder="seconds"
-          />
+          <input type="text" class="form-control" [(ngModel)]="hours" id="timer_duration_hours" value="1" placeholder="Hours" />
+          <input type="text" class="form-control" [(ngModel)]="minutes" id="timer_duration_minutes" placeholder="minutes" />
+          <input type="text" class="form-control" [(ngModel)]="seconds" id="timer_duration_seconds" placeholder="seconds" />
         </div>
         <hr />
-        <button
-        id="update_game_timer"
-        type="button"
-        class="btn btn-success-outline"
-        (click)="updateCustomTimer()"
-      >
-        Update Game timer
-      </button>
-        <button
-          id="start_game_timer"
-          type="button"
-          class="btn btn-success-outline"
-          (click)="resumeGameTimer()"
-        >
+        <button id="update_game_timer" type="button" class="btn btn-success-outline" (click)="updateCustomTimer()">
+          Update Game timer
+        </button>
+        <button id="start_game_timer" type="button" class="btn btn-success-outline" (click)="resumeGameTimer()">
           Start Game timer
         </button>
-        <button
-          id="stop_game_timer"
-          type="button"
-          class="btn btn-danger-outline"
-          (click)="pauseGameTimer()"
-        >
+        <button id="stop_game_timer" type="button" class="btn btn-danger-outline" (click)="pauseGameTimer()">
           Pause Game Timer
         </button>
         <hr />
-        <button
-          id="new_game"
-          type="button"
-          class="btn btn-success"
-          (click)="startNewGame()"
-        >
+        <button id="new_game" type="button" class="btn btn-success" (click)="startNewGame()">
           Start New Game
         </button>
-        <button
-        id="end_game"
-        type="button"
-        class="btn btn-danger"
-        (click)="endGame()"
-      >
-        End Game
-      </button>
+        <button id="end_game" type="button" class="btn btn-danger" (click)="endGame()">
+          End Game
+        </button>
       </div>
     </div>
 
@@ -87,16 +43,11 @@
           </ul>
 
           <ul>
-              <li *ngFor="let trigger of script.triggers">{{trigger.name}} : {{trigger.hint}} : {{trigger.audio}} : {{trigger.video}} : {{trigger.can_toggle}}</li>
-            </ul>
+            <li *ngFor="let trigger of script.triggers">{{trigger.name}} : {{trigger.hint}} : {{trigger.audio}} :
+              {{trigger.video}} : {{trigger.can_toggle}}</li>
+          </ul>
           <label for="hintInput"> Hint </label>
-          <input
-            type="text"
-            class="form-control"
-            id="hintInput"
-            [(ngModel)]="hintText"
-            name="hintInput"
-          />
+          <input type="text" class="form-control" id="hintInput" [(ngModel)]="hintText" name="hintInput" />
         </div>
         <button class="btn-info" (click)="sendHint()">Send Hint</button>
         <button type="button" class="btn btn-default" (click)="clearHint()">
@@ -117,10 +68,7 @@
                     Force event {{ event.name }}
                   </button>
                   <hr />
-                  <button
-                    *ngFor="let action of event.actions"
-                    (click)="sendForcedAction(action)"
-                  >
+                  <button *ngFor="let action of event.actions" (click)="sendForcedAction(action)">
                     {{ action }}
                   </button>
                 </ng-template>

@@ -1,0 +1,128 @@
+<!-- {{! <img src='' onerror='get_rooms_from_game_script()'> }} -->
+
+<a href="https://github.com/flowhub/the-graph">Change to this!!!!</a>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2">
+      <div id="instance_list">
+        <h3>Scripts</h3>
+        <button *ngFor="let script of scriptInstanceList" class="btn btn-success" (click)="loadScript(script.name)">
+          {{ script.name }}
+        </button>
+        <!-- {{#rooms}} -->
+        <!-- <button class='btn btn-block' id='room' {{id}} onclick="get_event_action_from_game_script('{{name}}')" value='{{name}}'>{{name}}</button> -->
+        <br />
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div id="event_action_list">
+        <div *ngIf="scriptLoaded">
+          Branch Address: {{ scriptInstance?.branch_address }}
+          <br />
+          Branch name: {{ scriptInstance?.name }}
+          <br />
+          Branch id: {{ scriptInstance?.id }}
+          <br />
+          Branch master node id: {{ scriptInstance?.masterId }}
+          <br />
+          Time Limit: {{ scriptInstance?.time.hours }}:{{scriptInstance?.time.minutes}}:{{ scriptInstance?.time.seconds
+          }}
+          <br />
+
+          <button *ngFor="let event of scriptInstance?.events" class="btn btn-success">
+            Event: {{ event.name }}
+          </button>
+          <hr />
+          <button *ngFor="let action of scriptInstance?.actions" class="btn btn-success">
+            Action: {{ action.name }}
+          </button>
+          <hr />
+          <button *ngFor="let hint of scriptInstance?.hints" class="btn btn-success">
+            Hint: {{ hint.name }}
+          </button>
+          <hr />
+          <button *ngFor="let trigger of scriptInstance?.triggers" class="btn btn-success">
+            Trigger: {{ trigger.name }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div id="device_details">when device selected list device settings</div>
+    </div>
+  </div>
+</div>
+
+<!-- actions -->
+<!-- {{! <img src='' onerror='create_puzzle_select_room()'> }} -->
+<!-- {{! <img src='' onerror='get_all_devices()'> }} -->
+<!-- {{#data}} -->
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <h3>Edit Action</h3>
+      <div class="form-group">
+        <label for="gs_event_action_name"> Name </label>
+        <!-- {{! name of event/action }} -->
+        <input type="text" class="form-control" id="gs_event_action_name" value="" />
+      </div>
+
+      <div class="form-group">
+        <label for="gs_action_type_action"> Action Type / Action </label>
+        <!-- {{! Make this populated from sql, or js when selecting action or event up the top}} -->
+        <select class="selectpicker form-control" id="gs_action_type_action">
+          <!-- <option selected='selected'>{{actionType}}/{{action}}</option> -->
+          <option>relay/start</option>
+          <option>relay/stop</option>
+          <option>relay/toggleA</option>
+          <option>mp3/play</option>
+          <option>mp3/stop</option>
+          <option>mp3/volume</option>
+          <option>buzzer/toggle</option>
+          <option>distanceSensor/configureRange</option>
+          <option>phoneAT/inCommingCall</option>
+          <option>phoneAT/outGoingCall</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="gs_device_id"> Device Id </label>
+        <!-- {{! change to device name in a select thingy }} -->
+        <input type="text" class="form-control" id="gs_device_id" value="" />
+      </div>
+
+      <div class="form-group">
+        <label for="gs_data"> Data </label>
+        <!-- {{! Data to send to the device on action, or get from event }} -->
+        <input type="text" class="form-control" id="gs_data" value="" />
+      </div>
+
+      <div class="form-group">
+        <label for="gs_description"> Description </label>
+        <!-- {{! populated from the game_script json's }} -->
+        <input type="text" class="form-control" id="gs_description" value="" />
+      </div>
+
+      <div class="form-group">
+        <label for="gs_dependencies"> Dependencies (Game states) </label>
+        <!-- {{! populated from the game_script json's }} -->
+        <input type="text" class="form-control" id="gs_dependencies" value="" />
+      </div>
+
+      <div class="form-group">
+        <label for="gs_state"> Game state (When triggered) </label>
+        <!-- {{! Game state to update on the event }} -->
+        <input type="text" class="form-control" id="gs_state" value="" />
+      </div>
+
+      <div class="form-group">
+        <label for="gs_actions"> Actions (When triggered) </label>
+        <!-- {{! Actions to do when event triggered }} -->
+        <input type="text" class="form-control" id="gs_actions" value="" />
+      </div>
+
+      <button class="btn btn-default">Save</button>
+    </div>
+  </div>
+  <!-- {{/data}} -->
+</div>

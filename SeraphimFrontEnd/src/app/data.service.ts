@@ -6,25 +6,101 @@ import { BehaviorSubject, Observable, Subscription } from "rxjs";
   providedIn: "root"
 })
 export class DataService {
+  // ======= instance overview data TODO: implement
   public scriptInstances: any; // JSON objct of instances
   public selectedScriptInstance: any;
-  public observableScript: any;
-  socketSubscription: Subscription;
+  public observableScriptInstance: any;
+  public observableScriptInstanceList: any;
+  public socketSubscription: Subscription;
+
+  // ======== Script editor data
+  public scriptEditor_selectedScript: any;
+  public scriptEditor_allScripts: any;
+  public scriptEditor_observableSelectedScript: any;
+  public scriptEditor_observableScriptList: any;
 
   constructor(public server: ServerService, public socket: SocketsService) {
-    this.observableScript = new BehaviorSubject<any>(
+    this.observableScriptInstance = new BehaviorSubject<any>(
       this.selectedScriptInstance
+    );
+    this.scriptEditor_observableSelectedScript = new BehaviorSubject<any>(
+      this.scriptEditor_selectedScript
+    );
+    this.scriptEditor_observableScriptList = new BehaviorSubject<any>(
+      this.scriptEditor_allScripts
     );
   }
 
+  // ==============================
+  // Script editor
+  // ==============================
+
+  // flow:
+  // component subscribes to changes to script
+  // component requests the data to be updated
+  // data then updates and sends a .next to observables
+
+  scriptEditor_observableUpdate() {
+    this.scriptEditor_observableSelectedScript.next(
+      this.scriptEditor_getSelectedScript()
+    );
+  }
+
+  scriptEditor_observableListUpdate() {
+    this.scriptEditor_observableScriptList.next(
+      this.scriptEditor_getAllLocalScripts()
+    );
+  }
+  scriptEditor_subscribe(): Observable<any> {
+    return this.scriptEditor_selectedScript;
+  }
+
+  scriptEditor_setSelectedScript(scriptName) {
+    this.findScript(scriptName).then(script => {
+      // console.log("Setting editing script to: ", scriptName, script);
+      this.scriptEditor_selectedScript = script;
+      this.scriptEditor_observableUpdate();
+    });
+  }
+
+  scriptEditor_getSelectedScript() {
+    return this.scriptEditor_selectedScript;
+  }
+
+  scriptEditor_getAllLocalScripts() {
+    return this.scriptEditor_allScripts;
+  }
+
+  scriptEditor_getAllScripts() {
+    this.server.loadScripts().subscribe((scriptList: any) => {
+      this.scriptEditor_allScripts = scriptList;
+      console.log(scriptList);
+      this.scriptEditor_observableListUpdate();
+    });
+  }
+
+  scriptEditor_updateSelectedScript() {
+    // this.server.updateScript();
+  }
+
+  // ==============================
+  // Overview
+  // ==============================
+
   selectedScriptInstanceChange() {
-    this.observableScript.next(this.selectedScriptInstance);
+    this.observableScriptInstance.next(this.selectedScriptInstance);
   }
 
   setSelectedScriptInstance(script) {
-    this.selectedScriptInstance = script;
+    this.selectedScriptInstance = this.scriptInstances[`${script.name}`];
+    // this.selectedScriptInstance = script;
     this.selectedScriptInstanceChange();
   }
+
+  scriptInstanceListChange() {
+    this.observableScriptInstanceList.next(this.scriptInstances);
+  }
+
   // TODO:
   // Make the callers eg overview - call data.serveice, data.service then updates its scripts
   createInstanceModel(sInstance: any) {
@@ -45,6 +121,7 @@ export class DataService {
 
   updateLocalScriptInstance(instanceUpdate) {
     this.scriptInstances[`${instanceUpdate.name}`] = instanceUpdate;
+    this.scriptInstanceListChange();
   }
 
   deleteLocalScriptInstance(instanceName) {
@@ -59,5 +136,25 @@ export class DataService {
       }
     });
   }
+
+  serverLoadScript(name) {
+    this.server.loadScript(name).subscribe(script => {
+      this.selectedScriptInstance = script;
+      console.log("=====TEST NEW DATA SERVICE =====", script);
+      this.selectedScriptInstanceChange();
+    });
+  }
   // ==================== Socket updates ========================
+
+  // ==================== Helpers ========================
+
+  findScript(scriptName) {
+    return new Promise((resolve, reject) => {
+      for (const instance of this.scriptEditor_allScripts) {
+        if (instance.name === scriptName) {
+          resolve(instance);
+        }
+      }
+    });
+  }
 }
