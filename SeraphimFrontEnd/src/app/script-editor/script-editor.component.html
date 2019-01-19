@@ -3,126 +3,474 @@
 <a href="https://github.com/flowhub/the-graph">Change to this!!!!</a>
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-4">
       <div id="instance_list">
         <h3>Scripts</h3>
-        <button *ngFor="let script of scriptInstanceList" class="btn btn-success" (click)="loadScript(script.name)">
+        <div class="card" style="width: 18rem;">
+          <ul class="list-group list-group-flush">
+            <li
+              *ngFor="let script of scriptInstanceList"
+              class="list-group-item"
+            >
+              {{ script.name }}
+              <button class="btn btn-success" (click)="loadScript(script.name)">
+                Edit
+              </button>
+              <button
+                class="btn btn-danger"
+                (click)="deleteScript(script.name)"
+              >
+                Delete
+              </button>
+            </li>
+          </ul>
+        </div>
+        <button class="btn btn-success">Add new script</button>
+        <!-- <button *ngFor="let script of scriptInstanceList" class="btn btn-success" (click)="loadScript(script.name)">
           {{ script.name }}
-        </button>
-        <!-- {{#rooms}} -->
-        <!-- <button class='btn btn-block' id='room' {{id}} onclick="get_event_action_from_game_script('{{name}}')" value='{{name}}'>{{name}}</button> -->
+        </button> -->
         <br />
       </div>
     </div>
     <div class="col-md-4">
       <div id="event_action_list">
         <div *ngIf="scriptLoaded">
-          Branch Address: {{ scriptInstance?.branch_address }}
-          <br />
-          Branch name: {{ scriptInstance?.name }}
-          <br />
-          Branch id: {{ scriptInstance?.id }}
-          <br />
-          Branch master node id: {{ scriptInstance?.masterId }}
-          <br />
-          Time Limit: {{ scriptInstance?.time.hours }}:{{scriptInstance?.time.minutes}}:{{ scriptInstance?.time.seconds
-          }}
-          <br />
+          Branch Address: {{ scriptInstance?.branch_address }} <br />
+          Branch name: {{ scriptInstance?.name }} <br />
+          Branch id: {{ scriptInstance?.id }} <br />
+          Branch master node id: {{ scriptInstance?.masterId }} <br />
+          Time Limit: {{ scriptInstance?.time.hours }}:{{
+            scriptInstance?.time.minutes
+          }}:{{ scriptInstance?.time.seconds }} <br />
 
-          <button *ngFor="let event of scriptInstance?.events" class="btn btn-success">
-            Event: {{ event.name }}
+          <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+            <ngb-panel title="Events : {{ scriptInstance.events.length }}">
+              <ng-template ngbPanelContent>
+                <div class="card" style="width: 18rem;">
+                  <ul class="list-group list-group-flush">
+                    <li
+                      *ngFor="let event of scriptInstance?.events"
+                      class="list-group-item"
+                    >
+                      Event: {{ event.name }}
+                      <button
+                        class="btn btn-success"
+                        (click)="scriptEditEvent(event.name)"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        class="btn btn-danger"
+                        (click)="scriptDeleteEvent(event.name)"
+                      >
+                        Delete
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </ng-template>
+            </ngb-panel>
+          </ngb-accordion>
+          <button
+            class="btn btn-success"
+          >
+            Add Event
           </button>
           <hr />
-          <button *ngFor="let action of scriptInstance?.actions" class="btn btn-success">
-            Action: {{ action.name }}
+
+          <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-1">
+            <ngb-panel title="Actions : {{ scriptInstance.actions.length }}">
+              <ng-template ngbPanelContent>
+                <div class="card" style="width: 18rem;">
+                  <ul class="list-group list-group-flush">
+                    <li
+                      *ngFor="let action of scriptInstance?.actions"
+                      class="list-group-item"
+                    >
+                      Action: {{ action.name }}
+                      <button
+                        class="btn btn-success"
+                        (click)="scriptEditAction(action.name)"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        class="btn btn-danger"
+                        (click)="scriptDeleteAction(action.name)"
+                      >
+                        Delete
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </ng-template>
+            </ngb-panel>
+          </ngb-accordion>
+            <button
+            class="btn btn-success"
+          >
+            Add Action
           </button>
           <hr />
-          <button *ngFor="let hint of scriptInstance?.hints" class="btn btn-success">
-            Hint: {{ hint.name }}
+
+          <hr />
+          <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-2">
+            <ngb-panel title="Hints : {{ scriptInstance.hints.length }}">
+              <ng-template ngbPanelContent>
+                <div class="card" style="width: 18rem;">
+                  <ul class="list-group list-group-flush">
+                    <li
+                      *ngFor="let hint of scriptInstance?.hints"
+                      class="list-group-item"
+                    >
+                      Hint: {{ hint.name }}
+                      <button
+                      class="btn btn-success"
+                      (click)="scriptEditHint(hint.name)"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      class="btn btn-danger"
+                      (click)="scriptDeleteHint(hint.name)"
+                    >
+                      Delete
+                    </button>
+                    </li>
+                  </ul>
+                </div>
+              </ng-template>
+            </ngb-panel>
+          </ngb-accordion>
+          <button
+            class="btn btn-success"
+          >
+            Add Hint
           </button>
           <hr />
-          <button *ngFor="let trigger of scriptInstance?.triggers" class="btn btn-success">
-            Trigger: {{ trigger.name }}
+
+          <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-3">
+            <ngb-panel title="Triggers : {{ scriptInstance.triggers.length }}">
+              <ng-template ngbPanelContent>
+                <div class="card" style="width: 18rem;">
+                  <ul class="list-group list-group-flush">
+                    <li
+                      *ngFor="let trigger of scriptInstance?.triggers"
+                      class="list-group-item"
+                    >
+                      Trigger: {{ trigger.name }}
+                      <button
+                      class="btn btn-success"
+                      (click)="scriptEditTrigger(trigger.name)"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      class="btn btn-danger"
+                      (click)="scriptDeleteTrigger(trigger.name)"
+                    >
+                      Delete
+                    </button>
+                    </li>
+                  </ul>
+                </div>
+              </ng-template>
+            </ngb-panel>
+          </ngb-accordion>
+          <button
+            class="btn btn-success"
+          >
+            Add Trigger
           </button>
         </div>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
+      <!-- ACTION FORM --------------------------------------------------->
+      <!-- -------------------------------------------------------------->
+
       <div id="device_details">when device selected list device settings</div>
+      <div class="container-fluid" *ngIf="actionLoaded">
+        <div class="row">
+          <div class="col-md-12">
+            <h3>Edit Action</h3>
+            <div class="form-group">
+              <label for="gs_event_action_name"> Name </label>
+              <input
+                type="text"
+                class="form-control"
+                id="gs_event_action_name"
+                value="{{ actionToEdit.name }}"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="gs_action_type_action"> Action Type / Action </label>
+              <!-- {{! Make this populated from sql, or js when selecting action or event up the top}} -->
+              <select
+                class="selectpicker form-control"
+                id="gs_action_type_action"
+              >
+                <option selected="selected"
+                  >{{ actionToEdit.actionType }}/{{
+                    actionToEdit.action
+                  }}</option
+                >
+                <option>relay/start</option>
+                <option>relay/stop</option>
+                <option>relay/toggleA</option>
+                <option>mp3/play</option>
+                <option>mp3/stop</option>
+                <option>mp3/volume</option>
+                <option>buzzer/toggle</option>
+                <option>distanceSensor/configureRange</option>
+                <option>phoneAT/inCommingCall</option>
+                <option>phoneAT/outGoingCall</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="gs_device_id"> Device Id </label>
+              <input
+                type="text"
+                class="form-control"
+                id="gs_device_id"
+                value="{{ actionToEdit.device_id }}"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="gs_data"> Data </label>
+              <input
+                type="text"
+                class="form-control"
+                id="gs_data"
+                value="{{ actionToEdit.data }}"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="gs_description"> Description </label>
+              <input
+                type="text"
+                class="form-control"
+                id="gs_description"
+                value="{{ actionToEdit.description }}"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="gs_dependencies"> Dependencies (Game states) </label>
+              <input
+                type="text"
+                class="form-control"
+                id="gs_dependencies"
+                value="{{ actionToEdit.dependencies }}"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="gs_state"> Game state (When triggered) </label>
+              <input
+                type="text"
+                class="form-control"
+                id="gs_state"
+                value="{{ actionToEdit.state }}"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="gs_actions"> Actions (When triggered) </label>
+              <input
+                type="text"
+                class="form-control"
+                id="gs_actions"
+                value="{{ actionToEdit.actions }}"
+              />
+            </div>
+
+            <button class="btn btn-default">Save</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- EVENT FORM --------------------------------------------------->
+      <!-- -------------------------------------------------------------->
+
+      <div class="col-md-12" *ngIf="eventLoaded">
+        <h3>Edit Event</h3>
+        <div class="form-group">
+          <label for="gs_event_action_name"> Name </label>
+          <input
+            type="text"
+            class="form-control"
+            id="gs_event_action_name"
+            value="{{ eventToEdit.name }}"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="gs_event_type_event"> Event Type / Event </label>
+          <select class="selectpicker form-control" id="gs_event_type_event">
+            <option selected="selected"
+              >{{ eventToEdit.eventType }}/{{ eventToEdit.event }}</option
+            >
+            <option>button/toggle</option>
+            <option>keypad/code</option>
+            <option>rfid/code</option>
+            <option>photoRes/rangeTrigger</option>
+            <option>thermometer/rangeTrigger</option>
+            <option>potentiometer/rangetrigger</option>
+            <option>magnetSwitch/on</option>
+            <option>magnetSwitch/off</option>
+            <option>distanceSensor/reangeTrigger</option>
+            <option>stepperDone/stepperTrigger</option>
+            <option>phoneET/callOut</option>
+            <option>phoneET/callReceived</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="gs_device_id"> Device Id </label>
+          <input
+            type="text"
+            class="form-control"
+            id="gs_device_id"
+            value="{{ eventToEdit.device_id }}"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="gs_data"> Data </label>
+          <input
+            type="text"
+            class="form-control"
+            id="gs_data"
+            value="{{ eventToEdit.data }}"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="gs_description"> Description </label>
+          <input
+            type="text"
+            class="form-control"
+            id="gs_description"
+            value="{{ eventToEdit.description }}"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="gs_dependencies"> Dependencies (Game states) </label>
+          <input
+            type="text"
+            class="form-control"
+            id="gs_dependencies"
+            value="{{ eventToEdit.dependencies }}"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="gs_state"> Game state (When triggered) </label>
+          <input
+            type="text"
+            class="form-control"
+            id="gs_state"
+            value="{{ eventToEdit.state }}"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="gs_actions"> Actions (When triggered) </label>
+          <input
+            type="text"
+            class="form-control"
+            id="gs_actions"
+            value="{{ eventToEdit.actions }}"
+          />
+          <ul class="list-group list-group-flush">
+            <li
+              *ngFor="let action of eventToEdit.actions"
+              class="list-group-item"
+            >
+              Action: {{ action }}
+              <button
+                class="btn btn-danger"
+                (click)="scriptDeleteAction(action)"
+              >
+                Delete
+              </button>
+            </li>
+          </ul>
+          <button
+          class="btn btn-success"
+        >
+          Add action
+        </button>
+        </div>
+
+        <button
+          class="btn btn-default"
+          onclick="edit_game_script('events', '1')"
+        >
+          Save
+        </button>
+      </div>
+
+            <!-- HINT FORM --------------------------------------------------->
+      <!-- -------------------------------------------------------------->
+      <div class="col-md-12" *ngIf="hintLoaded">
+          <h3>Edit Hint</h3>
+          <div class="form-group">
+            <label for="hintName"> Name </label>
+            <input
+              type="text"
+              class="form-control"
+              id="hintName"
+              value="{{ hintToEdit.name }}"
+            />
+          </div>
+          <div class="form-group">
+              <label for="hintText"> Hint Text </label>
+              <input
+                type="text"
+                class="form-control"
+                id="hintText"
+                value="{{ hintToEdit.hint }}"
+              />
+            </div>
+      </div>
+
+
+
+
+
+            <!-- TRIGGER FORM --------------------------------------------------->
+      <!-- -------------------------------------------------------------->
+      <div class="col-md-12" *ngIf="triggerLoaded">
+          <h3>Edit Trigger</h3>
+          <div class="form-group">
+            <label for="triggerName"> Name </label>
+            <input
+              type="text"
+              class="form-control"
+              id="triggerName"
+              value="{{ triggerToEdit.name }}"
+            />
+          </div>
+          <div class="form-group">
+              <label for="triggerText"> Trigger (state) </label>
+              <input
+                type="text"
+                class="form-control"
+                id="triggerText"
+                value="{{ triggerToEdit.trigger }}"
+              />
+            </div>
+      </div>
+
+
+
     </div>
   </div>
-</div>
-
-<!-- actions -->
-<!-- {{! <img src='' onerror='create_puzzle_select_room()'> }} -->
-<!-- {{! <img src='' onerror='get_all_devices()'> }} -->
-<!-- {{#data}} -->
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-12">
-      <h3>Edit Action</h3>
-      <div class="form-group">
-        <label for="gs_event_action_name"> Name </label>
-        <!-- {{! name of event/action }} -->
-        <input type="text" class="form-control" id="gs_event_action_name" value="" />
-      </div>
-
-      <div class="form-group">
-        <label for="gs_action_type_action"> Action Type / Action </label>
-        <!-- {{! Make this populated from sql, or js when selecting action or event up the top}} -->
-        <select class="selectpicker form-control" id="gs_action_type_action">
-          <!-- <option selected='selected'>{{actionType}}/{{action}}</option> -->
-          <option>relay/start</option>
-          <option>relay/stop</option>
-          <option>relay/toggleA</option>
-          <option>mp3/play</option>
-          <option>mp3/stop</option>
-          <option>mp3/volume</option>
-          <option>buzzer/toggle</option>
-          <option>distanceSensor/configureRange</option>
-          <option>phoneAT/inCommingCall</option>
-          <option>phoneAT/outGoingCall</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="gs_device_id"> Device Id </label>
-        <!-- {{! change to device name in a select thingy }} -->
-        <input type="text" class="form-control" id="gs_device_id" value="" />
-      </div>
-
-      <div class="form-group">
-        <label for="gs_data"> Data </label>
-        <!-- {{! Data to send to the device on action, or get from event }} -->
-        <input type="text" class="form-control" id="gs_data" value="" />
-      </div>
-
-      <div class="form-group">
-        <label for="gs_description"> Description </label>
-        <!-- {{! populated from the game_script json's }} -->
-        <input type="text" class="form-control" id="gs_description" value="" />
-      </div>
-
-      <div class="form-group">
-        <label for="gs_dependencies"> Dependencies (Game states) </label>
-        <!-- {{! populated from the game_script json's }} -->
-        <input type="text" class="form-control" id="gs_dependencies" value="" />
-      </div>
-
-      <div class="form-group">
-        <label for="gs_state"> Game state (When triggered) </label>
-        <!-- {{! Game state to update on the event }} -->
-        <input type="text" class="form-control" id="gs_state" value="" />
-      </div>
-
-      <div class="form-group">
-        <label for="gs_actions"> Actions (When triggered) </label>
-        <!-- {{! Actions to do when event triggered }} -->
-        <input type="text" class="form-control" id="gs_actions" value="" />
-      </div>
-
-      <button class="btn btn-default">Save</button>
-    </div>
-  </div>
-  <!-- {{/data}} -->
 </div>
