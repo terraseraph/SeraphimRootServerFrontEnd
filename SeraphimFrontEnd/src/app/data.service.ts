@@ -79,8 +79,17 @@ export class DataService {
     });
   }
 
-  scriptEditor_updateSelectedScript() {
-    // this.server.updateScript();
+  scriptEditor_updateSelectedScript(instanceUpdate) {
+    for (let i = 0; i < this.scriptEditor_allScripts.length; i++) {
+      if (this.scriptEditor_allScripts[i].name === instanceUpdate.name) {
+        this.scriptEditor_allScripts[i] = instanceUpdate;
+        this.scriptEditor_observableListUpdate();
+        this.server.updateScript(instanceUpdate).subscribe(result => {
+          console.log(result);
+        });
+        console.log(this.scriptEditor_allScripts);
+      }
+    }
   }
 
   // ==============================
@@ -121,7 +130,6 @@ export class DataService {
 
   updateLocalScriptInstance(instanceUpdate) {
     this.scriptInstances[`${instanceUpdate.name}`] = instanceUpdate;
-    this.scriptInstanceListChange();
   }
 
   deleteLocalScriptInstance(instanceName) {
@@ -157,4 +165,182 @@ export class DataService {
       }
     });
   }
+
+  newEventModel() {
+    return new Promise((resolve, reject) => {
+      resolve(new ScriptEventModel());
+    });
+  }
+
+  newActionModel() {
+    return new ScriptActionModel();
+  }
+
+  newHintModel() {
+    return new ScriptHintModel();
+  }
+
+  newTriggerModel() {
+    return new ScriptTriggerModel();
+  }
+
+  newStateModel() {
+    return new ScriptStateModel();
+  }
+
+  newScriptModel() {
+    const timeModel = {
+      hours: "0",
+      minutes: "60",
+      seconds: "0"
+    };
+    const stateModel = {
+      name: "",
+      active: false
+    };
+
+    const eventModel = {
+      id: "",
+      name: "",
+      device_id: "",
+      event: "",
+      eventType: "",
+      data: "",
+      description: "",
+      dependencies: [],
+      actions: [],
+      message: "",
+      states: []
+    };
+
+    const actionModel = {
+      id: "",
+      name: "",
+      device_id: "",
+      event: "",
+      eventType: "",
+      action: "",
+      actionType: "",
+      wait: 0,
+      data: "",
+      description: "",
+      dependencies: [],
+      repeatable: true,
+      actions: [],
+      message: "",
+      states: []
+    };
+
+    const hintModel = {
+      name: "",
+      hint: ""
+    };
+
+    const triggerModel = {
+      name: "",
+      trigger: "",
+      audio: "",
+      video: "",
+      hint: "",
+      can_toggle: ""
+    };
+
+    const s = {
+      name: "",
+      id: "",
+      branch_address: "",
+      masterId: "",
+      time: new ScriptTimeModel(),
+      states: [new ScriptStateModel()],
+      events: new ScriptEventModel(),
+      actions: new ScriptActionModel(),
+      hints: [new ScriptHintModel()],
+      triggers: [new ScriptTriggerModel()]
+    };
+    return new EventActionScriptModel();
+  }
+}
+
+export class EventActionScriptModel {
+  public name: "";
+  public id: "";
+  public branch_address: "";
+  public masterId: "";
+  public time: ScriptTimeModel;
+  public states: [ScriptStateModel];
+  public events: ScriptEventModel;
+  public actions: ScriptActionModel;
+  public hints: [ScriptHintModel];
+  public triggers: [ScriptTriggerModel];
+}
+
+export class ScriptEventModel {
+  public id: string;
+  public name: string;
+  public device_id: string;
+  public event: string;
+  public eventType: string;
+  public data: string;
+  public description: string;
+  public dependencies: [];
+  public actions: [];
+  public message: string;
+  public states = [];
+
+  constructor() {
+    this.id = "";
+    this.name = "";
+    this.device_id = "";
+    this.event = "";
+    this.eventType = "";
+    this.data = "";
+    this.description = "";
+    this.dependencies = [];
+    this.actions = [];
+    this.message = "";
+    this.states = [];
+  }
+}
+
+export class ScriptActionModel {
+  public id: "";
+  public name: "";
+  public device_id: "";
+  public event: "";
+  public eventType: "";
+  public action: "";
+  public actionType: "";
+  public wait: 0;
+  public data: "";
+  public description: "";
+  public dependencies: [];
+  public repeatable: true;
+  public actions: [];
+  public message: "";
+  public states: [];
+}
+
+export class ScriptHintModel {
+  public name: "";
+  public hint: "";
+}
+
+export class ScriptTriggerModel {
+  public name: "";
+  public trigger: "";
+  public audio: "";
+  public video: "";
+  public hint: "";
+  public can_toggle: "";
+}
+
+export class ScriptStateModel {
+  public name: "";
+  public active: false;
+}
+
+export class ScriptTimeModel {
+  public hours: "0";
+  public minutes: "60";
+  public seconds: "0";
 }

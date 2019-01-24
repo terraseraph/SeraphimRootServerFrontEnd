@@ -56,7 +56,7 @@
               </ng-template>
             </ngb-panel>
           </ngb-accordion>
-          <button class="btn btn-success">Add Event</button>
+          <button class="btn btn-success" (click)="scriptCreateNewEvent()">Add Event</button>
           <hr />
 
           <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-1">
@@ -250,7 +250,7 @@
 
         <div class="form-group">
           <label for="gs_event_type_event"> Event Type / Event </label>
-          <select #eventTypeSelector class="selectpicker form-control" id="gs_event_type_event">
+          <select #eventTypeSelector class="selectpicker form-control" id="gs_event_type_event" [(ngModel)]="eventEventTypeSelect">
             <option selected="selected">{{ eventToEdit.eventType }}/{{ eventToEdit.event }}</option>
             <option>button/toggle</option>
             <option>keypad/code</option>
@@ -260,7 +260,7 @@
             <option>potentiometer/rangetrigger</option>
             <option>magnetSwitch/on</option>
             <option>magnetSwitch/off</option>
-            <option>distanceSensor/reangeTrigger</option>
+            <option>distanceSensor/rangeTrigger</option>
             <option>stepperDone/stepperTrigger</option>
             <option>phoneET/callOut</option>
             <option>phoneET/callReceived</option>
@@ -284,17 +284,31 @@
 
         <div class="form-group">
           <label for="gs_dependencies"> Dependencies (Game states) </label>
-          <input type="text" class="form-control" id="gs_dependencies" value="{{ eventToEdit.dependencies }}" />
-        </div>
-
-        <div class="form-group">
-          <label for="gs_state"> Game state (When triggered) </label>
-          <select class="selectpicker form-control" id="gs_event_states">
+          <select class="selectpicker form-control" id="gs_event_states" [(ngModel)]="eventStateSelect">
             <option *ngFor="let state of scriptInstance.states">{{
               state.name
               }}</option>
           </select>
-          <button class="btn btn-success">Add State</button>
+          <!-- <input type="text" class="form-control" id="gs_dependencies" value="{{ eventToEdit.dependencies }}" /> -->
+          <button class="btn btn-success" (click)="addDependencyToEvent(eventStateSelect)">Add Dependency</button>
+          <ul class="list-group list-group-flush">
+            <li *ngFor="let dependecy of eventToEdit.dependencies" class="list-group-item">
+              State: {{ dependecy }}
+              <button class="btn btn-danger" (click)="deleteDependencyFromEvent(dependecy)">
+                Delete
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="form-group">
+          <label for="gs_state"> Game state (When triggered) </label>
+          <select class="selectpicker form-control" id="gs_event_states" [(ngModel)]="eventStateSelect">
+            <option *ngFor="let state of scriptInstance.states">{{
+              state.name
+              }}</option>
+          </select>
+          <button class="btn btn-success" (click)="addStateToCurrentEvent(eventStateSelect)">Add State</button>
           <ul class="list-group list-group-flush">
             <li *ngFor="let state of eventToEdit.states" class="list-group-item">
               State: {{ state.name }}
@@ -319,19 +333,24 @@
 
         <div class="form-group">
           <label for="gs_actions"> Actions (When triggered) </label>
-          <input type="text" class="form-control" id="gs_actions" value="{{ eventToEdit.actions }}" />
+          <select class="selectpicker form-control" id="gs_actions" [(ngModel)]="eventActionSelect">
+            <option *ngFor="let action of scriptInstance.actions">{{
+              action.name
+              }}</option>
+          </select>
+          <!-- <input type="text" class="form-control" id="gs_actions" value="{{ eventToEdit.actions }}" /> -->
           <ul class="list-group list-group-flush">
             <li *ngFor="let action of eventToEdit.actions" class="list-group-item">
               Action: {{ action }}
-              <button class="btn btn-danger" (click)="scriptDeleteAction(action)">
+              <button class="btn btn-danger" (click)="deleteActionFromEvent(action)">
                 Delete
               </button>
             </li>
           </ul>
-          <button class="btn btn-success">Add action</button>
+          <button class="btn btn-success" (click)="addActiontoEvent(eventActionSelect)">Add action</button>
         </div>
 
-        <button class="btn btn-default" onclick="edit_game_script('events', '1')">
+        <button class="btn btn-default" (click)="saveEditedEvent()">
           Save
         </button>
       </div>

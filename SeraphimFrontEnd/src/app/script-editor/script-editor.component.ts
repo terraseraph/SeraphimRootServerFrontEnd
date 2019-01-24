@@ -5,6 +5,8 @@ import { DataService } from "../data.service";
 import { InitService } from "../init.service";
 import { Subscription } from "rxjs";
 import { RouterModule, Routes, Router } from "@angular/router";
+import { resolve } from "path";
+import { ParsedEventType } from "@angular/compiler";
 
 @Component({
   selector: "app-script-editor",
@@ -27,6 +29,12 @@ export class ScriptEditorComponent implements OnInit {
   actionToEdit: any;
   hintToEdit: any;
   triggerToEdit: any;
+
+  eventStateSelect: any;
+  eventEventTypeSelect: any;
+  eventActionSelect: any;
+
+  // newEventFlag: boolean;
 
   constructor(
     public dataService: DataService,
@@ -72,7 +80,9 @@ export class ScriptEditorComponent implements OnInit {
 
   scriptEditEvent(eventName) {
     this.findEvent(eventName).then(evt => {
+      // this.newEventFlag = false;
       this.eventToEdit = evt;
+      this.eventEventTypeSelect = `${evt.eventType}/${evt.event}`;
       this.toggleFormPanel("event");
     });
     console.log("Editing event: ", eventName);
@@ -102,7 +112,16 @@ export class ScriptEditorComponent implements OnInit {
   }
 
   scriptDeleteEvent(eventName) {
-    console.log("Deleting: ", eventName);
+    for (let i = 0; i < this.scriptInstance.events.length; i++) {
+      if (this.scriptInstance.events[i].name === eventName) {
+        this.scriptInstance.events.splice(i, 1);
+        console.log("Deleting: ", eventName, this.scriptInstance.events);
+      }
+    }
+    // const index = this.scriptInstance.events.indexOf(eventName);
+    // if (index !== -1) {
+    //   this.scriptInstance.events.splice(index, 1);
+    // }
   }
   scriptDeleteAction(actionName) {
     console.log("Deleting: ", actionName);
@@ -137,22 +156,105 @@ export class ScriptEditorComponent implements OnInit {
         return;
       }
     }
-    // for (const state of this.eventToEdit.states) {
-    //   console.log(state);
-    //   if (this.eventToEdit.states[`${state}`].name === stateName) {
-    //     this.eventToEdit.states[`${state}`].active = !this.eventToEdit.states[
-    //       `${state}`
-    //     ].active;
-    //     console.log(
-    //       this.eventToEdit.states[`${state}`].name,
-    //       this.eventToEdit.states[`${state}`].active
-    //     );
-    //     return;
-    //   }
-    // }
+  }
+
+  addStateToCurrentEvent(stateName) {
+    console.log(this.eventStateSelect);
+    this.findScriptState(stateName).then(state => {
+      this.eventToEdit.states.push(state);
+    });
+  }
+
+  addActiontoEvent(actionName) {
+    this.eventToEdit.actions.push(actionName);
+  }
+
+  deleteActionFromEvent(actionName) {
+    const index = this.eventToEdit.actions.indexOf(actionName);
+    if (index !== -1) {
+      this.eventToEdit.actions.splice(index, 1);
+    }
+  }
+
+  addDependencyToEvent(depName) {
+    this.eventToEdit.dependencies.push(depName);
+  }
+
+  deleteDependencyFromEvent(depName) {
+    const index = this.eventToEdit.dependencies.indexOf(depName);
+    if (index !== -1) {
+      this.eventToEdit.dependencies.splice(index, 1);
+    }
+  }
+
+  findEventState(stateName) {
+    return new Promise((resolve, reject) => {
+      for (let i = 0; i < this.eventToEdit.states.length; i++) {
+        if (this.eventToEdit.states[i].name === stateName) {
+          resolve(this.eventToEdit.states[i]);
+        }
+      }
+    });
+  }
+
+  findScriptState(stateName) {
+    return new Promise((resolve, reject) => {
+      for (let i = 0; i < this.scriptInstance.states.length; i++) {
+        if (this.scriptInstance.states[i].name === stateName) {
+          resolve(this.scriptInstance.states[i]);
+        }
+      }
+    });
+  }
+
+  saveEditedEvent() {
+    this.parseEventType(this.eventEventTypeSelect).then(et => {
+      this.eventToEdit.event = et.event;
+      this.eventToEdit.eventType = et.eventType;
+      console.log(this.eventToEdit, this.scriptInstance, "ET: ", et);
+      // if(this.newEventFlag){
+      //   this.scriptInstance.events.push(this.eventToEdit);
+      // }
+      this.dataService.scriptEditor_updateSelectedScript(this.scriptInstance);
+    });
+  }
+
+  scriptCreateNewEvent(){
+    // const eventModel = {
+    //   id: "",
+    //   name: "",
+    //   device_id: "",
+    //   event: "",
+    //   eventType: "",
+    //   data: "",
+    //   description: "",
+    //   dependencies: [],
+    //   actions: [],
+    //   message: "",
+    //   states: []
+    // };
+    this.dataService.newEventModel().then(eventModel =>{
+      this.scriptInstance.events.push(eventModel);
+      this.eventToEdit = eventModel;
+    });
+    // this.scriptInstance.events.push(eventModel);
+      // this.eventToEdit = eventModel;
+    // this.toggleFormPanel("event");
+    console.log(this.eventToEdit);
   }
 
   // ================ helpers =============//
+  parseEventType(input) {
+    return new Promise((resolve, reject) => {
+      const split = input.split("/");
+      const result = {
+        eventType: split[0],
+        event: split[1]
+      };
+      resolve(result);
+    });
+  }
+
   toggleFormPanel(panelType) {
     this.toggleFormPanelOff();
     switch (panelType) {
