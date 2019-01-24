@@ -116,6 +116,42 @@ export class ScriptEditorComponent implements OnInit {
     console.log("Deleting: ", triggerName);
   }
 
+  scriptDeleteStateFromEvent(stateName) {
+    console.log("Deleting: ", stateName);
+  }
+
+  scriptDeleteStateFromAction(stateName) {
+    console.log("Deleting: ", stateName);
+  }
+
+  // ================ Event state toggle ======//
+
+  toggleEventState(stateName) {
+    for (let i = 0; i < this.eventToEdit.states.length; i++) {
+      if (this.eventToEdit.states[i].name === stateName) {
+        this.eventToEdit.states[i].active = !this.eventToEdit.states[i].active;
+        console.log(
+          this.eventToEdit.states[i].name,
+          this.eventToEdit.states[i].active
+        );
+        return;
+      }
+    }
+    // for (const state of this.eventToEdit.states) {
+    //   console.log(state);
+    //   if (this.eventToEdit.states[`${state}`].name === stateName) {
+    //     this.eventToEdit.states[`${state}`].active = !this.eventToEdit.states[
+    //       `${state}`
+    //     ].active;
+    //     console.log(
+    //       this.eventToEdit.states[`${state}`].name,
+    //       this.eventToEdit.states[`${state}`].active
+    //     );
+    //     return;
+    //   }
+    // }
+  }
+
   // ================ helpers =============//
   toggleFormPanel(panelType) {
     this.toggleFormPanelOff();

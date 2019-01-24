@@ -13,9 +13,9 @@ import { LogComponent } from "./log/log.component";
 import { EventActionScriptComponent } from "./event-action-script/event-action-script.component";
 import { InitService } from "./init.service";
 import { SocketsService } from "./sockets.service";
-import { OverviewEventActionListComponent } from './overview-event-action-list/overview-event-action-list.component';
-import { OverviewInstanceListComponent } from './overview-instance-list/overview-instance-list.component';
-import { ScriptEditorComponent } from './script-editor/script-editor.component';
+import { OverviewEventActionListComponent } from "./overview-event-action-list/overview-event-action-list.component";
+import { OverviewInstanceListComponent } from "./overview-instance-list/overview-instance-list.component";
+import { ScriptEditorComponent } from "./script-editor/script-editor.component";
 
 @NgModule({
   declarations: [
