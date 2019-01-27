@@ -188,11 +188,17 @@ export class DataService {
   }
 
   newTriggerModel() {
-    return new ScriptTriggerModel();
+    return new Promise((resolve, reject) => {
+      const model = new ScriptTriggerModel();
+      resolve(model);
+    });
   }
 
   newStateModel() {
-    return new ScriptStateModel();
+    return new Promise((resolve, reject) => {
+      const model = new ScriptStateModel();
+      resolve(model);
+    });
   }
 
   newScriptModel() {
@@ -324,7 +330,7 @@ export class ScriptActionModel {
   public message: string;
   public states: [];
 
-  constructor(){
+  constructor() {
     this.id = "";
     this.name = "";
     this.device_id = "";
@@ -346,17 +352,31 @@ export class ScriptHintModel {
 }
 
 export class ScriptTriggerModel {
-  public name: "";
-  public trigger: "";
-  public audio: "";
-  public video: "";
-  public hint: "";
-  public can_toggle: "";
+  public name: string;
+  public trigger: string;
+  public audio: string;
+  public video: string;
+  public hint: string;
+  public can_toggle: string;
+
+  constructor() {
+    this.name = "";
+    this.trigger = "";
+    this.audio = "";
+    this.video = "";
+    this.hint = "";
+    this.can_toggle = "";
+  }
 }
 
 export class ScriptStateModel {
-  public name: "";
-  public active: false;
+  public name: string;
+  public active: boolean;
+
+  constructor() {
+    this.name = "";
+    this.active = false;
+  }
 }
 
 export class ScriptTimeModel {

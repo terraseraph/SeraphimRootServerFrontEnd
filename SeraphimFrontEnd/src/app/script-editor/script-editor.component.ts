@@ -30,6 +30,7 @@ export class ScriptEditorComponent implements OnInit {
   actionToEdit: any;
   hintToEdit: any;
   triggerToEdit: any;
+  stateToEdit: any;
 
   eventStateSelect: any;
   eventEventTypeSelect: any;
@@ -294,7 +295,7 @@ export class ScriptEditorComponent implements OnInit {
   }
 
   scriptDeleteHint(hintName) {
-    for (let i = 0; i < this.scriptInstance.actions.length; i++) {
+    for (let i = 0; i < this.scriptInstance.hints.length; i++) {
       if (this.scriptInstance.hints[i].name === hintName) {
         this.scriptInstance.hints.splice(i, 1);
         this.dataService.scriptEditor_updateSelectedScript(this.scriptInstance);
@@ -320,20 +321,70 @@ export class ScriptEditorComponent implements OnInit {
   // ========= States functions ===== //
   // =============================== //
 
+  saveEditedState() {
+    this.dataService.scriptEditor_updateSelectedScript(this.scriptInstance);
+  }
+
+  scriptEditState(stateName) {
+    console.log("Editing State: ", stateName);
+    this.findState(stateName).then(state => {
+      this.stateToEdit = state;
+      this.toggleFormPanel("state");
+    });
+  }
+
+  scriptDeleteState(stateName) {
+    for (let i = 0; i < this.scriptInstance.states.length; i++) {
+      if (this.scriptInstance.states[i].name === stateName) {
+        this.scriptInstance.states.splice(i, 1);
+        this.dataService.scriptEditor_updateSelectedScript(this.scriptInstance);
+        console.log("Deleting: ", stateName, this.scriptInstance.states);
+      }
+    }
+  }
+
+  scriptCreateNewState() {
+    this.dataService.newStateModel().then(stateModel => {
+      let sm: any;
+      sm = stateModel;
+      sm.name = "UNSET State";
+      this.scriptInstance.states.push(sm);
+    });
+  }
+
   // ================================= //
   // ========= Triggers functions ===== //
   // =============================== //
 
   scriptEditTrigger(triggerName) {
     console.log("Editing Trigger: ", triggerName);
-    this.findAction(triggerName).then(trg => {
+    this.findTrigger(triggerName).then(trg => {
       this.triggerToEdit = trg;
       this.toggleFormPanel("trigger");
     });
   }
 
   scriptDeleteTrigger(triggerName) {
-    console.log("Deleting: ", triggerName);
+    for (let i = 0; i < this.scriptInstance.triggers.length; i++) {
+      if (this.scriptInstance.triggers[i].name === triggerName) {
+        this.scriptInstance.triggers.splice(i, 1);
+        this.dataService.scriptEditor_updateSelectedScript(this.scriptInstance);
+        console.log("Deleting: ", triggerName, this.scriptInstance.triggers);
+      }
+    }
+  }
+
+  saveEditedTrigger() {
+    this.dataService.scriptEditor_updateSelectedScript(this.scriptInstance);
+  }
+
+  scriptCreateNewTrigger() {
+    this.dataService.newTriggerModel().then(triggerModel => {
+      let tm: any;
+      tm = triggerModel;
+      tm.name = "UNSET Trigger";
+      this.scriptInstance.triggers.push(tm);
+    });
   }
 
   // ================ helpers =============//
@@ -396,6 +447,7 @@ export class ScriptEditorComponent implements OnInit {
     this.actionLoaded = false;
     this.hintLoaded = false;
     this.triggerLoaded = false;
+    this.stateLoaded = false;
   }
   findEvent(name) {
     // tslint:disable-next-line:no-shadowed-variable
@@ -425,6 +477,17 @@ export class ScriptEditorComponent implements OnInit {
       for (const hint of this.scriptInstance.hints) {
         if (hint.name === name) {
           resolve(hint);
+        }
+      }
+    });
+  }
+
+  findState(name) {
+    // tslint:disable-next-line:no-shadowed-variable
+    return new Promise((resolve, reject) => {
+      for (const state of this.scriptInstance.states) {
+        if (state.name === name) {
+          resolve(state);
         }
       }
     });
