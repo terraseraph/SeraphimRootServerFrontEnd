@@ -1,3 +1,22 @@
-<p>
-  log works!
-</p>
+<div *ngIf="dataLoaded">
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Room Name</th>
+        <th scope="col">Booking Time</th>
+        <th scope="col">Booking Name</th>
+        <th scope="col">Participants</th>
+        <th scope="col">Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let b of bookings.data">
+        <td>{{b?.productName}}</td>
+        <td>{{b?.startTime}}</td>
+        <td>{{b?.title}}</td>
+        <td>{{b?.participants.numbers[0].number}}</td>
+        <td>{{b?.price.totalGross.amount}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

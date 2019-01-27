@@ -48,9 +48,40 @@ export class OverviewComponent implements OnInit {
     this.socketSubscribe();
   }
 
-  get scriptChange(): any {
-    return this.server.selectedScript;
+  loadScript() {
+    return new Promise((resolve, reject) => {
+      resolve(this.server.selectedScript);
+    });
   }
+
+  loadScriptSubscribe() {
+    this.scriptSubscription = this.server.observableScript.subscribe(script => {
+      this.script = script;
+      this.isDataAvailable = true;
+    });
+  }
+
+  startNewGame() {
+    const t = this.script.time;
+    console.log(t);
+
+    this.server
+      .startNewGame(this.script, parseInt(t.hours, 10), parseInt(t.minutes, 10), parseInt(t.seconds, 10))
+      .subscribe(status => {
+        console.log(status);
+      });
+  }
+
+  endGame() {
+    this.server.endGame(this.script.name).subscribe(result => {
+      console.log(result);
+      // reset the game params here
+    });
+  }
+
+  // ======================================================================= //
+  // ========================= SOCKET MESSAGES  ============================ //
+  // ======================================================================= //
 
   socketSubscribe() {
     this.socketSubscription = this.socket
@@ -77,62 +108,9 @@ export class OverviewComponent implements OnInit {
     });
   }
 
-  eventStatus(event) {
-    this.script.events.forEach(evt => {
-      if (evt.name === event.name) {
-        evt.status = event.status;
-      }
-    });
-  }
-
-  actionStatus(action) {
-    this.script.actions.forEach(act => {
-      if (act.name === action.name) {
-        act.status = action.status;
-      }
-    });
-  }
-
-  sendHint() {
-    console.log(this.hintText);
-  }
-
-  clearHint() {
-    this.hintText = "";
-  }
-
-  loadScript() {
-    return new Promise((resolve, reject) => {
-      resolve(this.server.selectedScript);
-    });
-  }
-
-  loadScriptSubscribe() {
-    this.scriptSubscription = this.server.observableScript.subscribe(script => {
-      this.script = script;
-      this.isDataAvailable = true;
-    });
-  }
-
-  sendForcedAction(actionName) {
-    console.log(actionName);
-    this.server
-      .sendForcedAction(this.script.name, actionName)
-      .subscribe(action => {
-        console.log(action);
-      });
-    this.socket.sendForcedAction(this.script.name, actionName);
-  }
-
-  sendForcedEvent(eventName) {
-    console.log(eventName);
-    this.server
-      .sendForcedEvent(this.script.name, eventName)
-      .subscribe(event => {
-        console.log(event);
-      });
-    this.socket.sendForcedEvent(this.script.name, eventName);
-  }
+  // ======================================================================= //
+  // ========================== TIMER  ===================================== //
+  // ======================================================================= //
 
   startCustomTimer() {
     let hrs, mins, sec;
@@ -157,7 +135,6 @@ export class OverviewComponent implements OnInit {
         console.log(time);
       });
   }
-
   updateCustomTimer() {
     let hrs, mins, sec;
     if (this.hours === "") {
@@ -182,19 +159,6 @@ export class OverviewComponent implements OnInit {
       });
   }
 
-  startNewGame() {
-    this.server.startNewGame(this.script, 0, 60, 0).subscribe(status => {
-      console.log(status);
-    });
-  }
-
-  endGame() {
-    this.server.endGame(this.script.name).subscribe(result => {
-      console.log(result);
-      // reset the game params here
-    });
-  }
-
   pauseGameTimer() {
     this.server.pauseGameTimer(this.script.name).subscribe(result => {
       console.log(result);
@@ -205,5 +169,77 @@ export class OverviewComponent implements OnInit {
     this.server.resumeGameTimer(this.script.name).subscribe(result => {
       console.log(result);
     });
+  }
+
+  // ======================================================================= //
+  // ========================== EVENT ACTION  ============================== //
+  // ======================================================================= //
+
+  sendForcedAction(actionName) {
+    console.log(actionName);
+    this.server
+      .sendForcedAction(this.script.name, actionName)
+      .subscribe(action => {
+        console.log(action);
+      });
+    this.socket.sendForcedAction(this.script.name, actionName);
+  }
+
+  sendForcedEvent(eventName) {
+    console.log(eventName);
+    this.server
+      .sendForcedEvent(this.script.name, eventName)
+      .subscribe(event => {
+        console.log(event);
+      });
+    this.socket.sendForcedEvent(this.script.name, eventName);
+  }
+
+  eventStatus(event) {
+    this.script.events.forEach(evt => {
+      if (evt.name === event.name) {
+        evt.status = event.status;
+      }
+    });
+  }
+
+  actionStatus(action) {
+    this.script.actions.forEach(act => {
+      if (act.name === action.name) {
+        act.status = action.status;
+      }
+    });
+  }
+
+  // ======================================================================= //
+  // ========================== TRIGGERS  ================================== //
+  // ======================================================================= //
+  triggerForceTrigger(trigger) {
+    console.log("Forcing trigger: ", trigger);
+  }
+
+  triggerPlayAudio(audioFile) {
+    console.log("Playing: ", audioFile);
+  }
+
+  triggerPlayVideo(videoFile) {
+    console.log("Playing: ", videoFile);
+  }
+
+  // ======================================================================= //
+  // ========================== HINTS  ===================================== //
+  // ======================================================================= //
+
+  hintSendHint(hint) {
+    this.hintText = hint.hint;
+    console.log("SendingHint: ", hint);
+  }
+
+  hintSendCustomHint() {
+    console.log(this.hintText);
+  }
+
+  clearHint() {
+    this.hintText = "";
   }
 }

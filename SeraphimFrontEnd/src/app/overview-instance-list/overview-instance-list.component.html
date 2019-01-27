@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-md-12">
       <button *ngFor="let script of scripts" class="btn btn-success" (click)="loadScript(script.name)">
-        {{ script.name }} :: {{script.timeUpdate.hrs}} : {{script.timeUpdate.min}} : {{script.timeUpdate.sec}}
+        {{ script.name }} :: {{script.timeUpdate.hours}} : {{script.timeUpdate.minutes}} : {{script.timeUpdate.seconds}}
       </button>
     </div>
   </div>

@@ -30,7 +30,7 @@ export class OverviewInstanceListComponent implements OnInit {
       this.scripts = scripts;
       for (const s of this.scripts) {
         // NOTE: add specific values to check here
-        s.timeUpdate = { hrs: 0, min: 0, sec: 0 };
+        s.timeUpdate = { hours: 0, minutes: 0, seconds: 0 };
         s.ended = false;
       }
       this.socketSubscribe();
@@ -73,6 +73,7 @@ export class OverviewInstanceListComponent implements OnInit {
   loadScript(name) {
     this.server.loadScript(name).subscribe(script => {
       this.server.setSelectedScript(script);
+      // this.dataService.setSelectedScriptInstance(script);
       this.router.navigateByUrl(`/overview`);
       console.log(script);
     });

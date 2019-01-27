@@ -104,11 +104,13 @@ export class ServerService {
     const msg = {
       name: scriptName,
       timeLimit: {
-        hrs: h,
-        min: m,
-        sec: s
+        hours: h,
+        minutes: m,
+        seconds: s
       }
+
     };
+    console.log(msg);
     return this.http.post(`${this.api}/game`, msg);
   }
 
