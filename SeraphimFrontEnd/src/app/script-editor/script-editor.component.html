@@ -78,7 +78,7 @@
               </ng-template>
             </ngb-panel>
           </ngb-accordion>
-          <button class="btn btn-success">Add Action</button>
+          <button class="btn btn-success" (click)="scriptCreateNewAction()">Add Action</button>
           <hr />
 
           <hr />
@@ -101,7 +101,7 @@
               </ng-template>
             </ngb-panel>
           </ngb-accordion>
-          <button class="btn btn-success">Add Hint</button>
+          <button class="btn btn-success" (click)="scriptCreateNewHint()">Add Hint</button>
           <hr />
 
           <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-2">
@@ -160,13 +160,13 @@
             <h3>Edit Action</h3>
             <div class="form-group">
               <label for="gs_event_action_name"> Name </label>
-              <input type="text" class="form-control" id="gs_event_action_name" value="{{ actionToEdit.name }}" />
+              <input type="text" class="form-control" id="gs_event_action_name" [(ngModel)]="actionToEdit.name" value="{{ actionToEdit.name }}" />
             </div>
 
             <div class="form-group">
               <label for="gs_action_type_action"> Action Type / Action </label>
               <!-- {{! Make this populated from sql, or js when selecting action or event up the top}} -->
-              <select class="selectpicker form-control" id="gs_action_type_action">
+              <select class="selectpicker form-control" id="gs_action_type_action" [(ngModel)]="actionActionTypeSelect">
                 <option selected="selected">{{ actionToEdit.actionType }}/{{
                   actionToEdit.action
                   }}</option>
@@ -185,42 +185,63 @@
 
             <div class="form-group">
               <label for="gs_device_id"> Device Id </label>
-              <input type="text" class="form-control" id="gs_device_id" value="{{ actionToEdit.device_id }}" />
+              <input type="text" class="form-control" id="gs_device_id"  [(ngModel)]="actionToEdit.device_id" value="{{ actionToEdit.device_id }}" />
             </div>
 
             <div class="form-group">
               <label for="gs_data"> Data </label>
-              <input type="text" class="form-control" id="gs_data" value="{{ actionToEdit.data }}" />
+              <input type="text" class="form-control" id="gs_data" [(ngModel)]="actionToEdit.data" value="{{ actionToEdit.data }}" />
             </div>
 
             <div class="form-group">
               <label for="gs_description"> Description </label>
-              <input type="text" class="form-control" id="gs_description" value="{{ actionToEdit.description }}" />
+              <input type="text" class="form-control" id="gs_description" [(ngModel)]="actionToEdit.description" value="{{ actionToEdit.description }}" />
             </div>
 
             <div class="form-group">
               <label for="gs_dependencies"> Dependencies (Game states) </label>
-              <input type="text" class="form-control" id="gs_dependencies" value="{{ actionToEdit.dependencies }}" />
-            </div>
-
-            <div class="form-group">
-              <label for="gs_state"> Game state (When triggered) </label>
-              <select class="selectpicker form-control" id="gs_event_states">
+              <select class="selectpicker form-control" id="gs_event_states" [(ngModel)]="actionStateDependencySelect">
                 <option *ngFor="let state of scriptInstance.states">{{
                   state.name
                   }}</option>
               </select>
-              <button class="btn btn-success">Add State</button>
+              <button class="btn btn-success" (click)="addDependencyToAction(actionStateDependencySelect)">Add Dependency</button>
+              <ul class="list-group list-group-flush">
+                <li *ngFor="let dependecy of actionToEdit.dependencies" class="list-group-item">
+                  State: {{ dependecy }}
+                  <button class="btn btn-danger" (click)="deleteDependencyFromAction(dependecy)">
+                    Delete
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+
+
+
+            <div class="form-group">
+              <label for="gs_state"> Game state (When triggered) </label>
+              <select class="selectpicker form-control" id="gs_event_states" [(ngModel)]="actionStateSelect">
+                <option *ngFor="let state of scriptInstance.states">{{
+                  state.name
+                  }}</option>
+              </select>
+              <button class="btn btn-success" (click)="addStateToCurrentAction(actionStateSelect)">Add State</button>
               <ul class="list-group list-group-flush">
                 <li *ngFor="let state of actionToEdit.states" class="list-group-item">
-                  <button type="button" (click)="toggleEventState(state.name)" role="switch" aria-checked="state.active"
-                    class="ant-switch ant-switch-checked" ant-click-animating="true">
-
-                    <!-- <span class="ant-switch-inner"></span>
-                    <div class="ant-click-animating-node"></div> -->
-                  </button>
-
-                  State: {{ state.name }} on/off: {{ state.active }}
+                  State: {{ state.name }}
+                  <div *ngIf="state.active">
+                    <button type="button" class="btn btn-lg btn-toggle active" (click)="toggleActionState(state.name)"
+                      data-toggle="button" aria-pressed="false" autocomplete="off">
+                      <div class="handle"></div>
+                    </button>
+                  </div>
+                  <div *ngIf="!state.active">
+                    <button type="button" class="btn btn-lg btn-toggle" (click)="toggleActionState(state.name)" data-toggle="button"
+                      aria-pressed="false" autocomplete="off">
+                      <div class="handle"></div>
+                    </button>
+                  </div>
                   <button class="btn btn-danger" (click)="scriptDeleteStateFromAction(state.name)">
                     Delete
                   </button>
@@ -230,10 +251,23 @@
 
             <div class="form-group">
               <label for="gs_actions"> Actions (When triggered) </label>
-              <input type="text" class="form-control" id="gs_actions" value="{{ actionToEdit.actions }}" />
+              <select class="selectpicker form-control" id="gs_actions" [(ngModel)]="actionActionSelect">
+                <option *ngFor="let action of scriptInstance.actions">{{
+                  action.name
+                  }}</option>
+              </select>
+              <ul class="list-group list-group-flush">
+                <li *ngFor="let action of actionToEdit.actions" class="list-group-item">
+                  Action: {{ action }}
+                  <button class="btn btn-danger" (click)="deleteActionFromAction(action)">
+                    Delete
+                  </button>
+                </li>
+              </ul>
+              <button class="btn btn-success" (click)="addActiontoAction(actionActionSelect)">Add action</button>
             </div>
 
-            <button class="btn btn-default">Save</button>
+            <button class="btn btn-default" (click)="saveEditedAction()">Save</button>
           </div>
         </div>
       </div>
@@ -361,13 +395,17 @@
         <h3>Edit Hint</h3>
         <div class="form-group">
           <label for="hintName"> Name </label>
-          <input type="text" class="form-control" id="hintName" value="{{ hintToEdit.name }}" />
+          <input type="text" class="form-control" id="hintName" [(ngModel)]="hintToEdit.name" value="{{ hintToEdit.name }}" />
         </div>
         <div class="form-group">
           <label for="hintText"> Hint Text </label>
-          <input type="text" class="form-control" id="hintText" value="{{ hintToEdit.hint }}" />
+          <input type="text" class="form-control" id="hintText" [(ngModel)]="hintToEdit.hint" value="{{ hintToEdit.hint }}" />
         </div>
       </div>
+
+      <button class="btn btn-default" (click)="saveEditedHint()">
+        Save
+      </button>
 
       <!-- TRIGGER FORM --------------------------------------------------->
       <!-- -------------------------------------------------------------->

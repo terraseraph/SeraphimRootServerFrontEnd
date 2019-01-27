@@ -168,16 +168,23 @@ export class DataService {
 
   newEventModel() {
     return new Promise((resolve, reject) => {
-      resolve(new ScriptEventModel());
+      const model = new ScriptEventModel();
+      resolve(model);
     });
   }
 
   newActionModel() {
-    return new ScriptActionModel();
+    return new Promise((resolve, reject) => {
+      const model = new ScriptActionModel();
+      resolve(model);
+    });
   }
 
   newHintModel() {
-    return new ScriptHintModel();
+    return new Promise((resolve, reject) => {
+      const model = new ScriptHintModel();
+      resolve(model);
+    });
   }
 
   newTriggerModel() {
@@ -303,21 +310,34 @@ export class ScriptEventModel {
 }
 
 export class ScriptActionModel {
-  public id: "";
-  public name: "";
-  public device_id: "";
-  public event: "";
-  public eventType: "";
-  public action: "";
-  public actionType: "";
-  public wait: 0;
-  public data: "";
-  public description: "";
+  public id: string;
+  public name: string;
+  public device_id: string;
+  public action: string;
+  public actionType: string;
+  public wait: Number;
+  public data: string;
+  public description: string;
   public dependencies: [];
   public repeatable: true;
   public actions: [];
-  public message: "";
+  public message: string;
   public states: [];
+
+  constructor(){
+    this.id = "";
+    this.name = "";
+    this.device_id = "";
+    this.action = "";
+    this.actionType = "";
+    this.data = "";
+    this.description = "";
+    this.dependencies = [];
+    this.actions = [];
+    this.message = "";
+    this.states = [];
+    this.wait = 0;
+  }
 }
 
 export class ScriptHintModel {
