@@ -62,14 +62,22 @@ export class OverviewComponent implements OnInit {
   }
 
   startNewGame() {
-    const t = this.script.time;
-    console.log(t);
-
-    this.server
-      .startNewGame(this.script, parseInt(t.hours, 10), parseInt(t.minutes, 10), parseInt(t.seconds, 10))
-      .subscribe(status => {
-        console.log(status);
-      });
+    this.script = null;
+    this.loadScript().then(loadedScript => {
+      console.log(loadedScript);
+      this.script = loadedScript;
+      const t = this.script.time;
+      this.server
+        .startNewGame(
+          this.script,
+          parseInt(t.hours, 10),
+          parseInt(t.minutes, 10),
+          parseInt(t.seconds, 10)
+        )
+        .subscribe(status => {
+          console.log(status);
+        });
+    });
   }
 
   endGame() {
@@ -87,11 +95,13 @@ export class OverviewComponent implements OnInit {
     this.socketSubscription = this.socket
       .getMessages()
       .subscribe((message: any) => {
-        if (message.instance_update.name === this.script.name) {
-          this.parseSocketMessage(message);
-          if (message.hasOwnProperty("event")) {
-            this.eventStatus(message.event);
+        if (message.hasOwnProperty("instance_update")) {
+          if (message.instance_update.name === this.script.name) {
+            this.parseSocketMessage(message);
           }
+        }
+        if (message.hasOwnProperty("event")) {
+          this.eventStatus(message.event);
         }
       });
   }
@@ -102,6 +112,8 @@ export class OverviewComponent implements OnInit {
         return;
       }
       console.log("==== socket message", msg, this.script);
+      this.script.events = msg.instance_update.script.events;
+      this.script.actions = msg.instance_update.script.actions;
       this.script.timeUpdate = msg.instance_update.time;
       this.script.ended = msg.instance_update.ended;
       resolve();
@@ -188,7 +200,7 @@ export class OverviewComponent implements OnInit {
   sendForcedEvent(eventName) {
     console.log(eventName);
     this.server
-      .sendForcedEvent(this.script.name, eventName)
+      .sendForcedEvent(this.script.name, eventName, this.script.timeUpdate)
       .subscribe(event => {
         console.log(event);
       });
@@ -199,6 +211,8 @@ export class OverviewComponent implements OnInit {
     this.script.events.forEach(evt => {
       if (evt.name === event.name) {
         evt.status = event.status;
+        evt.completed_time = this.script.timeUpdate;
+        console.log("Updating Event: ", this.script);
       }
     });
   }
@@ -215,15 +229,33 @@ export class OverviewComponent implements OnInit {
   // ========================== TRIGGERS  ================================== //
   // ======================================================================= //
   triggerForceTrigger(trigger) {
-    console.log("Forcing trigger: ", trigger);
+    const msg = {
+      scriptName: this.script.name,
+      trigger: trigger
+    };
+    this.server.triggerForceTrigger(msg).subscribe(result => {
+      console.log("Forcing trigger: ", result);
+    });
   }
 
   triggerPlayAudio(audioFile) {
-    console.log("Playing: ", audioFile);
+    const msg = {
+      scriptName: this.script.name,
+      audioFile: audioFile
+    };
+    this.server.triggerPlayAudio(msg).subscribe(result => {
+      console.log("Playing Audio: ", result);
+    });
   }
 
   triggerPlayVideo(videoFile) {
-    console.log("Playing: ", videoFile);
+    const msg = {
+      scriptName: this.script.name,
+      videoFile: videoFile
+    };
+    this.server.triggerPlayVideo(msg).subscribe(result => {
+      console.log("Playing Video: ", result);
+    });
   }
 
   // ======================================================================= //
@@ -231,15 +263,34 @@ export class OverviewComponent implements OnInit {
   // ======================================================================= //
 
   hintSendHint(hint) {
+    const msg = {
+      scriptName: this.script.name,
+      hintText: this.hintText
+    };
     this.hintText = hint.hint;
-    console.log("SendingHint: ", hint);
+    this.server.hintSendHint(msg).subscribe(result => {
+      console.log("Sending hint: ", result);
+    });
   }
 
   hintSendCustomHint() {
-    console.log(this.hintText);
+    const msg = {
+      scriptName: this.script.name,
+      hintText: this.hintText
+    };
+    this.server.hintSendCustomHint(msg).subscribe(result => {
+      console.log("Sending hint: ", result);
+    });
   }
 
   clearHint() {
+    const msg = {
+      scriptName: this.script.name,
+      hintText: "--clear--"
+    };
     this.hintText = "";
+    this.server.clearHint(msg).subscribe(result => {
+      console.log("Clearing hint: ", result);
+    });
   }
 }

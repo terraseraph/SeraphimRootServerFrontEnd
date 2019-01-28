@@ -5,7 +5,7 @@
         <h2>{{ script?.name }}</h2>
         <hr />
         <div *ngIf="script?.timeUpdate">
-          <h2>{{script.timeUpdate.hrs}} : {{script.timeUpdate.min}} : {{script.timeUpdate.sec}}</h2>
+          <h2>{{script.timeUpdate.hours}} : {{script.timeUpdate.minutes}} : {{script.timeUpdate.seconds}}</h2>
         </div>
       </div>
       <div class="col-md-6">
@@ -37,56 +37,87 @@
 
     <div class="row">
       <div class="col-md-6">
-        <div class="form-group">
-          <ul class="list-group">
-              <li class="list-group-item" *ngFor="let hint of script?.hints">{{hint?.name}}
-                  <button class="btn btn-primary" (click)="hintSendHint(hint)">{{hint?.hint}}</button>
-              </li>
-              </ul>
 
-          <ul>
-            <li *ngFor="let trigger of script?.triggers">{{trigger.name}} : {{trigger.hint}} : {{trigger.audio}} :
-              {{trigger.video}} : {{trigger.can_toggle}}</li>
-          </ul>
-          <label for="hintInput"> Hint </label>
-          <input type="text" class="form-control" id="hintInput" [(ngModel)]="hintText" name="hintInput" />
-        </div>
-        <button class="btn-info" (click)="hintSendCustomHint()">Send Hint</button>
-        <button type="button" class="btn btn-default" (click)="clearHint()">
-          Clear message
-        </button>
+        <div class="card text-white bg-dark mb-3">
+            <div class="card-header">Hints</div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item list-group-item-dark" *ngFor="let hint of script?.hints">
+                        <button class="btn btn-primary" (click)="hintSendHint(hint)">Copy</button>
+                        {{hint?.name}}
+                    </li>
+                </ul>
+              </div>
+            </div>
+            <div class="card text-white bg-dark mb-3">
+                <div class="card-header">Triggers</div>
+                <div class="card-body">
+                  <ul class="list-group">
+                    <li class="list-group-item list-group-item-dark" *ngFor="let trigger of script?.triggers">
+                      <button class="btn btn-primary" (click)="triggerForceTrigger(trigger)">Fire</button>
+                      {{trigger.name}}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+                <label for="hintInput"> Hint </label>
+                <input type="text" class="form-control" id="hintInput" [(ngModel)]="hintText" name="hintInput" />
+              <button class="btn btn-primary" (click)="hintSendCustomHint()">Send Hint</button>
+              <button type="button" class="btn btn-default" (click)="clearHint()">
+                Clear message
+              </button>
+
+
+
+
       </div>
+
+
+
       <div class="col-md-6">
-          <ul class="list-group">
-            <li class="list-group-item" *ngFor="let trigger of script?.triggers">
-                <button class="btn btn-primary" (click)="triggerPlayAudio(trigger.audio)">{{trigger.audio}}</button>
-            </li>
-            </ul>
+          <div class="card text-white bg-dark mb-3">
+              <div class="card-header">Audio Controls</div>
+              <div class="card-body">
+
+                <ul class="list-group">
+                  <li class="list-group-item list-group-item-dark" *ngFor="let trigger of script?.triggers">
+                      <button class="btn btn-primary" (click)="triggerPlayAudio(trigger.audio)">{{trigger.audio}}</button>
+                  </li>
+                  </ul>
+
+              </div>
+            </div>
       </div>
     </div>
+
 
 
     <div class="row">
-      <div class="col-md-12">
-        <ng-template #eascript></ng-template>
-        <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
-          <div *ngIf="script">
-            <template *ngFor="let event of script.events">
-              <ngb-panel title="{{ event.name }} : {{ event.status }}">
-                <ng-template ngbPanelContent>
-                  <button (click)="sendForcedEvent(event.name)">
-                    Force event {{ event.name }}
-                  </button>
-                  <hr />
-                  <button *ngFor="let action of event.actions" (click)="sendForcedAction(action)">
-                    {{ action }}
-                  </button>
-                </ng-template>
-              </ngb-panel>
-            </template>
-          </div>
-        </ngb-accordion>
+        <div class="col-md-12">
+            <ul class="list-group">
+                <li class="list-group-item" *ngFor="let event of script.events">
+                  <button class="btn btn-primary" (click)="sendForcedEvent(event.name)">Fire Event</button>
+                  {{event?.name}} : {{event?.status}} - {{event.completed_time?.hours}} : {{event.completed_time?.minutes}} : {{event.completed_time?.seconds}}
+                  <ngb-accordion #acc="ngbAccordion">
+                      <ngb-panel title="Show Actions">
+                      <ng-template ngbPanelContent>
+                      <ul class="list-group">
+                          <li class="list-group-item" *ngFor="let action of event.actions">
+                            <button class="btn btn-primary" (click)="sendForcedAction(action)">
+                              Fire Action
+                            </button>
+                            {{action}}
+                          </li>
+                      </ul>
+                    </ng-template>
+                    </ngb-panel>
+                  </ngb-accordion>
+                </li>
+            </ul>
+        </div>
       </div>
-    </div>
+
+
   </div>
 </div>

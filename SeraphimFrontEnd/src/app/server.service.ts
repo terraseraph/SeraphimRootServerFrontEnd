@@ -2,18 +2,18 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { BehaviorSubject } from "rxjs";
-
+import {ConfigService} from "./config.service";
 @Injectable({
   providedIn: "root"
 })
 export class ServerService {
-  public api = `http://localhost:4300`;
+  public api = `http://192.168.0.180:4300`;
   public scriptInstances: any;
   public selectedScript: any;
   public selectedScriptInstance: any;
   public observableScript: any;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, public config: ConfigService) {
     // Seleceted will throw errors otherwise... TODO: put elsewhere
     this.selectedScript = {
       name: "Select a script",
@@ -21,6 +21,7 @@ export class ServerService {
     };
     this.observableScript = new BehaviorSubject<any>(this.selectedScript);
     this.scriptInstances = [];
+    this.api = config.getApiUrl();
   }
 
   scriptChange() {
@@ -38,8 +39,10 @@ export class ServerService {
   }
 
   loadScript(name): Observable<any> {
-    this.http.get(`${this.api}/game/name`).subscribe(scriptInstance => {
+    this.http.get(`${this.api}/game/${name}`).subscribe(scriptInstance => {
       this.selectedScriptInstance = scriptInstance;
+      console.log(scriptInstance);
+
     });
     return this.http.get(`${this.api}/script/${name}`);
   }
@@ -71,16 +74,19 @@ export class ServerService {
       forceAction: actionName
     };
     console.log(msg);
-    return this.http.post(`${this.api}/force/action`, msg);
+    // return this.http.post(`${this.api}/force/action`, msg);
+    return this.http.post(`${this.api}/game/force/action`, msg);
   }
 
-  sendForcedEvent(scriptName, eventName): Observable<any> {
+  sendForcedEvent(scriptName, eventName, completedTime): Observable<any> {
     const msg = {
       name: scriptName,
-      forceEvent: eventName
+      forceEvent: eventName,
+      completedTime: completedTime
     };
     console.log(msg);
-    return this.http.post(`${this.api}/force/event`, msg);
+    // return this.http.post(`${this.api}/force/event`, msg);
+    return this.http.post(`${this.api}/game/force/event`, msg);
   }
 
   startCustomTime(scriptName: any, h: any, m: any, s: any): Observable<any> {
@@ -142,5 +148,46 @@ export class ServerService {
     if (!exist) {
       this.scriptInstances.push(instanceUpdate);
     }
+  }
+
+    // ======================================================================= //
+  // ========================== TRIGGERS  ================================== //
+  // ======================================================================= //
+  triggerForceTrigger(msg): Observable<any> {
+    console.log("Forcing trigger: ", msg);
+
+    return this.http.post(`${this.api}/branch/trigger`, msg);
+  }
+
+  triggerPlayAudio(msg): Observable<any> {
+    console.log("Playing: ", msg);
+
+    return this.http.post(`${this.api}/branch/trigger/audio`, msg);
+  }
+
+  triggerPlayVideo(msg): Observable<any> {
+    console.log("Playing: ", msg);
+
+    return this.http.post(`${this.api}/branch/trigger/video`, msg);
+  }
+
+  // ======================================================================= //
+  // ========================== HINTS  ===================================== //
+  // ======================================================================= //
+
+  hintSendHint(msg): Observable<any> {
+    console.log("SendingHint: ", msg);
+
+    return this.http.post(`${this.api}/branch/hint`, msg);
+  }
+
+  hintSendCustomHint(msg): Observable<any> {
+    console.log(msg);
+    return this.http.post(`${this.api}/branch/hint`, msg);
+  }
+
+  clearHint(msg): Observable<any> {
+    console.log(msg);
+    return this.http.post(`${this.api}/branch/hint/clear`, msg);
   }
 }

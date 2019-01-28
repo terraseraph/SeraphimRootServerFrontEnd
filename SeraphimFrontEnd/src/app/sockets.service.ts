@@ -1,16 +1,18 @@
 import { Injectable } from "@angular/core";
 import * as io from "socket.io-client";
 import { Observable, of } from "rxjs";
+import {ConfigService} from "./config.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class SocketsService {
-  private url = "localhost:4300";
+  private url = "192.168.0.180:4300";
   private socket;
 
-  constructor() {
+  constructor(public config: ConfigService) {
     this.socket = io(this.url);
+    this.url = this.config.getApiUrl();
   }
 
   /** Send a message over sockets */

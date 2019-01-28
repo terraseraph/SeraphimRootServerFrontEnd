@@ -37,7 +37,7 @@
           scriptInstance?.time.minutes
           }}:{{ scriptInstance?.time.seconds }} <br />
 
-          <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+          <ngb-accordion #acc="ngbAccordion">
             <ngb-panel title="Events : {{ scriptInstance.events.length }}">
               <ng-template ngbPanelContent>
                 <div class="card" style="width: 18rem;">
@@ -59,7 +59,7 @@
           <button class="btn btn-success" (click)="scriptCreateNewEvent()">Add Event</button>
           <hr />
 
-          <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-1">
+          <ngb-accordion #acc="ngbAccordion">
             <ngb-panel title="Actions : {{ scriptInstance.actions.length }}">
               <ng-template ngbPanelContent>
                 <div class="card" style="width: 18rem;">
@@ -82,7 +82,7 @@
           <hr />
 
           <hr />
-          <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-2">
+          <ngb-accordion #acc="ngbAccordion">
             <ngb-panel title="Hints : {{ scriptInstance.hints.length }}">
               <ng-template ngbPanelContent>
                 <div class="card" style="width: 18rem;">
@@ -104,7 +104,7 @@
           <button class="btn btn-success" (click)="scriptCreateNewHint()">Add Hint</button>
           <hr />
 
-          <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-2">
+          <ngb-accordion #acc="ngbAccordion">
             <ngb-panel title="States : {{ scriptInstance.states.length }}">
               <ng-template ngbPanelContent>
                 <div class="card" style="width: 18rem;">
@@ -126,7 +126,7 @@
           <button class="btn btn-success" (click)="scriptCreateNewState()">Add State</button>
           <hr />
 
-          <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-3">
+          <ngb-accordion #acc="ngbAccordion">
             <ngb-panel title="Triggers : {{ scriptInstance.triggers.length }}">
               <ng-template ngbPanelContent>
                 <div class="card" style="width: 18rem;">

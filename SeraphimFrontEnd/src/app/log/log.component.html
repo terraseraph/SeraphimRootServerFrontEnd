@@ -7,6 +7,7 @@
         <th scope="col">Booking Name</th>
         <th scope="col">Participants</th>
         <th scope="col">Price</th>
+        <th scope="col">Paid</th>
       </tr>
     </thead>
     <tbody>
@@ -15,7 +16,8 @@
         <td>{{b?.startTime}}</td>
         <td>{{b?.title}}</td>
         <td>{{b?.participants.numbers[0].number}}</td>
-        <td>{{b?.price.totalGross.amount}}</td>
+        <td>${{b?.price.totalGross.amount}}</td>
+        <td>${{b?.price.totalPaid.amount}}</td>
       </tr>
     </tbody>
   </table>
