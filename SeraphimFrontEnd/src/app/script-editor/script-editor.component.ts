@@ -88,6 +88,15 @@ export class ScriptEditorComponent implements OnInit {
     console.log("Deleting: ", scriptName);
   }
 
+// ================================================= //
+  // ========= Script config functions ===== //
+  // ============================================== //
+
+  scriptSaveConfig(){
+    this.dataService.scriptEditor_updateSelectedScript(this.scriptInstance);
+    console.log("saved config");
+  }
+
   // ================================= //
   // ========= Event functions ===== //
   // =============================== //
