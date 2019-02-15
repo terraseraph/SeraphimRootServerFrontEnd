@@ -40,6 +40,7 @@ export class ScriptEditorComponent implements OnInit {
   actionStateSelect: any;
   actionStateDependencySelect: any;
   actionActionSelect: any;
+  actionRepeatable: any;
 
   // newEventFlag: boolean;
 
@@ -113,8 +114,12 @@ export class ScriptEditorComponent implements OnInit {
     }
   }
 
-  scriptDeleteStateFromEvent(stateName) {
-    console.log("Deleting: ", stateName);
+  scriptDeleteStateFromEvent(state) {
+    const index = this.eventToEdit.states.indexOf(state);
+    if (index !== -1) {
+      this.eventToEdit.states.splice(index, 1);
+    }
+    console.log("Deleting: ", state);
   }
 
   // ================ Event state toggle ======//
@@ -198,7 +203,13 @@ export class ScriptEditorComponent implements OnInit {
   scriptEditAction(actionName) {
     console.log("Editing Action: ", actionName);
     this.findAction(actionName).then(act => {
-      this.actionToEdit = act;
+      let a: any;
+      a = act;
+      this.actionActionTypeSelect = `${a.actionType}/${a.action}`;
+      this.actionToEdit = a;
+      if(this.actionToEdit.repeatable != typeof(Boolean)){
+        this.actionToEdit.repeatable = true;
+      }
       this.toggleFormPanel("action");
     });
   }
@@ -222,8 +233,12 @@ export class ScriptEditorComponent implements OnInit {
     }
   }
 
-  scriptDeleteStateFromAction(stateName) {
-    console.log("Deleting: ", stateName);
+  scriptDeleteStateFromAction(state) {
+    const index = this.actionToEdit.states.indexOf(state);
+    if (index !== -1) {
+      this.actionToEdit.states.splice(index, 1);
+    }
+    console.log("Deleting: ", state.name);
   }
 
   addDependencyToAction(depName) {
@@ -256,6 +271,10 @@ export class ScriptEditorComponent implements OnInit {
         return;
       }
     }
+  }
+
+  toggleActionRepeatable(){
+    this.actionToEdit.repeatable = !this.actionToEdit.repeatable;
   }
 
   addActiontoAction(actionName) {

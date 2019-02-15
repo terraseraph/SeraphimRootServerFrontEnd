@@ -343,6 +343,7 @@ export class ScriptActionModel {
     this.message = "";
     this.states = [];
     this.wait = 0;
+    this.repeatable = true;
   }
 }
 

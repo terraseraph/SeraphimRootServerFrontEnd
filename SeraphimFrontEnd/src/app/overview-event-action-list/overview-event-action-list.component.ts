@@ -40,7 +40,7 @@ export class OverviewEventActionListComponent implements OnInit {
   sendForcedEvent(eventName) {
     console.log(eventName);
     this.server
-      .sendForcedEvent(this.script.name, eventName)
+      .sendForcedEvent(this.script.name, eventName, this.script.time)
       .subscribe(event => {
         console.log(event);
       });
