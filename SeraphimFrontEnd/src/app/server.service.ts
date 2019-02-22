@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { BehaviorSubject } from "rxjs";
-import {ConfigService} from "./config.service";
+import { ConfigService } from "./config.service";
 @Injectable({
   providedIn: "root"
 })
@@ -42,7 +42,6 @@ export class ServerService {
     this.http.get(`${this.api}/game/${name}`).subscribe(scriptInstance => {
       this.selectedScriptInstance = scriptInstance;
       console.log(scriptInstance);
-
     });
     return this.http.get(`${this.api}/script/${name}`);
   }
@@ -59,6 +58,10 @@ export class ServerService {
 
   deleteScript(script): Observable<any> {
     return this.http.delete(`${this.api}/script/${script}`);
+  }
+
+  getFreshScriptsForEditing(): Observable<any> {
+    return this.http.get(`${this.api}/scriptf`);
   }
 
   // ==========================================//
@@ -114,7 +117,6 @@ export class ServerService {
         minutes: m,
         seconds: s
       }
-
     };
     console.log(msg);
     return this.http.post(`${this.api}/game`, msg);
@@ -150,7 +152,7 @@ export class ServerService {
     }
   }
 
-    // ======================================================================= //
+  // ======================================================================= //
   // ========================== TRIGGERS  ================================== //
   // ======================================================================= //
   triggerForceTrigger(msg): Observable<any> {

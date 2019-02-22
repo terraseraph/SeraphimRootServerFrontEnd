@@ -111,11 +111,12 @@ export class OverviewComponent implements OnInit {
       if (!msg.hasOwnProperty("instance_update")) {
         return;
       }
-      console.log("==== socket message", msg, this.script);
       this.script.events = msg.instance_update.script.events;
       this.script.actions = msg.instance_update.script.actions;
       this.script.timeUpdate = msg.instance_update.time;
       this.script.ended = msg.instance_update.ended;
+      this.script.states = msg.instance_update.states;
+      console.log("==== socket message", msg, this.script);
       resolve();
     });
   }

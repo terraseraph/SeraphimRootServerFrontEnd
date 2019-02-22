@@ -72,11 +72,16 @@ export class DataService {
   }
 
   scriptEditor_getAllScripts() {
-    this.server.loadScripts().subscribe((scriptList: any) => {
+    this.server.getFreshScriptsForEditing().subscribe((scriptList: any) => {
       this.scriptEditor_allScripts = scriptList;
       console.log(scriptList);
       this.scriptEditor_observableListUpdate();
     });
+    // this.server.loadScripts().subscribe((scriptList: any) => {
+    //   this.scriptEditor_allScripts = scriptList;
+    //   console.log(scriptList);
+    //   this.scriptEditor_observableListUpdate();
+    // });
   }
 
   scriptEditor_updateSelectedScript(instanceUpdate) {

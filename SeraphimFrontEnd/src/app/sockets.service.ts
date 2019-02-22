@@ -1,13 +1,13 @@
 import { Injectable } from "@angular/core";
 import * as io from "socket.io-client";
 import { Observable, of } from "rxjs";
-import {ConfigService} from "./config.service";
+import { ConfigService } from "./config.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class SocketsService {
-  private url = "192.168.0.180:4300";
+  private url = "192.168.0.180:4300"; //Also loads from config
   private socket;
 
   constructor(public config: ConfigService) {
