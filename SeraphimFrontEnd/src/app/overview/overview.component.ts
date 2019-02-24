@@ -76,6 +76,7 @@ export class OverviewComponent implements OnInit {
         )
         .subscribe(status => {
           console.log(status);
+          this.sendForcedEvent("start_instance");
         });
     });
   }

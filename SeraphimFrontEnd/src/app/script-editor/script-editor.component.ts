@@ -88,11 +88,11 @@ export class ScriptEditorComponent implements OnInit {
     console.log("Deleting: ", scriptName);
   }
 
-// ================================================= //
+  // ================================================= //
   // ========= Script config functions ===== //
   // ============================================== //
 
-  scriptSaveConfig(){
+  scriptSaveConfig() {
     this.dataService.scriptEditor_updateSelectedScript(this.scriptInstance);
     console.log("saved config");
   }
@@ -216,7 +216,7 @@ export class ScriptEditorComponent implements OnInit {
       a = act;
       this.actionActionTypeSelect = `${a.actionType}/${a.action}`;
       this.actionToEdit = a;
-      if(this.actionToEdit.repeatable != typeof(Boolean)){
+      if (this.actionToEdit.repeatable != typeof Boolean) {
         this.actionToEdit.repeatable = true;
       }
       this.toggleFormPanel("action");
@@ -282,7 +282,7 @@ export class ScriptEditorComponent implements OnInit {
     }
   }
 
-  toggleActionRepeatable(){
+  toggleActionRepeatable() {
     this.actionToEdit.repeatable = !this.actionToEdit.repeatable;
   }
 
@@ -413,6 +413,22 @@ export class ScriptEditorComponent implements OnInit {
       tm.name = "UNSET Trigger";
       this.scriptInstance.triggers.push(tm);
     });
+  }
+
+  triggerToggleLoopAudio() {
+    this.triggerToEdit.loop_audio = !this.triggerToEdit.loop_audio;
+  }
+
+  triggerToggleLoopVideo() {
+    this.triggerToEdit.loop_video = !this.triggerToEdit.loop_video;
+  }
+
+  triggerTogglePauseTimer() {
+    this.triggerToEdit.pause_timer = !this.triggerToEdit.pause_timer;
+  }
+
+  triggerToggleRepeatable() {
+    this.triggerToEdit.can_toggle = !this.triggerToEdit.can_toggle;
   }
 
   // ================ helpers =============//

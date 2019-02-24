@@ -508,10 +508,12 @@
           <input type="text" class="form-control" id="triggerName" [(ngModel)]="triggerToEdit.name" value="{{ triggerToEdit.name }}" />
         </div>
 
-
         <div class="form-group">
-          <label for="triggerState"> Trigger (state) </label>
-          <input type="text" class="form-control" id="triggerState" [(ngModel)]="triggerToEdit.trigger" value="{{ triggerToEdit.trigger }}" />
+          <label for="gs_trigger_select_state"> State (To listen for) </label>
+          <select #triggerStateSelector class="selectpicker form-control" id="gs_trigger_select_state" [(ngModel)]="triggerToEdit.trigger">
+            <option selected="selected">{{ triggerToEdit.trigger }}</option>
+            <option *ngFor="let state of scriptInstance.states">{{state.name}}</option>
+          </select>
         </div>
 
 
@@ -521,9 +523,87 @@
         </div>
 
         <div class="form-group">
+          <label for="gs_trigger_loop_audio"> Loop Audio </label>
+          <div *ngIf="triggerToEdit.loop_audio">
+            <button type="button" class="btn btn-lg btn-toggle active" (click)="triggerToggleLoopAudio()" data-toggle="button"
+              aria-pressed="false" autocomplete="off">
+              <div class="handle"></div>
+            </button>
+          </div>
+          <div *ngIf="!triggerToEdit.loop_audio">
+            <button type="button" class="btn btn-lg btn-toggle" (click)="triggerToggleLoopAudio()" data-toggle="button"
+              aria-pressed="false" autocomplete="off">
+              <div class="handle"></div>
+            </button>
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <label for="gs_trigger_audio_type"> Audio Type </label>
+          <select #eventTypeSelector class="selectpicker form-control" id="gs_event_type_event" [(ngModel)]="triggerToEdit.audio_type">
+            <option selected="selected">{{ triggerToEdit.audio_type }}</option>
+            <option>background</option>
+            <option>start</option>
+            <option>end</option>
+            <option>hint</option>
+            <option>custom</option>
+          </select>
+        </div>
+
+        <hr />
+        <div class="form-group">
           <label for="triggerVideo"> Video file </label>
           <input type="text" class="form-control" id="triggerVideo" [(ngModel)]="triggerToEdit.video" value="{{ triggerToEdit.video }}" />
         </div>
+
+
+        <div class="form-group">
+          <label for="gs_trigger_loop_video"> Loop Video </label>
+          <div *ngIf="triggerToEdit.loop_video">
+            <button type="button" class="btn btn-lg btn-toggle active" (click)="triggerToggleLoopVideo()" data-toggle="button"
+              aria-pressed="false" autocomplete="off">
+              <div class="handle"></div>
+            </button>
+          </div>
+          <div *ngIf="!triggerToEdit.loop_video">
+            <button type="button" class="btn btn-lg btn-toggle" (click)="triggerToggleLoopVideo()" data-toggle="button"
+              aria-pressed="false" autocomplete="off">
+              <div class="handle"></div>
+            </button>
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <label for="triggerVideoType"> Video Type </label>
+          <select #eventTypeSelector class="selectpicker form-control" id="triggerVideoType" [(ngModel)]="triggerToEdit.video_type">
+            <option selected="selected">{{ triggerToEdit.video_type }}</option>
+            <option>background</option>
+            <option>custom</option>
+          </select>
+        </div>
+
+
+
+        <div class="form-group">
+          <label for="triggerPauseTimer"> Pause timer while playing video </label>
+          <div *ngIf="triggerToEdit.pause_timer">
+            <button type="button" class="btn btn-lg btn-toggle active" (click)="triggerTogglePauseTimer()" data-toggle="button"
+              aria-pressed="false" autocomplete="off">
+              <div class="handle"></div>
+            </button>
+          </div>
+          <div *ngIf="!triggerToEdit.pause_timer">
+            <button type="button" class="btn btn-lg btn-toggle" (click)="triggerTogglePauseTimer()" data-toggle="button"
+              aria-pressed="false" autocomplete="off">
+              <div class="handle"></div>
+            </button>
+          </div>
+        </div>
+
+        <hr />
+
 
         <div class="form-group">
           <label for="triggerHint"> Hint </label>
@@ -532,8 +612,19 @@
 
 
         <div class="form-group">
-          <label for="triggerToggle"> Can toggle </label>
-          <input type="text" class="form-control" id="triggerToggle" [(ngModel)]="triggerToEdit.can_toggle" value="{{ triggerToEdit.can_toggle }}" />
+          <label for="triggerToggle"> Can toggle (Is repeatable)</label>
+          <div *ngIf="triggerToEdit.can_toggle">
+            <button type="button" class="btn btn-lg btn-toggle active" (click)="triggerToggleRepeatable()" data-toggle="button"
+              aria-pressed="false" autocomplete="off">
+              <div class="handle"></div>
+            </button>
+          </div>
+          <div *ngIf="!triggerToEdit.can_toggle">
+            <button type="button" class="btn btn-lg btn-toggle" (click)="triggerToggleRepeatable()" data-toggle="button"
+              aria-pressed="false" autocomplete="off">
+              <div class="handle"></div>
+            </button>
+          </div>
         </div>
 
 
