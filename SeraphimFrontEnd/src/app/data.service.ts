@@ -216,6 +216,40 @@ export class DataService {
     });
   }
 
+  getNewScriptModel() {
+    return new Promise((resolve, reject) => {
+      let model = new EventActionScriptModel("UNSET SCRIPT");
+      this.setDefaultEventsAndStates(model).then(s => {
+        resolve(model);
+      });
+    });
+  }
+
+  setDefaultEventsAndStates(model: EventActionScriptModel) {
+    return new Promise((resolve, reject) => {
+      let startInstance = new ScriptStateModel();
+      startInstance.name = "start_instance";
+
+      let endInstance = new ScriptStateModel();
+      endInstance.name = "end_instance";
+
+      let timerComplete = new ScriptStateModel();
+      timerComplete.name = "timer_complete";
+
+      model.states.push(startInstance, endInstance, timerComplete);
+
+      let eStartInstance = new ScriptEventModel();
+      eStartInstance.name = "start_instnace";
+      model.events.push(eStartInstance);
+
+      let eEndInstance = new ScriptEventModel();
+      eEndInstance.name = "end_instance";
+      model.events.push(eEndInstance);
+
+      resolve(model);
+    });
+  }
+
   newScriptModel() {
     const timeModel = {
       hours: "0",
@@ -280,26 +314,35 @@ export class DataService {
       masterId: "",
       time: new ScriptTimeModel(),
       states: [new ScriptStateModel()],
-      events: new ScriptEventModel(),
-      actions: new ScriptActionModel(),
+      events: [new ScriptEventModel()],
+      actions: [new ScriptActionModel()],
       hints: [new ScriptHintModel()],
       triggers: [new ScriptTriggerModel()]
     };
-    return new EventActionScriptModel();
+    // return new EventActionScriptModel("UNSET SCRIPT");
+    return s;
   }
 }
 
 export class EventActionScriptModel {
-  public name: "";
+  public name: string;
   public id: "";
   public branch_address: "";
   public masterId: "";
-  public time: ScriptTimeModel;
-  public states: [ScriptStateModel];
-  public events: ScriptEventModel;
-  public actions: ScriptActionModel;
-  public hints: [ScriptHintModel];
-  public triggers: [ScriptTriggerModel];
+  public time = new ScriptTimeModel();
+  public states: Array<ScriptStateModel>;
+  public events: Array<ScriptEventModel>;
+  public actions: Array<ScriptActionModel>;
+  public hints: Array<ScriptHintModel>;
+  public triggers: Array<ScriptTriggerModel>;
+  constructor(name) {
+    this.name = name;
+    this.states = new Array<ScriptStateModel>();
+    this.events = new Array<ScriptEventModel>();
+    this.actions = new Array<ScriptActionModel>();
+    this.hints = new Array<ScriptHintModel>();
+    this.triggers = new Array<ScriptTriggerModel>();
+  }
 }
 
 export class ScriptEventModel {
@@ -396,7 +439,7 @@ export class ScriptStateModel {
 }
 
 export class ScriptTimeModel {
-  public hours: "0";
-  public minutes: "60";
-  public seconds: "0";
+  public hours = "0";
+  public minutes = "60";
+  public seconds = "0";
 }

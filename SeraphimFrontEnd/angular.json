@@ -23,7 +23,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/bootstrap.min.css",
+              "src/customScripts/css/bootstrap.css",
               "node_modules/slick-carousel/slick/slick.scss",
               "node_modules/slick-carousel/slick/slick-theme.scss",
               "src/styles.css"

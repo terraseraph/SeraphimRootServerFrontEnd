@@ -42,8 +42,9 @@ export class OverviewInstanceListComponent implements OnInit {
   @ViewChild("videoModal") videoModal: any;
 
   //For modal views
-  tempEventToShow: any;
   tempScriptName: any;
+  tempEventToShow: any;
+  tempTriggersToShow: any;
 
   showCards = false;
 
@@ -57,9 +58,7 @@ export class OverviewInstanceListComponent implements OnInit {
         breakpoint: 1100,
         settings: {
           slidesToShow: 2,
-          slidesToScroll: 1,
-          infinite: true,
-          dots: true
+          slidesToScroll: 1
         }
       },
       {
@@ -342,5 +341,21 @@ export class OverviewInstanceListComponent implements OnInit {
     this.modalService.open(this.actionModal, { size: "lg" });
     this.tempScriptName = scriptName;
     this.tempEventToShow = event;
+  }
+
+  showTriggersModal(scriptName, triggers) {
+    this.modalService.open(this.triggerModal, { size: "lg" });
+    this.tempScriptName = scriptName;
+    this.tempTriggersToShow = triggers;
+  }
+  showAudioModal(scriptName, triggers) {
+    this.modalService.open(this.audioModal, { size: "lg" });
+    this.tempScriptName = scriptName;
+    this.tempTriggersToShow = triggers;
+  }
+  showVideoModal(scriptName, triggers) {
+    this.modalService.open(this.videoModal, { size: "lg" });
+    this.tempScriptName = scriptName;
+    this.tempTriggersToShow = triggers;
   }
 }

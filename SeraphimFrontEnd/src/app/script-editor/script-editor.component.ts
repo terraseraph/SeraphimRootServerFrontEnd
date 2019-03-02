@@ -1,10 +1,11 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { ServerService } from "../server.service";
 import { SocketsService } from "../sockets.service";
-import { DataService } from "../data.service";
+import { DataService, EventActionScriptModel } from "../data.service";
 import { InitService } from "../init.service";
 import { Subscription } from "rxjs";
 import { RouterModule, Routes, Router, ActivatedRoute } from "@angular/router";
+import { NgbModal, ModalDismissReasons } from "@ng-bootstrap/ng-bootstrap";
 import { resolve } from "path";
 import { ParsedEventType } from "@angular/compiler";
 
@@ -42,6 +43,15 @@ export class ScriptEditorComponent implements OnInit {
   actionActionSelect: any;
   actionRepeatable: any;
 
+  newScriptName: any;
+
+  @ViewChild("actionModal") actionModal: any;
+  @ViewChild("eventModal") eventModal: any;
+  @ViewChild("triggerModal") triggerModal: any;
+  @ViewChild("stateModal") stateModal: any;
+  @ViewChild("hintModal") hintModal: any;
+  @ViewChild("newScriptModal") newScriptModal: any;
+
   // newEventFlag: boolean;
 
   constructor(
@@ -50,7 +60,8 @@ export class ScriptEditorComponent implements OnInit {
     public socket: SocketsService,
     public init: InitService,
     public router: Router,
-    public route: ActivatedRoute
+    public route: ActivatedRoute,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit() {
@@ -87,6 +98,16 @@ export class ScriptEditorComponent implements OnInit {
 
   deleteScript(scriptName) {
     console.log("Deleting: ", scriptName);
+  }
+
+  createNewScript() {
+    this.dataService.getNewScriptModel().then(script => {
+      //@ts-ignore
+      script.name = this.newScriptName;
+      this.scriptInstance = script;
+      this.scriptLoaded = true;
+      this.scriptInstanceList.push(script);
+    });
   }
 
   // ================================================= //
@@ -469,18 +490,23 @@ export class ScriptEditorComponent implements OnInit {
     switch (panelType) {
       case "event":
         this.eventLoaded = true;
+        this.showEventsModal();
         break;
       case "action":
         this.actionLoaded = true;
+        this.showActionsModal();
         break;
       case "trigger":
         this.triggerLoaded = true;
+        this.showTriggersModal();
         break;
       case "hint":
         this.hintLoaded = true;
+        this.showHintsModal();
         break;
       case "state":
         this.stateLoaded = true;
+        this.showStatesModal();
         break;
       default:
         break;
@@ -547,5 +573,29 @@ export class ScriptEditorComponent implements OnInit {
         }
       }
     });
+  }
+
+  // ========== MODALS ============//
+  showActionsModal() {
+    this.modalService.open(this.actionModal, { size: "lg" });
+  }
+
+  showEventsModal() {
+    this.modalService.open(this.eventModal, { size: "lg" });
+  }
+  showStatesModal() {
+    this.modalService.open(this.stateModal, { size: "lg" });
+  }
+  showHintsModal() {
+    this.modalService.open(this.hintModal, { size: "lg" });
+  }
+
+  showTriggersModal() {
+    this.modalService.open(this.triggerModal, { size: "lg" });
+  }
+
+  showNewScriptNameModal() {
+    this.modalService.open(this.newScriptModal, { size: "lg" });
+    this.newScriptName = "";
   }
 }
