@@ -1,0 +1,13 @@
+.arrowDiv {
+  width: 100%;
+}
+
+
+.prevArrow {
+  left: 5%;
+}
+
+.nextArrow {
+  right: 5%;
+  top: 0%;
+}

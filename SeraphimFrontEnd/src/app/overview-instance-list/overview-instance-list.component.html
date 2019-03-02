@@ -1,9 +1,188 @@
 <div *ngIf="isDataAvailable">
   <div class="row">
     <div class="col-md-12">
-      <button *ngFor="let script of scripts" class="btn btn-success" (click)="loadScript(script.name)">
-        {{ script.name }} :: {{script.timeUpdate.hours}} : {{script.timeUpdate.minutes}} : {{script.timeUpdate.seconds}}
-      </button>
+      <div *ngIf="showCards; then Shown; else NotShown">
+      </div>
+
+      <!-- TOP INSTANCE BUTTONS -->
+      <ng-template #Shown>
+        <div class="card-group">
+          <div class="card" *ngFor="let script of scripts; index as i;" (click)="loadScript(script.name);">
+            <button class="btn btn-success btn-block" (click)="loadScript(script.name);slickGoTo(i)">
+              {{ script.name }}:: {{script.timeUpdate.hours}} : {{script.timeUpdate.minutes}} :
+              {{script.timeUpdate.seconds}}
+            </button>
+          </div>
+        </div>
+      </ng-template>
+
+
+      <ng-template #NotShown>
+        <div class="card-group">
+          <div class="card" *ngFor="let script of scripts; index as i;" (click)="showInstances(true)">
+            <button class="btn btn-success btn-block" (click)="loadScript(script.name)">
+              {{ script.name }} :: {{script.timeUpdate.hours}} : {{script.timeUpdate.minutes}} :
+              {{script.timeUpdate.seconds}}
+            </button>
+          </div>
+        </div>
+      </ng-template>
+
+
     </div>
   </div>
 </div>
+
+<div *ngIf="showCards">
+
+  <div class="row">
+    <div class="col-md-1">
+      <button class="prevArrow btn btn-warning" (click)="slickModal.slickPrev()">&lt;</button>
+
+    </div>
+    <div class="col-md-10"></div>
+    <div class="col-md-1">
+      <button class="nextArrow btn btn-warning" (click)="slickModal.slickNext()">&gt;</button>
+    </div>
+  </div>
+
+  <!-- BELOW is the new layout for the things.... -->
+  <ngx-slick-carousel class="carousel" [config]="slideConfig" #slickModal="slick-carousel">
+
+    <div ngxSlickItem *ngFor="let script of scripts; index as i;" class="slide">
+      <div class="card" style="width: 100%;">
+        <h4 class="card-header">{{script?.name}}</h4>
+        <div class="card-body">
+
+
+          <!-- TIME DISPLAY -->
+          <h3>{{script.timeUpdate?.hours}}:{{script.timeUpdate?.minutes}}:{{script.timeUpdate?.seconds}}</h3>
+
+          <!-- HINT DISPLAY -->
+          <h6 id="{{script.name}}_hintDisplay">{{script.displayedHint}}</h6>
+          <hr />
+          <!-- TIME UPDATE -->
+          <div class="input-group input-group-sm">
+            <input type="text" aria-label="hours" placeholder="Hours" id="{{script.name}}_inputHours" class="form-control">
+            <input type="text" aria-label="Minutes" placeholder="Minutes" id="{{script.name}}_inputMinutes" class="form-control">
+            <input type="text" aria-label="Seconds" placeholder="Seconds" id="{{script.name}}_inputSeconds" class="form-control">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" (click)="updateTime(script.name)" type="button">Update</button>
+            </div>
+          </div>
+
+
+          <!-- PAUSE / RESUME TIME -->
+          <div class="btn-group btn-group-sm" role="group" aria-label="Start/End">
+            <button type="button" class="btn btn-outline-success" (click)="pauseGameTimer(script.name)">Pause Time</button>
+            <button type="button" class="btn btn-outline-warning" (click)="resumeGameTimer(script.name)">Resume Time</button>
+          </div>
+
+          <hr />
+
+          <!-- HINT INPUT-->
+          <div class="input-group input-group-sm">
+            <input type="text" class="form-control" placeholder="Hint text" aria-label="Type the hint to display" id="{{script.name}}_hintInput">
+            <div class="input-group-append">
+              <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <span class="sr-only">Toggle Dropdown</span>
+              </button>
+              <div class="dropdown-menu">
+                <button class="dropdown-item" *ngFor="let hint of script.hints" (click)="insertHint(script.name, hint.hint)">{{hint.name}}</button>
+              </div>
+              <button class="btn btn-outline-secondary" (click)="sendHint(script.name)" type="button">Send</button>
+              <button class="btn btn-outline-secondary" (click)="clearHint(script.name)" type="button">Clear</button>
+            </div>
+          </div>
+
+          <hr />
+
+          <!-- START / END INSTANCE -->
+          <div class="btn-group btn-group-sm" role="group" aria-label="Start/End">
+            <button type="button" class="btn btn-success" (click)="startNewInstance(script.name)">Start Instance</button>
+            <button type="button" class="btn btn-danger" (click)="endInstance(script.name)">End Instance</button>
+          </div>
+
+          <hr />
+
+          <!-- EVENTS -->
+          <div class="row">
+            <div class="col-md-12">
+              <ul class="list-group">
+                <li class="list-group-item" *ngFor="let event of script.events">
+                  <div class="btn-group btn-group-sm btn-group-block" style="width:100%" role="group" aria-label="Start/End">
+                    <button class="btn btn-primary btn-sm btn-block" (click)="sendEvent(script.name, event.name, script.timeUpdate)">{{event?.name}}
+                      {{event?.status}} -
+                      {{event.completed_time?.hours}}
+                      : {{event.completed_time?.minutes}}
+                      : {{event.completed_time?.seconds}}
+                    </button>
+                    <div class="button-group-append">
+                      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="showActionsModal(script.name, event)">Actions</button>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <hr />
+
+          <!-- TRIGGERS -->
+          <ul class="list-group">
+            <li class="list-group-item list-group-item-dark" *ngFor="let trigger of script?.triggers">
+              <button class="btn btn-primary" (click)="sendTrigger(script.name, trigger)">Fire</button>
+              {{trigger.name}}
+            </li>
+          </ul>
+
+
+          <hr />
+
+
+          <!-- AUDIO -->
+          <ul class="list-group">
+            <li class="list-group-item list-group-item-dark" *ngFor="let trigger of script?.triggers">
+              <button class="btn btn-primary" (click)="sendAudio(script.name, trigger.audio)">{{trigger.audio}}</button>
+            </li>
+          </ul>
+
+
+          <!-- STATES -->
+          <ul class="list-group">
+            <li class="list-group-item" *ngFor="let state of script.states">{{state.name}} : {{state.active}}</li>
+          </ul>
+
+
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">{{script.name}}</small>
+        </div>
+      </div>
+    </div>
+
+  </ngx-slick-carousel>
+</div>
+
+<ng-template #actionModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">{{tempEventToShow.name}} Actions</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let action of tempEventToShow.actions">
+        <button class="btn btn-primary" (click)="sendAction(tempScriptName, action.name)">
+          Fire Action
+        </button>
+        {{action}}
+      </li>
+    </ul>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+  </div>
+</ng-template>

@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { SocketsService } from "./sockets.service";
 import { ServerService } from "./server.service";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
+import { promise } from "protractor";
 @Injectable({
   providedIn: "root"
 })
@@ -29,6 +30,7 @@ export class DataService {
     this.scriptEditor_observableScriptList = new BehaviorSubject<any>(
       this.scriptEditor_allScripts
     );
+    this.scriptEditor_getAllScripts();
   }
 
   // ==============================
@@ -100,6 +102,14 @@ export class DataService {
   // ==============================
   // Overview
   // ==============================
+
+  overview_getNewScript(scriptName) {
+    return new Promise((resolve, reject) => {
+      this.findScript(scriptName).then(script => {
+        resolve(script);
+      });
+    });
+  }
 
   selectedScriptInstanceChange() {
     this.observableScriptInstance.next(this.selectedScriptInstance);

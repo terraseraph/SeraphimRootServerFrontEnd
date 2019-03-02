@@ -4,7 +4,7 @@ import { SocketsService } from "../sockets.service";
 import { DataService } from "../data.service";
 import { InitService } from "../init.service";
 import { Subscription } from "rxjs";
-import { RouterModule, Routes, Router } from "@angular/router";
+import { RouterModule, Routes, Router, ActivatedRoute } from "@angular/router";
 import { resolve } from "path";
 import { ParsedEventType } from "@angular/compiler";
 
@@ -49,7 +49,8 @@ export class ScriptEditorComponent implements OnInit {
     public server: ServerService,
     public socket: SocketsService,
     public init: InitService,
-    public router: Router
+    public router: Router,
+    public route: ActivatedRoute
   ) {}
 
   ngOnInit() {
