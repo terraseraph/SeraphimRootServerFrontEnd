@@ -44,8 +44,8 @@ export class OverviewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadScriptSubscribe();
-    this.socketSubscribe();
+    // this.loadScriptSubscribe();
+    // this.socketSubscribe();
   }
 
   loadScript() {

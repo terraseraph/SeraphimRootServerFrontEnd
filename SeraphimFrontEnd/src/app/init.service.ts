@@ -19,7 +19,7 @@ export class InitService {
     this.socketSubscription = this.socket
       .getMessages()
       .subscribe((message: any) => {
-        console.log("SOCKET: ", message);
+        // console.log("SOCKET: ", message);
       });
   }
 }
