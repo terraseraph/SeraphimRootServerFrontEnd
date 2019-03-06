@@ -152,6 +152,15 @@ export class ServerService {
     }
   }
 
+  updateScreenConfiguration(scriptName, config): Observable<any> {
+    let msg = {
+      config: config,
+      scriptName: scriptName,
+      screenName: config.name
+    };
+    return this.http.post(`${this.api}/branch/config`, msg);
+  }
+
   // ======================================================================= //
   // ========================== TRIGGERS  ================================== //
   // ======================================================================= //

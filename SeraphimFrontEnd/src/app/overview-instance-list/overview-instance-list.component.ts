@@ -21,6 +21,7 @@ import {
 } from "@angular/router";
 import { SlicePipe } from "@angular/common";
 import * as $ from "jquery";
+import { promise } from "protractor";
 
 @Component({
   selector: "app-overview-instance-list",
@@ -300,27 +301,30 @@ export class OverviewInstanceListComponent implements OnInit {
   sendTrigger(scriptName, trigger) {
     const msg = {
       scriptName: scriptName,
-      trigger: trigger
+      trigger: trigger,
+      screenName: trigger.screenName
     };
     this.server.triggerForceTrigger(msg).subscribe(result => {
       console.log("Forcing trigger: ", result);
     });
   }
 
-  sendAudio(scriptName, audioFile) {
+  sendAudio(scriptName, audioFile, screenName) {
     const msg = {
       scriptName: scriptName,
-      audioFile: audioFile
+      audioFile: audioFile,
+      screenName: screenName
     };
     this.server.triggerPlayAudio(msg).subscribe(result => {
       console.log("Playing Audio: ", result);
     });
   }
 
-  triggerPlayVideo(scriptName, videoFile) {
+  triggerPlayVideo(scriptName, videoFile, screenName) {
     const msg = {
       scriptName: scriptName,
-      videoFile: videoFile
+      videoFile: videoFile,
+      screenName: screenName
     };
     this.server.triggerPlayVideo(msg).subscribe(result => {
       console.log("Playing Video: ", result);
@@ -332,6 +336,51 @@ export class OverviewInstanceListComponent implements OnInit {
   // ========================================================
   slickGoTo(index) {
     this.slickModal.slickGoTo(index);
+  }
+
+  shownCards = new Array();
+
+  slickSetCardState(scriptName, state, index = 0) {
+    for (var i = 0; i < this.scripts.length; i++) {
+      if (this.scripts[i].name === scriptName) {
+        this.scripts[i]["ui_show"] = state;
+        if (state) {
+          this.shownCards.push(this.scripts[i]);
+          console.log("pushing", this.scripts[i].name);
+          console.log(this.shownCards);
+        } else {
+          for (let j = 0; j < this.shownCards.length; j++) {
+            if (this.shownCards[j].name === scriptName) {
+              console.log(this.shownCards);
+
+              this.shownCards.splice(j, 1);
+            }
+          }
+          this.refreshPage();
+        }
+      }
+    }
+  }
+
+  refreshPage() {
+    this.router
+      .navigateByUrl("/settings", { skipLocationChange: true })
+      .then(() => {
+        this.router.navigate(["/overview"]);
+      })
+      .then(() => {});
+  }
+
+  beforeChange(e) {
+    console.log(e);
+  }
+
+  toggleSlick() {
+    return new Promise((resolve, reject) => {
+      this.slickModal.unslick();
+    }).then(() => {
+      // this.slickModal.initSlick(this.slideConfig);
+    });
   }
 
   // ========================================================

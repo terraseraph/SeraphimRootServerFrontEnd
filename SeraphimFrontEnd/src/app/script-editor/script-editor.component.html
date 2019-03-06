@@ -21,9 +21,6 @@
           </ul>
         </div>
         <button class="btn btn-success" (click)="showNewScriptNameModal()">Add new script</button>
-        <!-- <button *ngFor="let script of scriptInstanceList" class="btn btn-success" (click)="loadScript(script.name)">
-          {{ script.name }}
-        </button> -->
         <br />
       </div>
     </div>
@@ -98,17 +95,17 @@
           <hr />
 
           <ngb-accordion #acc="ngbAccordion">
-            <ngb-panel title="Events : {{ scriptInstance.events?.length }}">
+            <ngb-panel title="States : {{ scriptInstance.states?.length }}">
               <ng-template ngbPanelContent>
                 <div class="card" style="width: 100%;">
                   <ul class="list-group list-group-flush">
-                    <li *ngFor="let event of scriptInstance?.events" class="list-group-item">
-                      Event: {{ event.name }}
+                    <li *ngFor="let state of scriptInstance?.states" class="list-group-item">
+                      State: {{ state.name }}
                       <br />
-                      <button class="btn btn-success" (click)="scriptEditEvent(event.name)">
+                      <button class="btn btn-success" (click)="scriptEditState(state.name)">
                         Edit
                       </button>
-                      <button class="btn btn-danger" (click)="scriptDeleteEvent(event.name)">
+                      <button class="btn btn-danger" (click)="scriptDeleteState(state.name)">
                         Delete
                       </button>
                     </li>
@@ -117,7 +114,7 @@
               </ng-template>
             </ngb-panel>
           </ngb-accordion>
-          <button class="btn btn-success" (click)="scriptCreateNewEvent()">Add Event</button>
+          <button class="btn btn-success" (click)="scriptCreateNewState()">Add State</button>
           <hr />
 
           <ngb-accordion #acc="ngbAccordion">
@@ -143,6 +140,30 @@
           <button class="btn btn-success" (click)="scriptCreateNewAction()">Add Action</button>
           <hr />
 
+          <ngb-accordion #acc="ngbAccordion">
+            <ngb-panel title="Events : {{ scriptInstance.events?.length }}">
+              <ng-template ngbPanelContent>
+                <div class="card" style="width: 100%;">
+                  <ul class="list-group list-group-flush">
+                    <li *ngFor="let event of scriptInstance?.events" class="list-group-item">
+                      Event: {{ event.name }}
+                      <br />
+                      <button class="btn btn-success" (click)="scriptEditEvent(event.name)">
+                        Edit
+                      </button>
+                      <button class="btn btn-danger" (click)="scriptDeleteEvent(event.name)">
+                        Delete
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </ng-template>
+            </ngb-panel>
+          </ngb-accordion>
+          <button class="btn btn-success" (click)="scriptCreateNewEvent()">Add Event</button>
+          <hr />
+
+
           <hr />
           <ngb-accordion #acc="ngbAccordion">
             <ngb-panel title="Hints : {{ scriptInstance.hints?.length }}">
@@ -167,18 +188,19 @@
           <button class="btn btn-success" (click)="scriptCreateNewHint()">Add Hint</button>
           <hr />
 
+
           <ngb-accordion #acc="ngbAccordion">
-            <ngb-panel title="States : {{ scriptInstance.states?.length }}">
+            <ngb-panel title="Screen Configurations : {{ scriptInstance.screenConfigs?.length }}">
               <ng-template ngbPanelContent>
                 <div class="card" style="width: 100%;">
                   <ul class="list-group list-group-flush">
-                    <li *ngFor="let state of scriptInstance?.states" class="list-group-item">
-                      State: {{ state.name }}
+                    <li *ngFor="let config of scriptInstance?.screenConfigs" class="list-group-item">
+                      config: {{ config.name }}
                       <br />
-                      <button class="btn btn-success" (click)="scriptEditState(state.name)">
+                      <button class="btn btn-success" (click)="scriptEditScreenConfig(config.name)">
                         Edit
                       </button>
-                      <button class="btn btn-danger" (click)="scriptDeleteState(state.name)">
+                      <button class="btn btn-danger" (click)="scriptDeleteScreenConfig(config.name)">
                         Delete
                       </button>
                     </li>
@@ -187,7 +209,7 @@
               </ng-template>
             </ngb-panel>
           </ngb-accordion>
-          <button class="btn btn-success" (click)="scriptCreateNewState()">Add State</button>
+          <button class="btn btn-success" (click)="scriptCreateNewScreenConfig()">Add Screen</button>
           <hr />
 
           <ngb-accordion #acc="ngbAccordion">
@@ -215,436 +237,6 @@
       </div>
     </div>
     <div class="col-md-4">
-      <!-- ACTION FORM --------------------------------------------------->
-      <!-- -------------------------------------------------------------->
-
-      <!-- <div id="device_details">when device selected list device settings</div>
-      <div class="container-fluid" *ngIf="actionLoaded">
-        <div class="row">
-          <div class="col-md-12">
-            <h3>Edit Action</h3>
-            <div class="form-group">
-              <label for="gs_event_action_name"> Name </label>
-              <input type="text" class="form-control" id="gs_event_action_name" [(ngModel)]="actionToEdit.name" value="{{ actionToEdit.name }}" />
-            </div>
-
-            <div class="form-group">
-              <label for="gs_action_type_action"> Action Type / Action </label>
-              <select class="selectpicker form-control" id="gs_action_type_action" [(ngModel)]="actionActionTypeSelect">
-                <option selected="selected">{{ actionToEdit.actionType }}/{{
-                  actionToEdit.action
-                  }}</option>
-                <option>relay/start</option>
-                <option>relay/stop</option>
-                <option>relay/toggleA</option>
-                <option>mp3/play</option>
-                <option>mp3/stop</option>
-                <option>mp3/volume</option>
-                <option>buzzer/toggle</option>
-                <option>distanceSensor/configureRange</option>
-                <option>phoneAT/inCommingCall</option>
-                <option>phoneAT/outGoingCall</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="gs_device_id"> Device Id </label>
-              <input type="text" class="form-control" id="gs_device_id" [(ngModel)]="actionToEdit.device_id" value="{{ actionToEdit.device_id }}" />
-            </div>
-
-            <div class="form-group">
-              <label for="gs_data"> Data </label>
-              <input type="text" class="form-control" id="gs_data" [(ngModel)]="actionToEdit.data" value="{{ actionToEdit.data }}" />
-            </div>
-
-            <div class="form-group">
-              <label for="gs_description"> Description </label>
-              <input type="text" class="form-control" id="gs_description" [(ngModel)]="actionToEdit.description" value="{{ actionToEdit.description }}" />
-            </div>
-
-            <div class="form-group">
-              <label for="gs_dependencies"> Dependencies (Game states) </label>
-              <select class="selectpicker form-control" id="gs_event_states" [(ngModel)]="actionStateDependencySelect">
-                <option *ngFor="let state of scriptInstance.states">{{
-                  state.name
-                  }}</option>
-              </select>
-              <button class="btn btn-success" (click)="addDependencyToAction(actionStateDependencySelect)">Add
-                Dependency</button>
-              <ul class="list-group list-group-flush">
-                <li *ngFor="let dependecy of actionToEdit.dependencies" class="list-group-item">
-                  State: {{ dependecy }}
-                  <button class="btn btn-danger" (click)="deleteDependencyFromAction(dependecy)">
-                    Delete
-                  </button>
-                </li>
-              </ul>
-            </div>
-
-
-
-
-            <div class="form-group">
-              <label for="gs_state"> Game state (When triggered) </label>
-              <select class="selectpicker form-control" id="gs_event_states" [(ngModel)]="actionStateSelect">
-                <option *ngFor="let state of scriptInstance.states">{{
-                  state.name
-                  }}</option>
-              </select>
-              <button class="btn btn-success" (click)="addStateToCurrentAction(actionStateSelect)">Add State</button>
-              <ul class="list-group list-group-flush">
-                <li *ngFor="let state of actionToEdit.states" class="list-group-item">
-                  State: {{ state.name }}
-                  <div *ngIf="state.active">
-                    <button type="button" class="btn btn-lg btn-toggle active" (click)="toggleActionState(state.name)"
-                      data-toggle="button" aria-pressed="false" autocomplete="off">
-                      <div class="handle"></div>
-                    </button>
-                  </div>
-                  <div *ngIf="!state.active">
-                    <button type="button" class="btn btn-lg btn-toggle" (click)="toggleActionState(state.name)"
-                      data-toggle="button" aria-pressed="false" autocomplete="off">
-                      <div class="handle"></div>
-                    </button>
-                  </div>
-                  <button class="btn btn-danger" (click)="scriptDeleteStateFromAction(state)">
-                    Delete
-                  </button>
-                </li>
-              </ul>
-            </div>
-
-
-
-
-            <div class="form-group">
-              <label for="gs_state"> Repeatable : </label>
-              {{actionToEdit.repeatable}}
-              <div *ngIf="actionToEdit.repeatable == true">
-                <button type="button" class="btn btn-lg btn-toggle active" (click)="toggleActionRepeatable()"
-                  data-toggle="button" aria-pressed="false" autocomplete="off">
-                  <div class="handle"></div>
-                </button>
-              </div>
-              <div *ngIf="actionToEdit.repeatable == false">
-                <button type="button" class="btn btn-lg btn-toggle" (click)="toggleActionRepeatable()" data-toggle="button"
-                  aria-pressed="false" autocomplete="off">
-                  <div class="handle"></div>
-                </button>
-              </div>
-
-            </div>
-
-            <div class="form-group">
-              <label for="gs_actions"> Actions (When triggered) </label>
-              <select class="selectpicker form-control" id="gs_actions" [(ngModel)]="actionActionSelect">
-                <option *ngFor="let action of scriptInstance.actions">{{
-                  action.name
-                  }}</option>
-              </select>
-              <ul class="list-group list-group-flush">
-                <li *ngFor="let action of actionToEdit.actions" class="list-group-item">
-                  Action: {{ action }}
-                  <button class="btn btn-danger" (click)="deleteActionFromAction(action)">
-                    Delete
-                  </button>
-                </li>
-              </ul>
-              <button class="btn btn-success" (click)="addActiontoAction(actionActionSelect)">Add action</button>
-            </div>
-
-            <button class="btn btn-default" (click)="saveEditedAction()">Save</button>
-          </div>
-        </div>
-      </div> -->
-
-      <!-- EVENT FORM --------------------------------------------------->
-      <!-- -------------------------------------------------------------->
-
-      <!-- <div class="col-md-12" *ngIf="eventLoaded">
-        <h3>Edit Event</h3>
-        <div class="form-group">
-          <label for="gs_event_action_name"> Name </label>
-          <input type="text" class="form-control" id="gs_event_action_name" value="{{ eventToEdit.name }}" [(ngModel)]="eventToEdit.name" />
-        </div>
-
-        <div class="form-group">
-          <label for="gs_event_type_event"> Event Type / Event </label>
-          <select #eventTypeSelector class="selectpicker form-control" id="gs_event_type_event" [(ngModel)]="eventEventTypeSelect">
-            <option selected="selected">{{ eventToEdit.eventType }}/{{ eventToEdit.event }}</option>
-            <option>button/toggle</option>
-            <option>keypad/code</option>
-            <option>rfid/code</option>
-            <option>photoRes/rangeTrigger</option>
-            <option>thermometer/rangeTrigger</option>
-            <option>potentiometer/rangetrigger</option>
-            <option>magnetSwitch/on</option>
-            <option>magnetSwitch/off</option>
-            <option>distanceSensor/rangeTrigger</option>
-            <option>stepperDone/stepperTrigger</option>
-            <option>phoneET/callOut</option>
-            <option>phoneET/callReceived</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="gs_device_id"> Device Id </label>
-          <input type="text" class="form-control" id="gs_device_id" [(ngModel)]="eventToEdit.device_id" value="{{ eventToEdit.device_id }}" />
-        </div>
-
-        <div class="form-group">
-          <label for="gs_data"> Data </label>
-          <input type="text" class="form-control" id="gs_data" [(ngModel)]="eventToEdit.data" value="{{ eventToEdit.data }}" />
-        </div>
-
-        <div class="form-group">
-          <label for="gs_description"> Description </label>
-          <input type="text" class="form-control" id="gs_description" [(ngModel)]="eventToEdit.description" value="{{ eventToEdit.description }}" />
-        </div>
-
-        <div class="form-group">
-          <label for="gs_dependencies"> Dependencies (Game states) </label>
-          <select class="selectpicker form-control" id="gs_event_states" [(ngModel)]="eventStateSelect">
-            <option *ngFor="let state of scriptInstance.states">{{
-              state.name
-              }}</option>
-          </select>
-          <button class="btn btn-success" (click)="addDependencyToEvent(eventStateSelect)">Add Dependency</button>
-          <ul class="list-group list-group-flush">
-            <li *ngFor="let dependecy of eventToEdit.dependencies" class="list-group-item">
-              State: {{ dependecy }}
-              <button class="btn btn-danger" (click)="deleteDependencyFromEvent(dependecy)">
-                Delete
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        <div class="form-group">
-          <label for="gs_state"> Game state (When triggered) </label>
-          <select class="selectpicker form-control" id="gs_event_states" [(ngModel)]="eventStateSelect">
-            <option *ngFor="let state of scriptInstance.states">{{
-              state.name
-              }}</option>
-          </select>
-          <button class="btn btn-success" (click)="addStateToCurrentEvent(eventStateSelect)">Add State</button>
-          <ul class="list-group list-group-flush">
-            <li *ngFor="let state of eventToEdit.states" class="list-group-item">
-              State: {{ state.name }}
-              <div *ngIf="state.active">
-                <button type="button" class="btn btn-lg btn-toggle active" (click)="toggleEventState(state.name)"
-                  data-toggle="button" aria-pressed="false" autocomplete="off">
-                  <div class="handle"></div>
-                </button>
-              </div>
-              <div *ngIf="!state.active">
-                <button type="button" class="btn btn-lg btn-toggle" (click)="toggleEventState(state.name)" data-toggle="button"
-                  aria-pressed="false" autocomplete="off">
-                  <div class="handle"></div>
-                </button>
-              </div>
-              <button class="btn btn-danger" (click)="scriptDeleteStateFromEvent(state)">
-                Delete
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        <div class="form-group">
-          <label for="gs_actions"> Actions (When triggered) </label>
-          <select class="selectpicker form-control" id="gs_actions" [(ngModel)]="eventActionSelect">
-            <option *ngFor="let action of scriptInstance.actions">{{
-              action.name
-              }}</option>
-          </select>
-          <ul class="list-group list-group-flush">
-            <li *ngFor="let action of eventToEdit.actions" class="list-group-item">
-              Action: {{ action }}
-              <button class="btn btn-danger" (click)="deleteActionFromEvent(action)">
-                Delete
-              </button>
-            </li>
-          </ul>
-          <button class="btn btn-success" (click)="addActiontoEvent(eventActionSelect)">Add action</button>
-        </div>
-
-        <button class="btn btn-default" (click)="saveEditedEvent()">
-          Save
-        </button>
-      </div> -->
-
-      <!-- HINT FORM --------------------------------------------------->
-      <!-- -------------------------------------------------------------->
-      <!-- <div class="col-md-12" *ngIf="hintLoaded">
-        <h3>Edit Hint</h3>
-        <div class="form-group">
-          <label for="hintName"> Name </label>
-          <input type="text" class="form-control" id="hintName" [(ngModel)]="hintToEdit.name" value="{{ hintToEdit.name }}" />
-        </div>
-        <div class="form-group">
-          <label for="hintText"> Hint Text </label>
-          <input type="text" class="form-control" id="hintText" [(ngModel)]="hintToEdit.hint" value="{{ hintToEdit.hint }}" />
-        </div>
-
-        <button class="btn btn-default" (click)="saveEditedHint()">
-          Save
-        </button>
-      </div> -->
-
-
-
-      <!-- STATE FORM --------------------------------------------------->
-      <!-- -------------------------------------------------------------->
-      <!-- <div class="col-md-12" *ngIf="stateLoaded">
-        <h3>Edit State</h3>
-        <div class="form-group">
-          <label for="stateName"> Name </label>
-          <input type="text" class="form-control" id="stateName" [(ngModel)]="stateToEdit.name" value="{{ stateToEdit.name }}" />
-        </div>
-        <button class="btn btn-default" (click)="saveEditedState()">
-          Save
-        </button>
-      </div> -->
-
-      <!-- TRIGGER FORM --------------------------------------------------->
-      <!-- -------------------------------------------------------------->
-      <!-- <div class="col-md-12" *ngIf="triggerLoaded">
-        <h3>Edit Trigger</h3>
-        <div class="form-group">
-          <label for="triggerName"> Name </label>
-          <input type="text" class="form-control" id="triggerName" [(ngModel)]="triggerToEdit.name" value="{{ triggerToEdit.name }}" />
-        </div>
-
-        <div class="form-group">
-          <label for="gs_trigger_select_state"> State (To listen for) </label>
-          <select #triggerStateSelector class="selectpicker form-control" id="gs_trigger_select_state" [(ngModel)]="triggerToEdit.trigger">
-            <option selected="selected">{{ triggerToEdit.trigger }}</option>
-            <option *ngFor="let state of scriptInstance.states">{{state.name}}</option>
-          </select>
-        </div>
-
-
-        <div class="form-group">
-          <label for="triggerAudio"> Audio file </label>
-          <input type="text" class="form-control" id="triggerAudio" [(ngModel)]="triggerToEdit.audio" value="{{ triggerToEdit.audio }}" />
-        </div>
-
-        <div class="form-group">
-          <label for="gs_trigger_loop_audio"> Loop Audio </label>
-          <div *ngIf="triggerToEdit.loop_audio">
-            <button type="button" class="btn btn-lg btn-toggle active" (click)="triggerToggleLoopAudio()" data-toggle="button"
-              aria-pressed="false" autocomplete="off">
-              <div class="handle"></div>
-            </button>
-          </div>
-          <div *ngIf="!triggerToEdit.loop_audio">
-            <button type="button" class="btn btn-lg btn-toggle" (click)="triggerToggleLoopAudio()" data-toggle="button"
-              aria-pressed="false" autocomplete="off">
-              <div class="handle"></div>
-            </button>
-          </div>
-        </div>
-
-
-        <div class="form-group">
-          <label for="gs_trigger_audio_type"> Audio Type </label>
-          <select #eventTypeSelector class="selectpicker form-control" id="gs_event_type_event" [(ngModel)]="triggerToEdit.audio_type">
-            <option selected="selected">{{ triggerToEdit.audio_type }}</option>
-            <option>background</option>
-            <option>start</option>
-            <option>end</option>
-            <option>hint</option>
-            <option>custom</option>
-          </select>
-        </div>
-
-        <hr />
-        <div class="form-group">
-          <label for="triggerVideo"> Video file </label>
-          <input type="text" class="form-control" id="triggerVideo" [(ngModel)]="triggerToEdit.video" value="{{ triggerToEdit.video }}" />
-        </div>
-
-
-        <div class="form-group">
-          <label for="gs_trigger_loop_video"> Loop Video </label>
-          <div *ngIf="triggerToEdit.loop_video">
-            <button type="button" class="btn btn-lg btn-toggle active" (click)="triggerToggleLoopVideo()" data-toggle="button"
-              aria-pressed="false" autocomplete="off">
-              <div class="handle"></div>
-            </button>
-          </div>
-          <div *ngIf="!triggerToEdit.loop_video">
-            <button type="button" class="btn btn-lg btn-toggle" (click)="triggerToggleLoopVideo()" data-toggle="button"
-              aria-pressed="false" autocomplete="off">
-              <div class="handle"></div>
-            </button>
-          </div>
-        </div>
-
-
-        <div class="form-group">
-          <label for="triggerVideoType"> Video Type </label>
-          <select #eventTypeSelector class="selectpicker form-control" id="triggerVideoType" [(ngModel)]="triggerToEdit.video_type">
-            <option selected="selected">{{ triggerToEdit.video_type }}</option>
-            <option>background</option>
-            <option>custom</option>
-          </select>
-        </div>
-
-
-
-        <div class="form-group">
-          <label for="triggerPauseTimer"> Pause timer while playing video </label>
-          <div *ngIf="triggerToEdit.pause_timer">
-            <button type="button" class="btn btn-lg btn-toggle active" (click)="triggerTogglePauseTimer()" data-toggle="button"
-              aria-pressed="false" autocomplete="off">
-              <div class="handle"></div>
-            </button>
-          </div>
-          <div *ngIf="!triggerToEdit.pause_timer">
-            <button type="button" class="btn btn-lg btn-toggle" (click)="triggerTogglePauseTimer()" data-toggle="button"
-              aria-pressed="false" autocomplete="off">
-              <div class="handle"></div>
-            </button>
-          </div>
-        </div>
-
-        <hr />
-
-
-        <div class="form-group">
-          <label for="triggerHint"> Hint </label>
-          <input type="text" class="form-control" id="triggerHint" [(ngModel)]="triggerToEdit.hint" value="{{ triggerToEdit.hint }}" />
-        </div>
-
-
-        <div class="form-group">
-          <label for="triggerToggle"> Can toggle (Is repeatable)</label>
-          <div *ngIf="triggerToEdit.can_toggle">
-            <button type="button" class="btn btn-lg btn-toggle active" (click)="triggerToggleRepeatable()" data-toggle="button"
-              aria-pressed="false" autocomplete="off">
-              <div class="handle"></div>
-            </button>
-          </div>
-          <div *ngIf="!triggerToEdit.can_toggle">
-            <button type="button" class="btn btn-lg btn-toggle" (click)="triggerToggleRepeatable()" data-toggle="button"
-              aria-pressed="false" autocomplete="off">
-              <div class="handle"></div>
-            </button>
-          </div>
-        </div>
-
-
-
-        <button class="btn btn-default" (click)="saveEditedTrigger()">
-          Save
-        </button>
-
-      </div> -->
-      <!-- </div> -->
-
-
-
     </div>
   </div>
 </div>
@@ -658,7 +250,8 @@
 
 
 
-
+<!-- TRIGGER FORM --------------------------------------------------->
+<!-- -------------------------------------------------------------->
 
 
 <ng-template #triggerModal let-modal>
@@ -685,6 +278,13 @@
         </select>
       </div>
 
+      <div class="form-group">
+        <label for="gs_trigger_select_state"> Screen to trigger on) </label>
+        <select #triggerStateSelector class="selectpicker form-control" id="gs_trigger_select_state" [(ngModel)]="triggerToEdit.screenName">
+          <option selected="selected">{{ triggerToEdit.screenName }}</option>
+          <option *ngFor="let config of scriptInstance.screenConfigs">{{config.name}}</option>
+        </select>
+      </div>
 
       <div class="form-group">
         <label for="triggerAudio"> Audio file </label>
@@ -812,7 +412,8 @@
 </ng-template>
 
 
-
+<!-- STATE FORM --------------------------------------------------->
+<!-- -------------------------------------------------------------->
 
 <ng-template #stateModal let-modal>
   <div class="modal-header">
@@ -843,7 +444,8 @@
 
 
 
-
+<!-- HINT FORM --------------------------------------------------->
+<!-- -------------------------------------------------------------->
 
 <ng-template #hintModal let-modal>
   <div class="modal-header">
@@ -882,7 +484,8 @@
 
 
 
-
+<!-- EVENT FORM --------------------------------------------------->
+<!-- -------------------------------------------------------------->
 
 <ng-template #eventModal let-modal>
   <div class="modal-header">
@@ -1027,7 +630,8 @@
 
 
 
-
+<!-- ACTION FORM --------------------------------------------------->
+<!-- -------------------------------------------------------------->
 <ng-template #actionModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title">{{actionToEdit.name}} Video</h4>
@@ -1210,6 +814,136 @@
   </div>
   <div class="modal-footer">
     <button class="btn btn-default" (click)="createNewScript();modal.close('Close click')">
+      Save
+    </button>
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+  </div>
+</ng-template>
+
+
+
+
+<ng-template #screenConfigModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Screen Config -
+      {{scriptInstance.branch_address}}/{{scriptInstance.name}}/{{screenConfigToEdit.name}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <h3>Screen Config</h3>
+    <div class="form-group">
+      <label for="hintName"> Name </label>
+      <input type="text" class="form-control" id="screenConfigName" [(ngModel)]="screenConfigToEdit.name" placeholder="Script Name...." />
+    </div>
+
+    <div class="form-group">
+      <label for="hintName"> Background Type </label>
+      <select class="selectpicker form-control" id="gs_action_type_action" [(ngModel)]="screenConfigToEdit.backgroundType">
+        <option selected="selected">{{ screenConfigToEdit.backgroundType }}</option>
+        <option>Video</option>
+        <option>Image</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="hintName"> Background Path </label>
+      <input type="text" class="form-control" id="screenConfigName" [(ngModel)]="screenConfigToEdit.backgroundPath"
+        placeholder="Path to file" />
+    </div>
+
+    <div class="form-group">
+      <label for="hintName"> Font Family</label>
+      <select class="selectpicker form-control" id="gs_action_type_action" [(ngModel)]="screenConfigToEdit.font">
+        <option selected="selected">{{ screenConfigToEdit.font }}</option>
+        <option>'Comic Sans MS', cursive, sans-serif</option>
+        <option>'Times New Roman', Times, serif</option>
+        <option>Arial, Helvetica, sans-serif</option>
+        <option>Impact, Charcoal, sans-serif</option>
+        <option>Tahoma, Geneva, sans-serif</option>
+        <option>Verdana, Geneva, sans-serif</option>
+        <option>'Courier New', Courier, monospace</option>
+        <option>'Lucida Console', Monaco, monospace</option>
+        <option>'Comic Sans MS', cursive, sans-serif</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="hintName"> Font Colour</label>
+      <select class="selectpicker form-control" id="gs_action_type_action" [(ngModel)]="screenConfigToEdit.font_colour">
+        <option selected="selected">{{ screenConfigToEdit.font_colour }}</option>
+        <option>Red</option>
+        <option>DarkRed</option>
+        <option>Pink</option>
+        <option>HotPink</option>
+        <option>Green</option>
+        <option>DarkGreen</option>
+        <option>Brown</option>
+        <option>Maroon</option>
+        <option>Yellow</option>
+        <option>Khaki</option>
+        <option>Cyan</option>
+        <option>SteelBlue</option>
+        <option>White</option>
+        <option>Beige</option>
+        <option>Plum</option>
+        <option>BlueViolet</option>
+        <option>Indego</option>
+        <option>DarkSlateBlue</option>
+        <option>Purple</option>
+        <option>Blue</option>
+        <option>RoyalBlue</option>
+        <option>Navy</option>
+        <option>Silver</option>
+        <option>Gray</option>
+        <option>DimGray</option>
+        <option>Black</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="hintName"> Audio path *optional </label>
+      <input type="text" class="form-control" id="screenConfigName" [(ngModel)]="screenConfigToEdit.audio" placeholder="Audio path" />
+    </div>
+
+    <div class="form-group">
+      <label for="hintName"> Show Timer </label>
+      <div *ngIf="screenConfigToEdit.showTimer == true">
+        <button type="button" class="btn btn-lg btn-toggle active" (click)="toggleScreenConfigShowtimer()" data-toggle="button"
+          aria-pressed="false" autocomplete="off">
+          <div class="handle"></div>
+        </button>
+      </div>
+      <div *ngIf="screenConfigToEdit.showTimer == false">
+        <button type="button" class="btn btn-lg btn-toggle" (click)="toggleScreenConfigShowtimer()" data-toggle="button"
+          aria-pressed="false" autocomplete="off">
+          <div class="handle"></div>
+        </button>
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <label for="hintName"> Show Hints </label>
+      <div *ngIf="screenConfigToEdit.showHints == true">
+        <button type="button" class="btn btn-lg btn-toggle active" (click)="toggleScreenConfigShowHints()" data-toggle="button"
+          aria-pressed="false" autocomplete="off">
+          <div class="handle"></div>
+        </button>
+      </div>
+      <div *ngIf="screenConfigToEdit.showHints == false">
+        <button type="button" class="btn btn-lg btn-toggle" (click)="toggleScreenConfigShowHints()" data-toggle="button"
+          aria-pressed="false" autocomplete="off">
+          <div class="handle"></div>
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-default" (click)="saveEditedScreenConfig();modal.close('Close click')">
       Save
     </button>
     <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>

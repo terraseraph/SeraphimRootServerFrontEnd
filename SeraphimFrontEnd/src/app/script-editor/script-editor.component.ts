@@ -26,12 +26,14 @@ export class ScriptEditorComponent implements OnInit {
   hintLoaded: boolean;
   triggerLoaded: boolean;
   stateLoaded: boolean;
+  screenConfigLoaded: boolean;
 
   eventToEdit: any;
   actionToEdit: any;
   hintToEdit: any;
   triggerToEdit: any;
   stateToEdit: any;
+  screenConfigToEdit: any;
 
   eventStateSelect: any;
   eventEventTypeSelect: any;
@@ -51,6 +53,7 @@ export class ScriptEditorComponent implements OnInit {
   @ViewChild("stateModal") stateModal: any;
   @ViewChild("hintModal") hintModal: any;
   @ViewChild("newScriptModal") newScriptModal: any;
+  @ViewChild("screenConfigModal") screenConfigModal: any;
 
   // newEventFlag: boolean;
 
@@ -98,6 +101,15 @@ export class ScriptEditorComponent implements OnInit {
 
   deleteScript(scriptName) {
     console.log("Deleting: ", scriptName);
+    this.server.deleteScript(scriptName).subscribe(cb => {
+      console.log(cb);
+      this.ngOnInit();
+      // for(var i = 0 ; i < this.scriptInstance.length; i ++){
+      //   if(this.scriptInstanceList[i].name == scriptName){
+      //     this.scriptInstanceList.splice(i, 1);
+      //   }
+      // }
+    });
   }
 
   createNewScript() {
@@ -453,6 +465,61 @@ export class ScriptEditorComponent implements OnInit {
     this.triggerToEdit.can_toggle = !this.triggerToEdit.can_toggle;
   }
 
+  // ======================================= //
+  // ========= Screen config functions ===== //
+  // ======================================= //
+  scriptEditScreenConfig(screenConfigName) {
+    console.log("Editing Screen Config: ", screenConfigName);
+    this.findScreenConfig(screenConfigName).then(conf => {
+      this.screenConfigToEdit = conf;
+      this.toggleFormPanel("screenConfig");
+    });
+  }
+
+  scriptDeleteScreenConfig(screenConfig) {
+    for (let i = 0; i < this.scriptInstance.screenConfigs.length; i++) {
+      if (this.scriptInstance.screenConfigs[i].name === screenConfig) {
+        this.scriptInstance.screenConfigs.splice(i, 1);
+        this.dataService.scriptEditor_updateSelectedScript(this.scriptInstance);
+        console.log(
+          "Deleting: ",
+          screenConfig,
+          this.scriptInstance.screenConfigs
+        );
+      }
+    }
+  }
+
+  saveEditedScreenConfig() {
+    this.dataService.scriptEditor_updateSelectedScript(this.scriptInstance);
+    //update game screen config too
+    this.server
+      .updateScreenConfiguration(
+        this.scriptInstance.name,
+        this.screenConfigToEdit
+      )
+      .subscribe(result => {
+        console.log(result);
+      });
+  }
+
+  scriptCreateNewScreenConfig() {
+    this.dataService.newScreenConfigModel().then(screenConfigModel => {
+      let sc: any;
+      sc = screenConfigModel;
+      sc.name = "UNSET ScreenConfig";
+      this.scriptInstance.ScreenConfigs.push(sc);
+    });
+  }
+
+  toggleScreenConfigShowtimer() {
+    this.screenConfigToEdit.showTimer = !this.screenConfigToEdit.showTimer;
+  }
+
+  toggleScreenConfigShowHints() {
+    this.screenConfigToEdit.showHints = !this.screenConfigToEdit.showHints;
+  }
+
   // ================ helpers =============//
 
   findScriptState(stateName) {
@@ -508,6 +575,9 @@ export class ScriptEditorComponent implements OnInit {
         this.stateLoaded = true;
         this.showStatesModal();
         break;
+      case "screenConfig":
+        this.screenConfigLoaded = true;
+        this.showScreenConfigModal();
       default:
         break;
     }
@@ -575,6 +645,16 @@ export class ScriptEditorComponent implements OnInit {
     });
   }
 
+  findScreenConfig(name) {
+    return new Promise((resolve, reject) => {
+      for (const conf of this.scriptInstance.screenConfigs) {
+        if (conf.name === name) {
+          resolve(conf);
+        }
+      }
+    });
+  }
+
   // ========== MODALS ============//
   showActionsModal() {
     this.modalService.open(this.actionModal, { size: "lg" });
@@ -597,5 +677,9 @@ export class ScriptEditorComponent implements OnInit {
   showNewScriptNameModal() {
     this.modalService.open(this.newScriptModal, { size: "lg" });
     this.newScriptName = "";
+  }
+
+  showScreenConfigModal() {
+    this.modalService.open(this.screenConfigModal, { size: "lg" });
   }
 }

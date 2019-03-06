@@ -225,6 +225,13 @@ export class DataService {
     });
   }
 
+  newScreenConfigModel() {
+    return new Promise((resolve, reject) => {
+      const model = new ScreenConfigModel();
+      resolve(model);
+    });
+  }
+
   setDefaultEventsAndStates(model: EventActionScriptModel) {
     return new Promise((resolve, reject) => {
       let startInstance = new ScriptStateModel();
@@ -335,6 +342,7 @@ export class EventActionScriptModel {
   public actions: Array<ScriptActionModel>;
   public hints: Array<ScriptHintModel>;
   public triggers: Array<ScriptTriggerModel>;
+  public screenConfigs: Array<ScreenConfigModel>;
   constructor(name) {
     this.name = name;
     this.states = new Array<ScriptStateModel>();
@@ -342,6 +350,7 @@ export class EventActionScriptModel {
     this.actions = new Array<ScriptActionModel>();
     this.hints = new Array<ScriptHintModel>();
     this.triggers = new Array<ScriptTriggerModel>();
+    this.screenConfigs = new Array<ScreenConfigModel>();
   }
 }
 
@@ -410,6 +419,17 @@ export class ScriptHintModel {
   public hint: "";
 }
 
+export class ScreenConfigModel {
+  public name = "";
+  public backgroundType = "";
+  public backgroundPath = "";
+  public audio = "";
+  public font = "'Times New Roman', Times, serif";
+  public font_colour = "white";
+  public showTimer = true;
+  public showHints = true;
+}
+
 export class ScriptTriggerModel {
   public name: string;
   public trigger: string;
@@ -417,6 +437,7 @@ export class ScriptTriggerModel {
   public video: string;
   public hint: string;
   public can_toggle: string;
+  public screenName: String;
 
   constructor() {
     this.name = "";
@@ -425,6 +446,7 @@ export class ScriptTriggerModel {
     this.video = "";
     this.hint = "";
     this.can_toggle = "";
+    this.screenName = "";
   }
 }
 

@@ -233,7 +233,8 @@ export class OverviewComponent implements OnInit {
   triggerForceTrigger(trigger) {
     const msg = {
       scriptName: this.script.name,
-      trigger: trigger
+      trigger: trigger,
+      screenName: trigger.screenName
     };
     this.server.triggerForceTrigger(msg).subscribe(result => {
       console.log("Forcing trigger: ", result);
