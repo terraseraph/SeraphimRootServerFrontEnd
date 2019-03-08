@@ -1,3 +1,105 @@
-<p>
-  settings works!
-</p>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-4">
+      <div id="instance_list">
+        <h3>Branches</h3>
+        <div class="card" style="width: 100%;">
+          <ul class="list-group list-group-flush">
+            <li *ngFor="let branch of branchList" class="list-group-item">
+              <h4>{{ branch.name }}</h4>
+              <ul class="list-group list-group-flush">
+                <li>
+                  ID: {{branch.id}}
+                </li>
+                <li>
+                  IP ADDRESS: {{branch.ip_address}}
+                </li>
+              </ul>
+              <br />
+              <button class="btn btn-success" (click)="loadBranch(branch.id)">
+                Edit
+              </button>
+              <button class="btn btn-danger" (click)="deleteBranch(branch.id)">
+                Delete
+              </button>
+            </li>
+          </ul>
+        </div>
+        <button class="btn btn-success" (click)="showNewBranchNameModal()">Add new Branch</button>
+        <br />
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div>
+        <div *ngFor="let node of selectedBranch?.nodes">
+          <ul class="list-group list-group-flush">
+            <li>
+              ID: {{node?.id}}
+            </li>
+            <li>
+              IP ADDRESS: {{node?.ipAddress}}
+            </li>
+            <li>
+              Bridge Type: {{node?.nodeType}}
+            </li>
+            <ul>
+              Mesh Nodes:
+              <!-- <ul class="list-group list-group-flush" *ngFor="let mNode of node.meshNodes">
+                <li>
+                  {{mNode?.id}}
+                </li>
+                <li>
+                  {{mNode?.type}}
+                </li>
+                <li>
+                  {{mNode?.lastAlive}}
+                </li>
+              </ul> -->
+            </ul>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+  <ng-template #newBranchModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">New Script</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <h3>Branch Name</h3>
+      <div class="form-group">
+        <label for="hintName"> Name </label>
+        <input type="text" class="form-control" id="hintName" [(ngModel)]="newBranchName" placeholder="Branch Name...." />
+      </div>
+
+
+      <h3>Branch IP Address</h3>
+      <div class="form-group">
+        <label for="hintName"> IP Address </label>
+        <input type="text" class="form-control" id="hintName" [(ngModel)]="newBranchIp" placeholder="E.g. http://192.168.0.10:4300" />
+      </div>
+
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-default" (click)="createNewBranch();modal.close('Close click')">
+        Save
+      </button>
+      <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+    </div>
+  </ng-template>

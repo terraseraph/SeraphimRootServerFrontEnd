@@ -20,6 +20,12 @@ export class DataService {
   public scriptEditor_observableSelectedScript: any;
   public scriptEditor_observableScriptList: any;
 
+  // ========= Branch Server settings
+  public branch_selectedBranch: any;
+  public branch_allBranches: any;
+  public branch_observableSelectedBranch: any;
+  public branch_observableBranchList: any;
+
   constructor(public server: ServerService, public socket: SocketsService) {
     this.observableScriptInstance = new BehaviorSubject<any>(
       this.selectedScriptInstance
@@ -30,17 +36,101 @@ export class DataService {
     this.scriptEditor_observableScriptList = new BehaviorSubject<any>(
       this.scriptEditor_allScripts
     );
+
+    this.branch_observableBranchList = new BehaviorSubject<any>(
+      this.branch_allBranches
+    );
+    this.branch_observableSelectedBranch = new BehaviorSubject<any>(
+      this.branch_selectedBranch
+    );
     this.scriptEditor_getAllScripts();
   }
-
-  // ==============================
-  // Script editor
-  // ==============================
 
   // flow:
   // component subscribes to changes to script
   // component requests the data to be updated
   // data then updates and sends a .next to observables
+
+  // ==============================
+  // Branches
+  // ==============================
+
+  branch_observableUpdate() {
+    this.branch_observableSelectedBranch.next(this.branch_getSelectedBranch());
+  }
+
+  branch_observableListUpdate() {
+    this.branch_observableBranchList.next(this.branch_getAllBranches());
+  }
+  branch_subscribe(): Observable<any> {
+    return this.branch_selectedBranch;
+  }
+
+  branch_setSelectedBranch(branchId) {
+    this.findBranch(branchId).then(branch => {
+      console.log("Setting editing branch to: ", branch);
+      this.branch_selectedBranch = branch;
+      this.branch_observableUpdate();
+    });
+  }
+
+  branch_serverGetAllBranches() {
+    this.server.readAllBranches().subscribe(branchList => {
+      this.branch_allBranches = branchList;
+      console.log(branchList);
+      this.branch_observableListUpdate();
+    });
+  }
+  branch_getSelectedBranch() {
+    return this.branch_selectedBranch;
+  }
+
+  branch_getAllBranches() {
+    return this.branch_allBranches;
+  }
+
+  branch_updateSelectedBranch(branch) {
+    this.server.updateBranch(branch).subscribe(result => {
+      console.log(result);
+    });
+  }
+
+  branch_deleteBranch(id) {
+    this.server.deleteBranch(id).subscribe(result => {
+      console.log(result);
+    });
+  }
+
+  branch_createNewBranch(name, ip) {
+    let branch = new BranchModel(name, 1, ip);
+    this.server.createBranch(branch).subscribe(result => {
+      console.log(result);
+      this.branch_allBranches.push(branch);
+    });
+  }
+
+  findBranch(id) {
+    return new Promise((resolve, reject) => {
+      for (let i = 0; i < this.branch_allBranches.length; i++) {
+        const branch = this.branch_allBranches[i];
+        if (branch.id == id) {
+          resolve(branch);
+        }
+      }
+    });
+  }
+
+  branch_getAllBranchNodes(branchId) {
+    this.server.getBridgeNodes(branchId).subscribe(nodes => {
+      this.findBranch(branchId).then(branch => {
+        branch["nodes"] = nodes;
+        this.branch_observableListUpdate();
+      });
+    });
+  }
+  // ==============================
+  // Script editor
+  // ==============================
 
   scriptEditor_observableUpdate() {
     this.scriptEditor_observableSelectedScript.next(
@@ -464,4 +554,43 @@ export class ScriptTimeModel {
   public hours = "0";
   public minutes = "60";
   public seconds = "0";
+}
+
+export class BranchModel {
+  public id: any;
+  public name: any;
+  public rootserver_id: any;
+  public ip_address: any;
+  constructor(name, rootId, ipAddress) {
+    this.name = name;
+    this.rootserver_id = rootId;
+    this.ip_address = ipAddress;
+  }
+}
+
+export class NodeBridgeModel {
+  public id: any;
+  public name: any;
+  public ip_address: any;
+  public branch_id: any;
+  constructor(name, ip, branchId) {
+    this.name = name;
+    this.ip_address = ip;
+    this.branch_id = branchId;
+  }
+}
+
+export class NodeModel {
+  public id: any;
+  public name: any;
+  public type: any;
+  public last_alive: any;
+  public bridge_id: any;
+
+  constructor(name, type, lastAlive, bridgeId) {
+    this.name = name;
+    this.type = type;
+    this.last_alive = lastAlive;
+    this.bridge_id = bridgeId;
+  }
 }

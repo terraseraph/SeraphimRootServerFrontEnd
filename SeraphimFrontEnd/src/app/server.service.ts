@@ -65,6 +65,39 @@ export class ServerService {
   }
 
   // ==========================================//
+  // ======== Branches =======================//
+  // =========================================//
+
+  createBranch(branch: any): Observable<any> {
+    return this.http.post(`${this.api}/branch`, branch);
+  }
+
+  readBranch(id): Observable<any> {
+    return this.http.get(`${this.api}/branch/${id}`);
+  }
+
+  readAllBranches(): Observable<any> {
+    console.log("Server reading branches");
+    return this.http.get(`${this.api}/branch`);
+  }
+
+  updateBranch(branch): Observable<any> {
+    return this.http.put(`${this.api}/branch`, branch);
+  }
+
+  deleteBranch(id): Observable<any> {
+    return this.http.delete(`${this.api}/branch/${id}`);
+  }
+
+  // ==========================================//
+  // ======== Nodes =======================//
+  // =========================================//
+
+  getBridgeNodes(branchId) {
+    return this.http.get(`${this.api}/branch/nodes/${branchId}`);
+  }
+
+  // ==========================================//
   // ======== Overview =======================//
   // =========================================//
   loadOverview(scriptName): Observable<any> {
