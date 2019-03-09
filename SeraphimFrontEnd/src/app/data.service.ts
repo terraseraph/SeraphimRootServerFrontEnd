@@ -67,6 +67,7 @@ export class DataService {
   }
 
   branch_setSelectedBranch(branchId) {
+    this.branch_getAllBranches();
     this.findBranch(branchId).then(branch => {
       console.log("Setting editing branch to: ", branch);
       this.branch_selectedBranch = branch;

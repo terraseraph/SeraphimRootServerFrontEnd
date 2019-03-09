@@ -22,6 +22,10 @@ export class SettingsComponent implements OnInit {
   newBranchIp: any;
 
   //Selected branch
+  @ViewChild("branchConfigModal") branchConfigModal: any;
+  selectedBridgeToEdit: any;
+  selectedBranchMeshNodes = [];
+  meshNodeToEdit: any;
 
   constructor(
     public dataService: DataService,
@@ -43,21 +47,40 @@ export class SettingsComponent implements OnInit {
         if (branchList === undefined) {
           return;
         }
-        // for (let i = 0; i < this.branchList.length; i++) {
-        //   const branch = branchList[i];
-        //   this.dataService.branch_getAllBranchNodes(branch.id);
-        // }
       }
     );
   }
   branchSubscribe() {
     this.branchSubscription = this.dataService.branch_observableSelectedBranch.subscribe(
       branch => {
+        if (branch != undefined) {
+          console.log("GOT BRANCH");
+          if (branch.nodes != undefined) {
+            console.log("GOT NODE");
+            for (let i = 0; i < branch.nodes.length; i++) {
+              let node = branch.nodes[i];
+              this.makeArr(node.meshNodes).then(arr => {});
+            }
+          }
+        }
         this.selectedBranch = branch;
         console.log("selected branch for editing: ", branch);
         this.branchLoaded = true;
       }
     );
+  }
+
+  makeArr(meshNodes) {
+    return new Promise((resolve, reject) => {
+      this.selectedBranchMeshNodes = [];
+      var nodes = [];
+      for (var x in meshNodes) {
+        console.log("pushing", x);
+        this.selectedBranchMeshNodes.push(meshNodes[x]);
+        nodes.push(meshNodes[x]);
+      }
+      resolve(nodes);
+    });
   }
 
   loadBranch(id) {
@@ -69,6 +92,15 @@ export class SettingsComponent implements OnInit {
 
   deleteBranch(id) {
     this.dataService.branch_deleteBranch(id);
+  }
+
+  configBranch(id) {
+    this.loadBranch(id);
+    this.modalService.open(this.branchConfigModal, { size: "lg" });
+  }
+
+  updateBRanchConfig() {
+    this.dataService.branch_updateSelectedBranch(this.selectedBranch);
   }
 
   showNewBranchNameModal() {
@@ -83,5 +115,46 @@ export class SettingsComponent implements OnInit {
       this.newBranchIp
     );
     this.dataService.branch_serverGetAllBranches();
+  }
+
+  // =============================
+  // ===== QUERY NODE FUNCTIONS ==
+  // =============================
+  getNodeSubconnections(bridgeId) {}
+
+  getNodeNodeList(bridgeId) {
+    //type = getMeshNodes
+  }
+
+  // =============================
+  // ====== EDIT NODE FUNCTIONS ==
+  // =============================
+  editNodeBranchAddress(bridgeId, ipaddress) {
+    //ip address as int array i.e. [192,168,0,10]
+  }
+
+  editNodeId(bridgeId, hwId, toId) {
+    //type = setId
+  }
+
+  editNodeType(bridgeId, hwId, toType) {
+    //type = functionChange
+    // msg == "bridge" ||
+    //   msg == "button" ||
+    //   msg == "keypad" ||
+    //   msg == "relay" ||
+    //   msg == "reedSwitch" ||
+    //   msg == "magSwitch" ||
+    //   msg == "rfid" ||
+    //   msg == "button")
+  }
+
+  getMeshNodeToEdit(hardwareId, cb) {
+    for (let i = 0; i < this.selectedBranchMeshNodes.length; i++) {
+      const node = this.selectedBranchMeshNodes[i];
+      if (node.hardwareId === hardwareId) {
+        cb(node);
+      }
+    }
   }
 }

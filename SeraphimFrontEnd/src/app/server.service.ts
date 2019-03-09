@@ -73,6 +73,7 @@ export class ServerService {
   }
 
   readBranch(id): Observable<any> {
+    console.log("Server reading branch", id);
     return this.http.get(`${this.api}/branch/${id}`);
   }
 
