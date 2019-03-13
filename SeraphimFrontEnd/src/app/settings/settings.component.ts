@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { DataService } from "../data.service";
 import { Subscription } from "rxjs";
 import { NgbModal, ModalDismissReasons } from "@ng-bootstrap/ng-bootstrap";
+import * as $ from "jquery";
 import { load } from "@angular/core/src/render3";
 
 @Component({
@@ -16,6 +17,14 @@ export class SettingsComponent implements OnInit {
   branchList: any;
   branchLoaded: boolean;
 
+  // Editing nodes
+  nodeTypes = ["relay", "bridge", "button", "keypad", "magSwitch", "rfid"];
+  tempNodeType: any;
+
+  tempAction: any;
+  tempActionType: any;
+  tempActionData: any;
+
   // New Branch
   @ViewChild("newBranchModal") newBranchModal: any;
   newBranchName: any;
@@ -26,6 +35,11 @@ export class SettingsComponent implements OnInit {
   selectedBridgeToEdit: any;
   selectedBranchMeshNodes = [];
   meshNodeToEdit: any;
+
+  // Action packets
+  actionRelayData = [15, 2, 4, 5, 27, 14, 12, 13];
+  actionRelayActions = ["start", "stop", "toggleA"];
+  actionRelayActionType = "relay";
 
   constructor(
     public dataService: DataService,
@@ -133,20 +147,58 @@ export class SettingsComponent implements OnInit {
     //ip address as int array i.e. [192,168,0,10]
   }
 
-  editNodeId(bridgeId, hwId, toId) {
-    //type = setId
+  editNodeId(bridgeId, bridgeType, nodeId) {
+    // let newId = $(`#mNodeId_${nodeId}`).val();
+    this.getElemValue(`#mNodeId_${nodeId}`).then(newId => {
+      let node = {
+        branchAddress: this.selectedBranch.ip_address,
+        bridgeId: bridgeId,
+        bridgeType: bridgeType,
+        nodeId: nodeId,
+        newId: newId
+      };
+      console.log(node);
+      this.dataService.branch_editNodeCommonId(node);
+    });
   }
 
-  editNodeType(bridgeId, hwId, toType) {
-    //type = functionChange
-    // msg == "bridge" ||
-    //   msg == "button" ||
-    //   msg == "keypad" ||
-    //   msg == "relay" ||
-    //   msg == "reedSwitch" ||
-    //   msg == "magSwitch" ||
-    //   msg == "rfid" ||
-    //   msg == "button")
+  editNodeType(bridgeId, bridgeType, nodeId) {
+    let newType = $(`#mNodeSelectType_${nodeId} option:selected`).text();
+    let node = {
+      branchAddress: this.selectedBranch.ip_address,
+      bridgeId: bridgeId,
+      bridgeType: bridgeType,
+      nodeId: nodeId,
+      newType: newType
+    };
+    this.dataService.branch_editNodeType(node);
+  }
+
+  getElemValue(elemId) {
+    return new Promise((resolve, reject) => {
+      let result = $(elemId).val();
+      resolve(result);
+      // while (result == "" || result == undefined) {
+      //   result = $(elemId).val();
+      //   if (result != "" && result != undefined) {
+      //     resolve(result);
+      //     return;
+      //   }
+      // }
+    });
+  }
+
+  sendActionToNode(bridgeId, bridgeType, nodeId, action, actionType, data) {
+    let node = {
+      branchAddress: this.selectedBranch.ip_address,
+      bridgeId: bridgeId,
+      bridgeType: bridgeType,
+      nodeId: nodeId,
+      action: action,
+      actionType: actionType,
+      data: data
+    };
+    this.dataService.branch_sendNodeAction(node);
   }
 
   getMeshNodeToEdit(hardwareId, cb) {

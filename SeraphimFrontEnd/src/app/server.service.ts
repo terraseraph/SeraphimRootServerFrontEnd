@@ -94,8 +94,20 @@ export class ServerService {
   // ======== Nodes =======================//
   // =========================================//
 
-  getBridgeNodes(branchId) {
+  getBridgeNodes(branchId): Observable<any> {
     return this.http.get(`${this.api}/branch/nodes/${branchId}`);
+  }
+
+  editNodeCommonId(msg): Observable<any> {
+    return this.http.post(`${this.api}/branch/nodes/direct`, msg);
+  }
+
+  editNodeType(msg): Observable<any> {
+    return this.http.post(`${this.api}/branch/nodes/direct`, msg);
+  }
+
+  sendNodeAction(msg): Observable<any> {
+    return this.http.post(`${this.api}/branch/nodes/direct`, msg);
   }
 
   // ==========================================//

@@ -129,6 +129,92 @@ export class DataService {
       });
     });
   }
+
+  branch_editNodeCommonId(node) {
+    var msg = {
+      header: {
+        branchAddress: node.branchAddress,
+        bridgeId: node.bridgeId,
+        nodeType: node.bridgeType
+      },
+      message: {
+        id: node.bridgeId,
+        message: {
+          toId: node.nodeId,
+          command: {
+            type: "setId",
+            message: node.newId
+          }
+        }
+      }
+    };
+    this.server.editNodeCommonId(msg).subscribe(result => {
+      console.log(result);
+    });
+  }
+
+  /**
+   *
+   *
+ {"id":"10",
+ "message":{
+  "toId" : "3209423301",
+	"command" : {
+		"type" : "functionChange",
+		"toId": "3209423301",
+		"message" : "button"
+        }
+  }
+}
+   *
+   *
+   */
+
+  branch_editNodeType(node) {
+    var msg = {
+      header: {
+        branchAddress: node.branchAddress,
+        bridgeId: node.bridgeId,
+        nodeType: node.bridgeType
+      },
+      message: {
+        id: node.bridgeId,
+        message: {
+          toId: node.nodeId,
+          command: {
+            type: "functionChange",
+            message: node.newType
+          }
+        }
+      }
+    };
+    this.server.editNodeCommonId(msg).subscribe(result => {
+      console.log(result);
+    });
+  }
+
+  branch_sendNodeAction(node) {
+    var actionPkt = this.createActionPacketToSend(
+      node.nodeId,
+      node.action,
+      node.actionType,
+      node.data
+    );
+    var msg = {
+      header: {
+        branchAddress: node.branchAddress,
+        bridgeId: node.bridgeId,
+        nodeType: node.bridgeType
+      },
+      message: {
+        id: node.bridgeId,
+        message: actionPkt
+      }
+    };
+    this.server.sendNodeAction(msg).subscribe(result => {
+      console.log(result);
+    });
+  }
   // ==============================
   // Script editor
   // ==============================
@@ -272,6 +358,21 @@ export class DataService {
   // ==================== Socket updates ========================
 
   // ==================== Helpers ========================
+
+  createActionPacketToSend(nodeId, action, actionType, data) {
+    let result = {
+      toId: nodeId,
+      state: {
+        type: "action",
+        message: {
+          action: action,
+          actionType: actionType,
+          data: data
+        }
+      }
+    };
+    return result;
+  }
 
   findScript(scriptName) {
     return new Promise((resolve, reject) => {
@@ -552,7 +653,7 @@ export class ScriptTriggerModel {
     this.hint = "";
     this.can_toggle = "";
     this.screenName = "";
-    this.httpRequestType = "";
+    this.httpRequestType = "NONE";
     this.httpRequestUrl = "";
     this.httpRequestBody = "";
   }
