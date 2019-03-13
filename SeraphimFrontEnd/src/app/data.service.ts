@@ -190,6 +190,17 @@ export class DataService {
     }
   }
 
+  scriptEditorSendHttpRequest(type, url, body = "") {
+    let msg = {
+      type: type,
+      url: url,
+      body: body
+    };
+    this.server.triggerSendHttpRequest(msg).subscribe(result => {
+      console.log(result);
+    });
+  }
+
   // ==============================
   // Overview
   // ==============================
@@ -529,6 +540,9 @@ export class ScriptTriggerModel {
   public hint: string;
   public can_toggle: string;
   public screenName: String;
+  public httpRequestType: string;
+  public httpRequestUrl: string;
+  public httpRequestBody: string;
 
   constructor() {
     this.name = "";
@@ -538,6 +552,9 @@ export class ScriptTriggerModel {
     this.hint = "";
     this.can_toggle = "";
     this.screenName = "";
+    this.httpRequestType = "";
+    this.httpRequestUrl = "";
+    this.httpRequestBody = "";
   }
 }
 

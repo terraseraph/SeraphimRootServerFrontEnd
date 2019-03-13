@@ -216,6 +216,10 @@ export class ServerService {
     return this.http.post(`${this.api}/branch/trigger/video`, msg);
   }
 
+  triggerSendHttpRequest(msg): Observable<any> {
+    return this.http.post(`${this.api}/trigger/request`, msg);
+  }
+
   // ======================================================================= //
   // ========================== HINTS  ===================================== //
   // ======================================================================= //

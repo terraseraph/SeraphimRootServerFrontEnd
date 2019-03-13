@@ -397,6 +397,33 @@
       </div>
 
 
+      <hr />
+      <h3>Advanced:</h3>
+      <div class="form-group">
+        <label for="gs_trigger_audio_type"> Http Request Method </label>
+        <select #eventTypeSelector class="selectpicker form-control" id="gs_event_type_event" [(ngModel)]="triggerToEdit.httpRequestType">
+          <option selected="selected">{{ triggerToEdit.httpRequestType }}</option>
+          <option>GET</option>
+          <option>POST</option>
+          <option>PUT</option>
+          <option>PATCH</option>
+          <option>DELETE</option>
+          <option>NONE</option>
+        </select>
+      </div>
+
+
+      <div class="form-group">
+        <label for="triggerHint"> Http Request URL: </label>
+        <input type="text" class="form-control" id="triggerHint" [(ngModel)]="triggerToEdit.httpRequestUrl" value="{{ triggerToEdit.httpRequestUrl }}" />
+      </div>
+
+      <div class="form-group">
+        <label for="triggerHint"> Http Request Body: </label>
+        <textarea type="text" class="form-control" id="triggerHint" [(ngModel)]="triggerToEdit.httpRequestBody" value="{{ triggerToEdit.httpRequestBody }}"></textarea>
+      </div>
+
+
 
 
     </div>
@@ -793,7 +820,9 @@
 
 
 
-
+<!-- NEW SCRIPT MODAL ---------------------------------------------------->
+<!--  -------------------------------------------------------------------->
+<!--  -------------------------------------------------------------------->
 
 <ng-template #newScriptModal let-modal>
   <div class="modal-header">
@@ -822,7 +851,9 @@
 
 
 
-
+<!-- SCREEN CONFIG MODAL ---------------------------------------------------->
+<!--  -------------------------------------------------------------------->
+<!--  -------------------------------------------------------------------->
 <ng-template #screenConfigModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title">Screen Config -

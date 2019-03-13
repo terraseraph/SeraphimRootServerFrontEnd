@@ -237,7 +237,7 @@ export class OverviewComponent implements OnInit {
       screenName: trigger.screenName
     };
     this.server.triggerForceTrigger(msg).subscribe(result => {
-      console.log("Forcing trigger: ", result);
+      console.log("Forcing trigger: ", msg, result);
     });
   }
 
