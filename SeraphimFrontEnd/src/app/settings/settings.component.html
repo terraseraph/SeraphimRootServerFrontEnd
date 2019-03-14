@@ -32,6 +32,90 @@
     </div>
     <div class="col-md-8">
       <div>
+
+
+        <!-- BRANCH INFO -->
+
+
+        <div class="card" *ngIf="selectedBranch?.name != undefined">
+          <div class="card-header">
+            <h2>{{selectedBranch?.name}}</h2>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Branch ID: </h5>
+            <p class="card-text">{{selectedBranch?.id}}</p>
+            <h5 class="card-title">IP Address : </h5>
+            <p class="card-text">{{selectedBranch?.ip_address}}</p>
+            <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+            <hr />
+
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Video</h5>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item" *ngFor="let video of selectedBranch.config.media?.video">
+                        <button class="btn btn-sm btn-danger" (click)="branchDeleteVideo(video)">Delete</button>
+                        {{video}}
+                      </li>
+                    </ul>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                      </div>
+                      <div class="custom-file">
+                        <input id='update_image' class="custom-file-input" (change)='onFileSelected($event);setMediaType("video")'
+                          type="file" name='file'>
+                        <!-- <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01"> -->
+                        <label class="custom-file-label" for="inputGroupFile01">Select Video</label>
+                      </div>
+                      <button class="btn btn-sm btn-primary" (click)="setMediaType('video');updateMedia()">Upload</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+
+              <div class="col-sm-6">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Audio</h5>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item" *ngFor="let audio of selectedBranch.config.media?.audio">
+                        <button class="btn btn-sm btn-danger" (click)="branchDeleteVideo(audio)">Delete</button>
+                        {{audio}}
+                      </li>
+                    </ul>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                      </div>
+                      <div class="custom-file">
+                        <!-- <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01"> -->
+                        <input id='update_image' class="custom-file-input" (change)='onFileSelected($event);setMediaType("audio")'
+                          type="file" name='file'>
+                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                      </div>
+                      <button class="btn btn-sm btn-primary" (click)="setMediaType('audio');updateMedia()">Upload</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+        <hr />
+
+
+
+        <!-- BRANCH NODE MESHES -->
         <div *ngFor="let node of selectedBranch?.nodes">
           <ul class="list-group list-group-flush">
             <li class="list-group-item">Bridge ID: {{ node?.id }}</li>

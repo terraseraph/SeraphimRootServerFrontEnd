@@ -215,6 +215,49 @@ export class DataService {
       console.log(result);
     });
   }
+
+  branch_deleteVideo(name, branchIp) {
+    let msg = {
+      name: name,
+      branchIp: branchIp,
+      type: "video"
+    };
+    this.server.branchDeleteMedia(msg).subscribe(result => {
+      console.log(result);
+    });
+  }
+
+  branch_deleteAudio(name, branchIp) {
+    let msg = {
+      name: name,
+      branchIp: branchIp,
+      type: "audio"
+    };
+    this.server.branchDeleteMedia(msg).subscribe(result => {
+      console.log(result);
+    });
+  }
+
+  branch_uploadVideo(fd, branchIp) {
+    var msg = {
+      ipAddress: branchIp,
+      formData: fd
+    };
+    console.log(msg);
+    this.server.branchUploadVideo(msg).subscribe(res => {
+      console.log(res);
+    });
+  }
+
+  branch_uploadAudio(fd, branchIp) {
+    var msg = {
+      ipAddress: branchIp,
+      formData: fd
+    };
+    this.server.branchUploadAudio(msg).subscribe(res => {
+      console.log(res);
+    });
+  }
   // ==============================
   // Script editor
   // ==============================

@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { DataService } from "../data.service";
 import { Subscription } from "rxjs";
 import { NgbModal, ModalDismissReasons } from "@ng-bootstrap/ng-bootstrap";
+import { FormsModule } from "@angular/forms";
 import * as $ from "jquery";
 import { load } from "@angular/core/src/render3";
 
@@ -41,6 +42,11 @@ export class SettingsComponent implements OnInit {
   actionRelayActions = ["start", "stop", "toggleA"];
   actionRelayActionType = "relay";
 
+  // Branch Media
+  selectedFile: any;
+  selectedFilePath: any;
+  mediaType: any;
+
   constructor(
     public dataService: DataService,
     private modalService: NgbModal
@@ -50,6 +56,29 @@ export class SettingsComponent implements OnInit {
     this.branchListSubscribe();
     this.branchSubscribe();
     this.branchLoaded = false;
+  }
+
+  onFileSelected(event) {
+    event.preventDefault();
+    console.log(event);
+    this.selectedFile = event.target.files[0];
+    this.selectedFilePath = event.target.files[0].path;
+  }
+
+  updateMedia() {
+    // event.preventDefault();
+    var fd = new FormData();
+    fd.append("file", this.selectedFile, this.selectedFile.name);
+    console.log(this.selectedFile);
+    if (this.mediaType == "video") {
+      this.dataService.branch_uploadVideo(fd, this.selectedBranch.ip_address);
+    } else {
+      this.dataService.branch_uploadAudio(fd, this.selectedBranch.ip_address);
+    }
+  }
+
+  setMediaType(type) {
+    this.mediaType = type;
   }
 
   branchListSubscribe() {
@@ -129,6 +158,14 @@ export class SettingsComponent implements OnInit {
       this.newBranchIp
     );
     this.dataService.branch_serverGetAllBranches();
+  }
+
+  branchDeleteVideo(name) {
+    this.dataService.branch_deleteVideo(name, this.selectedBranch.ip_address);
+  }
+
+  branchDeleteAudio(name) {
+    this.dataService.branch_deleteAudio(name, this.selectedBranch.ipaddress);
   }
 
   // =============================

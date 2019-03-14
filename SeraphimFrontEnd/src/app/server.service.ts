@@ -90,6 +90,25 @@ export class ServerService {
     return this.http.delete(`${this.api}/branch/${id}`);
   }
 
+  branchDeleteMedia(msg): Observable<any> {
+    return this.http.post(`${this.api}/branch/media/delete`, msg);
+  }
+
+  branchUploadVideo(msg): Observable<any> {
+    var p = {
+      branchIp: msg.ipAddress,
+      files: msg.formData
+    };
+    console.log(`${msg.ipAddress}/video`);
+    return this.http.post(`${msg.ipAddress}/video`, p);
+  }
+  branchUploadAudio(msg): Observable<any> {
+    var p = {
+      branchIp: msg.ipAddress,
+      files: msg.formData
+    };
+    return this.http.post(`${msg.ipAddress}/audio`, p);
+  }
   // ==========================================//
   // ======== Nodes =======================//
   // =========================================//
