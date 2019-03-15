@@ -238,23 +238,15 @@ export class DataService {
     });
   }
 
-  branch_uploadVideo(fd, branchIp) {
-    var msg = {
-      ipAddress: branchIp,
-      formData: fd
-    };
-    console.log(msg);
-    this.server.branchUploadVideo(msg).subscribe(res => {
+  branch_uploadVideo(fd) {
+    this.server.branchUploadVideo(fd).subscribe(res => {
       console.log(res);
     });
   }
 
-  branch_uploadAudio(fd, branchIp) {
-    var msg = {
-      ipAddress: branchIp,
-      formData: fd
-    };
-    this.server.branchUploadAudio(msg).subscribe(res => {
+  branch_uploadAudio(fd) {
+    console.log(fd);
+    this.server.branchUploadAudio(fd).subscribe(res => {
       console.log(res);
     });
   }

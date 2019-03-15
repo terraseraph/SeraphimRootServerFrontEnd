@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { BehaviorSubject } from "rxjs";
 import { ConfigService } from "./config.service";
@@ -94,20 +94,14 @@ export class ServerService {
     return this.http.post(`${this.api}/branch/media/delete`, msg);
   }
 
-  branchUploadVideo(msg): Observable<any> {
-    var p = {
-      branchIp: msg.ipAddress,
-      files: msg.formData
-    };
-    console.log(`${msg.ipAddress}/video`);
-    return this.http.post(`${msg.ipAddress}/video`, p);
+  branchUploadVideo(msg: FormData): Observable<any> {
+    console.log(msg);
+    let headers = new HttpHeaders();
+    return this.http.post(`${this.api}/branch/video`, msg);
   }
   branchUploadAudio(msg): Observable<any> {
-    var p = {
-      branchIp: msg.ipAddress,
-      files: msg.formData
-    };
-    return this.http.post(`${msg.ipAddress}/audio`, p);
+    console.log(msg);
+    return this.http.post(`${this.api}/branch/audio`, msg);
   }
   // ==========================================//
   // ======== Nodes =======================//

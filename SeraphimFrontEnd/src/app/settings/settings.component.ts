@@ -2,7 +2,12 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { DataService } from "../data.service";
 import { Subscription } from "rxjs";
 import { NgbModal, ModalDismissReasons } from "@ng-bootstrap/ng-bootstrap";
-import { FormsModule } from "@angular/forms";
+import {
+  FormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators
+} from "@angular/forms";
 import * as $ from "jquery";
 import { load } from "@angular/core/src/render3";
 
@@ -67,14 +72,23 @@ export class SettingsComponent implements OnInit {
 
   updateMedia() {
     // event.preventDefault();
-    var fd = new FormData();
-    fd.append("file", this.selectedFile, this.selectedFile.name);
-    console.log(this.selectedFile);
-    if (this.mediaType == "video") {
-      this.dataService.branch_uploadVideo(fd, this.selectedBranch.ip_address);
-    } else {
-      this.dataService.branch_uploadAudio(fd, this.selectedBranch.ip_address);
-    }
+    this.prepareForm().then(fd => {
+      if (this.mediaType == "video") {
+        this.dataService.branch_uploadVideo(fd);
+      } else {
+        this.dataService.branch_uploadAudio(fd);
+      }
+    });
+  }
+
+  prepareForm() {
+    return new Promise((resolve, reject) => {
+      let fd: FormData = new FormData();
+      fd.append("file", this.selectedFile, this.selectedFile.name);
+      fd.append("branchIp", this.selectedBranch.ip_address);
+      console.log(this.selectedFile, this.selectedFile.name);
+      resolve(fd);
+    });
   }
 
   setMediaType(type) {
