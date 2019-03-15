@@ -24,7 +24,15 @@ export class SettingsComponent implements OnInit {
   branchLoaded: boolean;
 
   // Editing nodes
-  nodeTypes = ["relay", "bridge", "button", "keypad", "magSwitch", "rfid"];
+  nodeTypes = [
+    "relay",
+    "bridge",
+    "button",
+    "keypad",
+    "magSwitch",
+    "rfid",
+    "mp3"
+  ];
   tempNodeType: any;
 
   tempAction: any;
@@ -75,9 +83,10 @@ export class SettingsComponent implements OnInit {
     this.prepareForm().then(fd => {
       if (this.mediaType == "video") {
         this.dataService.branch_uploadVideo(fd);
-      } else {
+      } else if (this.mediaType == "audio") {
         this.dataService.branch_uploadAudio(fd);
       }
+      this.mediaType = "none";
     });
   }
 

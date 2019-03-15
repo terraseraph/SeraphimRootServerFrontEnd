@@ -95,12 +95,9 @@ export class ServerService {
   }
 
   branchUploadVideo(msg: FormData): Observable<any> {
-    console.log(msg);
-    let headers = new HttpHeaders();
     return this.http.post(`${this.api}/branch/video`, msg);
   }
   branchUploadAudio(msg): Observable<any> {
-    console.log(msg);
     return this.http.post(`${this.api}/branch/audio`, msg);
   }
   // ==========================================//

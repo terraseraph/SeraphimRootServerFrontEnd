@@ -245,7 +245,6 @@ export class DataService {
   }
 
   branch_uploadAudio(fd) {
-    console.log(fd);
     this.server.branchUploadAudio(fd).subscribe(res => {
       console.log(res);
     });
