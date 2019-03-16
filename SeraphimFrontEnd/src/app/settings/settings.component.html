@@ -86,7 +86,7 @@
                     <h5 class="card-title">Audio</h5>
                     <ul class="list-group list-group-flush">
                       <li class="list-group-item" *ngFor="let audio of selectedBranch.config.media?.audio">
-                        <button class="btn btn-sm btn-danger" (click)="branchDeleteVideo(audio)">Delete</button>
+                        <button class="btn btn-sm btn-danger" (click)="branchDeleteAudio(audio)">Delete</button>
                         {{audio}}
                       </li>
                     </ul>
