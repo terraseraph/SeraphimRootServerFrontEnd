@@ -82,6 +82,17 @@ export class DataService {
       this.branch_observableListUpdate();
     });
   }
+
+
+
+  branch_getScriptsForUploading(cb) {
+    this.server.getFreshScriptsForEditing().subscribe((scriptList: any) => {
+      this.scriptEditor_allScripts = scriptList;
+      console.log(scriptList);
+      cb(scriptList)
+    });
+  }
+
   branch_getSelectedBranch() {
     return this.branch_selectedBranch;
   }
@@ -216,7 +227,7 @@ export class DataService {
     });
   }
 
-  branch_deleteVideo(name, branchIp, cb){
+  branch_deleteVideo(name, branchIp, cb) {
     let msg = {
       name: name,
       branchIp: branchIp,
@@ -255,26 +266,29 @@ export class DataService {
     });
   }
 
-  branch_uploadScript(script, ip){
-    let msg = {
-      branchIp : ip,
-      script: script
-    }
-    this.server.branchUploadScript(msg).subscribe(result =>{
-      console.log(result);
+  branch_uploadScript(scriptName, ip) {
+    this.findScript(scriptName).then(script =>{
+      let msg = {
+        branchIp: ip,
+        script: script
+      }
+      console.log(msg);
+      this.server.branchUploadScript(msg).subscribe(result => {
+        console.log(result);
+      })
     })
   }
 
-  branch_deleteScript(scriptName, ip){
-let msg = {
-  branchIp : ip,
-  scriptName : scriptName
-}
-console.log(msg);
+  branch_deleteScript(scriptName, ip) {
+    let msg = {
+      branchIp: ip,
+      scriptName: scriptName
+    }
+    console.log(msg);
 
-this.server.branchDeleteScript(msg).subscribe(result =>{
-  console.log(result);
-});
+    this.server.branchDeleteScript(msg).subscribe(result => {
+      console.log(result);
+    });
   }
   // ==============================
   // Script editor

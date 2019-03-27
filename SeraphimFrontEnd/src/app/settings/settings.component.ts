@@ -62,6 +62,10 @@ export class SettingsComponent implements OnInit {
   selectedFilePath: any;
   mediaType: any;
 
+  // branch scripts
+  allScripts:any;
+  selectedScriptToUpload:any;
+
   constructor(
     public dataService: DataService,
     private modalService: NgbModal
@@ -117,6 +121,10 @@ export class SettingsComponent implements OnInit {
   }
 
   branchListSubscribe() {
+    this.dataService.branch_getScriptsForUploading((scripts =>{
+this.allScripts = scripts;
+    }))
+
     this.dataService.branch_serverGetAllBranches();
     this.branchListSubscription = this.dataService.branch_observableBranchList.subscribe(
       branchList => {

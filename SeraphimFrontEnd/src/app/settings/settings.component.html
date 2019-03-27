@@ -68,6 +68,15 @@
                 </div>
               </div>
 
+                    <div class="form-group">
+        <label for="gs_trigger_select_state">Upload script</label>
+        <select #scriptSelector class="selectpicker form-control" id="gs_trigger_select_state" [(ngModel)]="selectedScriptToUpload">
+          <option selected="selected">{{ selectedScriptToUpload }}</option>
+          <option *ngFor="let script of allScripts">{{script.name}}</option>
+        </select>
+        <button class="btn btn-sm btn-primary" (click)="branchAddScript(selectedScriptToUpload)">Upload</button>
+      </div>
+
             <hr/>
 
             <div class="row">
