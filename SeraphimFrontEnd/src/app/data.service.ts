@@ -216,7 +216,7 @@ export class DataService {
     });
   }
 
-  branch_deleteVideo(name, branchIp) {
+  branch_deleteVideo(name, branchIp, cb){
     let msg = {
       name: name,
       branchIp: branchIp,
@@ -224,10 +224,11 @@ export class DataService {
     };
     this.server.branchDeleteMedia(msg).subscribe(result => {
       console.log(result);
+      cb(result);
     });
   }
 
-  branch_deleteAudio(name, branchIp) {
+  branch_deleteAudio(name, branchIp, cb) {
     let msg = {
       name: name,
       branchIp: branchIp,
@@ -235,19 +236,45 @@ export class DataService {
     };
     this.server.branchDeleteMedia(msg).subscribe(result => {
       console.log(result);
+      this.branch_observableUpdate();
+      cb(result);
     });
   }
 
-  branch_uploadVideo(fd) {
+  branch_uploadVideo(fd, cb) {
     this.server.branchUploadVideo(fd).subscribe(res => {
       console.log(res);
+      cb(res);
     });
   }
 
-  branch_uploadAudio(fd) {
+  branch_uploadAudio(fd, cb) {
     this.server.branchUploadAudio(fd).subscribe(res => {
       console.log(res);
+      cb(res);
     });
+  }
+
+  branch_uploadScript(script, ip){
+    let msg = {
+      branchIp : ip,
+      script: script
+    }
+    this.server.branchUploadScript(msg).subscribe(result =>{
+      console.log(result);
+    })
+  }
+
+  branch_deleteScript(scriptName, ip){
+let msg = {
+  branchIp : ip,
+  scriptName : scriptName
+}
+console.log(msg);
+
+this.server.branchDeleteScript(msg).subscribe(result =>{
+  console.log(result);
+});
   }
   // ==============================
   // Script editor

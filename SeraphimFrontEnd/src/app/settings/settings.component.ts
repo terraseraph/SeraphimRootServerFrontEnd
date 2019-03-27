@@ -57,6 +57,8 @@ export class SettingsComponent implements OnInit {
 
   // Branch Media
   selectedFile: any;
+  selectedVideoName: any;
+  selectedAudioName:any;
   selectedFilePath: any;
   mediaType: any;
 
@@ -82,9 +84,13 @@ export class SettingsComponent implements OnInit {
     // event.preventDefault();
     this.prepareForm().then(fd => {
       if (this.mediaType == "video") {
-        this.dataService.branch_uploadVideo(fd);
+        this.dataService.branch_uploadVideo(fd, (result)=>{
+          this.loadBranch(this.selectedBranch.id);
+        });
       } else if (this.mediaType == "audio") {
-        this.dataService.branch_uploadAudio(fd);
+        this.dataService.branch_uploadAudio(fd, (result)=>{
+          this.loadBranch(this.selectedBranch.id);
+        });
       }
       this.mediaType = "none";
     });
@@ -102,6 +108,12 @@ export class SettingsComponent implements OnInit {
 
   setMediaType(type) {
     this.mediaType = type;
+    if(type == "video"){
+      this.selectedVideoName = this.selectedFile.name;
+    }
+    else if(type == "audio"){
+      this.selectedAudioName = this.selectedFile.name;
+    }
   }
 
   branchListSubscribe() {
@@ -184,11 +196,23 @@ export class SettingsComponent implements OnInit {
   }
 
   branchDeleteVideo(name) {
-    this.dataService.branch_deleteVideo(name, this.selectedBranch.ip_address);
+    this.dataService.branch_deleteVideo(name, this.selectedBranch.ip_address, (result)=>{
+this.loadBranch(this.selectedBranch.id);
+    });
   }
 
   branchDeleteAudio(name) {
-    this.dataService.branch_deleteAudio(name, this.selectedBranch.ipaddress);
+    this.dataService.branch_deleteAudio(name, this.selectedBranch.ip_address, (result)=>{
+this.loadBranch(this.selectedBranch.id);
+    });
+  }
+
+  branchDeleteScript(scriptName:any){
+    this.dataService.branch_deleteScript(scriptName, this.selectedBranch.ip_address);
+  }
+
+  branchAddScript(script){
+  this.dataService.branch_uploadScript(script, this.selectedBranch.ip_address);
   }
 
   // =============================

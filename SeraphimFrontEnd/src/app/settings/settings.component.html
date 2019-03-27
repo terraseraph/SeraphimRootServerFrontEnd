@@ -1,5 +1,9 @@
 <div class="container-fluid">
   <div class="row">
+    <h3>Server Config</h3>
+  </div>
+  <hr/>
+  <div class="row">
     <div class="col-md-4">
       <div id="instance_list">
         <h3>Branches</h3>
@@ -50,6 +54,23 @@
             <hr />
 
             <div class="row">
+              <div class="col-sm-12">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Branch Scripts</h5>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item" *ngFor="let scriptName of selectedBranch.config?.branch_scripts">
+                        <button class="btn btn-sm btn-danger" (click)="branchDeleteScript(scriptName)">Delete</button>
+                        {{scriptName}}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+            <hr/>
+
+            <div class="row">
               <div class="col-sm-6">
                 <div class="card">
                   <div class="card-body">
@@ -68,7 +89,7 @@
                         <input id='update_image' class="custom-file-input" (change)='onFileSelected($event);setMediaType("video")'
                           type="file" name='file'>
                         <!-- <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01"> -->
-                        <label class="custom-file-label" for="inputGroupFile01">Select Video</label>
+                        <label class="custom-file-label" for="inputGroupFile01">{{selectedVideoName}}</label>
                       </div>
                       <button class="btn btn-sm btn-primary" (click)="setMediaType('video');updateMedia()">Upload</button>
                     </div>
@@ -98,7 +119,7 @@
                         <!-- <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01"> -->
                         <input id='update_image' class="custom-file-input" (change)='onFileSelected($event);setMediaType("audio")'
                           type="file" name='file'>
-                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                        <label class="custom-file-label" for="inputGroupFile01">{{selectedAudioName}}</label>
                       </div>
                       <button class="btn btn-sm btn-primary" (click)="setMediaType('audio');updateMedia()">Upload</button>
                     </div>

@@ -100,6 +100,14 @@ export class ServerService {
   branchUploadAudio(msg): Observable<any> {
     return this.http.post(`${this.api}/branch/audio`, msg);
   }
+
+  branchUploadScript(msg): Observable<any>{
+    return this.http.post(`${this.api}/branch/script/upload`, msg);
+  }
+
+  branchDeleteScript(msg): Observable<any>{
+    return this.http.post(`${this.api}/branch/script/delete`, msg);
+  }
   // ==========================================//
   // ======== Nodes =======================//
   // =========================================//
