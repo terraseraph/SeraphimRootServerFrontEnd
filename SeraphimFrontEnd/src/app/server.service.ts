@@ -101,12 +101,28 @@ export class ServerService {
     return this.http.post(`${this.api}/branch/audio`, msg);
   }
 
-  branchUploadScript(msg): Observable<any>{
+  branchUploadScript(msg): Observable<any> {
     return this.http.post(`${this.api}/branch/script/upload`, msg);
   }
 
-  branchDeleteScript(msg): Observable<any>{
+  branchDeleteScript(msg): Observable<any> {
     return this.http.post(`${this.api}/branch/script/delete`, msg);
+  }
+
+  branchShellRestartBranch(msg): Observable<any> {
+    return this.http.post(`${this.api}/branch/shell/restart`, msg);
+  }
+
+  branchShellReloadBranchScreen(msg): Observable<any> {
+    return this.http.post(`${this.api}/branch/shell/reload`, msg);
+  }
+
+  branchShellCustomCommand(msg): Observable<any> {
+    return this.http.post(`${this.api}/branch/shell/command`, msg);
+  }
+
+  branchShellUpdateFromGit(msg): Observable<any> {
+    return this.http.post(`${this.api}/branch/shell/gitupdate`, msg);
   }
   // ==========================================//
   // ======== Nodes =======================//

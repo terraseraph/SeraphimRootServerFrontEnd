@@ -39,6 +39,8 @@ export class SettingsComponent implements OnInit {
   tempActionType: any;
   tempActionData: any;
 
+  tempShellCommand: any;
+
   // New Branch
   @ViewChild("newBranchModal") newBranchModal: any;
   newBranchName: any;
@@ -58,13 +60,13 @@ export class SettingsComponent implements OnInit {
   // Branch Media
   selectedFile: any;
   selectedVideoName: any;
-  selectedAudioName:any;
+  selectedAudioName: any;
   selectedFilePath: any;
   mediaType: any;
 
   // branch scripts
-  allScripts:any;
-  selectedScriptToUpload:any;
+  allScripts: any;
+  selectedScriptToUpload: any;
 
   constructor(
     public dataService: DataService,
@@ -88,11 +90,11 @@ export class SettingsComponent implements OnInit {
     // event.preventDefault();
     this.prepareForm().then(fd => {
       if (this.mediaType == "video") {
-        this.dataService.branch_uploadVideo(fd, (result)=>{
+        this.dataService.branch_uploadVideo(fd, result => {
           this.loadBranch(this.selectedBranch.id);
         });
       } else if (this.mediaType == "audio") {
-        this.dataService.branch_uploadAudio(fd, (result)=>{
+        this.dataService.branch_uploadAudio(fd, result => {
           this.loadBranch(this.selectedBranch.id);
         });
       }
@@ -112,18 +114,17 @@ export class SettingsComponent implements OnInit {
 
   setMediaType(type) {
     this.mediaType = type;
-    if(type == "video"){
+    if (type == "video") {
       this.selectedVideoName = this.selectedFile.name;
-    }
-    else if(type == "audio"){
+    } else if (type == "audio") {
       this.selectedAudioName = this.selectedFile.name;
     }
   }
 
   branchListSubscribe() {
-    this.dataService.branch_getScriptsForUploading((scripts =>{
-this.allScripts = scripts;
-    }))
+    this.dataService.branch_getScriptsForUploading(scripts => {
+      this.allScripts = scripts;
+    });
 
     this.dataService.branch_serverGetAllBranches();
     this.branchListSubscription = this.dataService.branch_observableBranchList.subscribe(
@@ -204,23 +205,37 @@ this.allScripts = scripts;
   }
 
   branchDeleteVideo(name) {
-    this.dataService.branch_deleteVideo(name, this.selectedBranch.ip_address, (result)=>{
-this.loadBranch(this.selectedBranch.id);
-    });
+    this.dataService.branch_deleteVideo(
+      name,
+      this.selectedBranch.ip_address,
+      result => {
+        this.loadBranch(this.selectedBranch.id);
+      }
+    );
   }
 
   branchDeleteAudio(name) {
-    this.dataService.branch_deleteAudio(name, this.selectedBranch.ip_address, (result)=>{
-this.loadBranch(this.selectedBranch.id);
-    });
+    this.dataService.branch_deleteAudio(
+      name,
+      this.selectedBranch.ip_address,
+      result => {
+        this.loadBranch(this.selectedBranch.id);
+      }
+    );
   }
 
-  branchDeleteScript(scriptName:any){
-    this.dataService.branch_deleteScript(scriptName, this.selectedBranch.ip_address);
+  branchDeleteScript(scriptName: any) {
+    this.dataService.branch_deleteScript(
+      scriptName,
+      this.selectedBranch.ip_address
+    );
   }
 
-  branchAddScript(script){
-  this.dataService.branch_uploadScript(script, this.selectedBranch.ip_address);
+  branchAddScript(script) {
+    this.dataService.branch_uploadScript(
+      script,
+      this.selectedBranch.ip_address
+    );
   }
 
   // =============================
@@ -300,5 +315,30 @@ this.loadBranch(this.selectedBranch.id);
         cb(node);
       }
     }
+  }
+
+  // =============================
+  // ===== SHELL FUNCTIONS =======
+  // =============================
+
+  shellRestartBranch() {
+    this.dataService.branch_shellRestartBranch(this.selectedBranch.ip_address);
+  }
+
+  shellReloadBranchScreen() {
+    this.dataService.branch_shellReloadBranchScreen(
+      this.selectedBranch.ip_address
+    );
+  }
+
+  shellCustomCommand() {
+    this.dataService.branch_shellCustomCommand(
+      this.selectedBranch.ip_address,
+      this.tempShellCommand
+    );
+  }
+
+  shellUpdateFromGit() {
+    this.dataService.branch_shellUpdateFromGit(this.selectedBranch.ip_address);
   }
 }

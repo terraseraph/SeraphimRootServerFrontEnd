@@ -267,7 +267,7 @@ export class DataService {
   }
 
   branch_uploadScript(scriptName, ip) {
-    this.findScript(scriptName).then(script =>{
+    this.findScript(scriptName).then(script => {
       let msg = {
         branchIp: ip,
         script: script
@@ -290,6 +290,46 @@ export class DataService {
       console.log(result);
     });
   }
+
+
+  branch_shellRestartBranch(ip) {
+    let msg = {
+      branchIp: ip
+    }
+    this.server.branchShellRestartBranch(msg).subscribe(result =>{
+
+    })
+  }
+
+  branch_shellReloadBranchScreen(ip) {
+    let msg = {
+      branchIp: ip
+    }
+    this.server.branchShellReloadBranchScreen(msg).subscribe(result =>{
+
+    })
+  }
+
+  branch_shellCustomCommand(ip, cmd) {
+    let msg = {
+      branchIp: ip,
+      command: cmd
+    }
+    this.server.branchShellCustomCommand(msg).subscribe(result =>{
+
+    })
+  }
+
+
+    branch_shellUpdateFromGit(ip) {
+    let msg = {
+      branchIp: ip
+    }
+    this.server.branchShellUpdateFromGit(msg).subscribe(result =>{
+
+    })
+  }
+
   // ==============================
   // Script editor
   // ==============================

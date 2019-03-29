@@ -2,7 +2,7 @@
   <div class="row">
     <h3>Server Config</h3>
   </div>
-  <hr/>
+  <hr />
   <div class="row">
     <div class="col-md-4">
       <div id="instance_list">
@@ -46,15 +46,27 @@
             <h2>{{selectedBranch?.name}}</h2>
           </div>
           <div class="card-body">
-            <h5 class="card-title">Branch ID: </h5>
-            <p class="card-text">{{selectedBranch?.id}}</p>
-            <h5 class="card-title">IP Address : </h5>
-            <p class="card-text">{{selectedBranch?.ip_address}}</p>
+            <div class="row">
+              <div class="col-6">
+                <h5 class="card-title">Branch ID: </h5>
+                <p class="card-text">{{selectedBranch?.id}}</p>
+                <h5 class="card-title">IP Address : </h5>
+                <p class="card-text">{{selectedBranch?.ip_address}}</p>
+              </div>
+              <div class="col-6">
+                <button class="btn btn-warning" (click)="shellRestartBranch()">Restart Branch Server</button>
+                <button class="btn btn-warning" (click)="shellReloadBranchScreen()">Reload Branch Screen</button>
+                <button class="btn btn-warning" (click)="shellUpdateFromGit()">Update Server From Git</button>
+
+                 <input type="text" class="form-control" id="shell_command_input" [(ngModel)]="tempShellCommand" />
+                <button class="btn btn-warning" (click)="shellCustomCommand()">Send Custom Command</button>
+              </div>
+            </div>
             <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
             <hr />
 
             <div class="row">
-              <div class="col-sm-12">
+              <div class="col-12">
                 <div class="card">
                   <div class="card-body">
                     <h5 class="card-title">Branch Scripts</h5>
@@ -68,247 +80,257 @@
                 </div>
               </div>
 
-                    <div class="form-group">
-        <label for="gs_trigger_select_state">Upload script</label>
-        <select #scriptSelector class="selectpicker form-control" id="gs_trigger_select_state" [(ngModel)]="selectedScriptToUpload">
-          <option selected="selected">{{ selectedScriptToUpload }}</option>
-          <option *ngFor="let script of allScripts">{{script.name}}</option>
-        </select>
-        <button class="btn btn-sm btn-primary" (click)="branchAddScript(selectedScriptToUpload)">Upload</button>
-      </div>
+              <div class="form-group">
+                <label for="gs_trigger_select_state">Upload script</label>
+                <select #scriptSelector class="selectpicker form-control" id="gs_trigger_select_state"
+                  [(ngModel)]="selectedScriptToUpload">
+                  <option selected="selected">{{ selectedScriptToUpload }}</option>
+                  <option *ngFor="let script of allScripts">{{script.name}}</option>
+                </select>
+                <button class="btn btn-sm btn-primary" (click)="branchAddScript(selectedScriptToUpload)">Upload</button>
+              </div>
 
-            <hr/>
+              <hr />
 
-            <div class="row">
-              <div class="col-sm-6">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Video</h5>
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item" *ngFor="let video of selectedBranch.config.media?.video">
-                        <button class="btn btn-sm btn-danger" (click)="branchDeleteVideo(video)">Delete</button>
-                        {{video}}
-                      </li>
-                    </ul>
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Video</h5>
+                      <ul class="list-group list-group-flush">
+                        <li class="list-group-item" *ngFor="let video of selectedBranch.config.media?.video">
+                          <button class="btn btn-sm btn-danger" (click)="branchDeleteVideo(video)">Delete</button>
+                          {{video}}
+                        </li>
+                      </ul>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                        </div>
+                        <div class="custom-file">
+                          <input id='update_image' class="custom-file-input"
+                            (change)='onFileSelected($event);setMediaType("video")' type="file" name='file'>
+                          <!-- <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01"> -->
+                          <label class="custom-file-label" for="inputGroupFile01">{{selectedVideoName}}</label>
+                        </div>
+                        <button class="btn btn-sm btn-primary"
+                          (click)="setMediaType('video');updateMedia()">Upload</button>
                       </div>
-                      <div class="custom-file">
-                        <input id='update_image' class="custom-file-input" (change)='onFileSelected($event);setMediaType("video")'
-                          type="file" name='file'>
-                        <!-- <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01"> -->
-                        <label class="custom-file-label" for="inputGroupFile01">{{selectedVideoName}}</label>
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+
+                <div class="col-sm-6">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Audio</h5>
+                      <ul class="list-group list-group-flush">
+                        <li class="list-group-item" *ngFor="let audio of selectedBranch.config.media?.audio">
+                          <button class="btn btn-sm btn-danger" (click)="branchDeleteAudio(audio)">Delete</button>
+                          {{audio}}
+                        </li>
+                      </ul>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                        </div>
+                        <div class="custom-file">
+                          <!-- <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01"> -->
+                          <input id='update_image' class="custom-file-input"
+                            (change)='onFileSelected($event);setMediaType("audio")' type="file" name='file'>
+                          <label class="custom-file-label" for="inputGroupFile01">{{selectedAudioName}}</label>
+                        </div>
+                        <button class="btn btn-sm btn-primary"
+                          (click)="setMediaType('audio');updateMedia()">Upload</button>
                       </div>
-                      <button class="btn btn-sm btn-primary" (click)="setMediaType('video');updateMedia()">Upload</button>
                     </div>
                   </div>
                 </div>
               </div>
 
-
-
-
-
-              <div class="col-sm-6">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Audio</h5>
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item" *ngFor="let audio of selectedBranch.config.media?.audio">
-                        <button class="btn btn-sm btn-danger" (click)="branchDeleteAudio(audio)">Delete</button>
-                        {{audio}}
-                      </li>
-                    </ul>
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                      </div>
-                      <div class="custom-file">
-                        <!-- <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01"> -->
-                        <input id='update_image' class="custom-file-input" (change)='onFileSelected($event);setMediaType("audio")'
-                          type="file" name='file'>
-                        <label class="custom-file-label" for="inputGroupFile01">{{selectedAudioName}}</label>
-                      </div>
-                      <button class="btn btn-sm btn-primary" (click)="setMediaType('audio');updateMedia()">Upload</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
-
           </div>
-        </div>
 
 
-        <hr />
-
-
-
-        <!-- BRANCH NODE MESHES -->
-        <div *ngFor="let node of selectedBranch?.nodes">
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">Bridge ID: {{ node?.id }}</li>
-
-            <li class="list-group-item">
-              <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">Branch Address :</span>
-                </div>
-                <input type="text" class="form-control" id="branch_address" value="{{ node.ipAddress }}" />
-              </div>
-              <!-- IP ADDRESS: {{node?.ipAddress}} -->
-            </li>
-
-            <li class="list-group-item">
-              <div class="input-group input-group-sm">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">Bridge Type :</span>
-                </div>
-                <input type="text" class="form-control" id="branch_address" value="{{ node?.nodeType }}" />
-              </div>
-
-              <!-- Bridge Type: {{node?.nodeType}} -->
-            </li>
-          </ul>
-          <h4>Mesh Nodes:</h4>
-          <div *ngFor="let mNode of selectedBranchMeshNodes">
-            <div class="card">
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                  <h5>Hardware Id:</h5>
-                  {{ mNode?.hardwareId }}
-                </li>
-                <li class="list-group-item">
-                  <h5>Common Id:</h5>
-                  {{ mNode?.id }}
+          <hr />
 
 
 
-                <li class="list-group-item">
-                  <div class="input-group input-group-sm">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">Node Id</span>
-                    </div>
-                    <input type="text" class="form-control" id="mNodeId_{{mNode.id}}" value="{{ mNode.id }}" />
+          <!-- BRANCH NODE MESHES -->
+          <div *ngFor="let node of selectedBranch?.nodes">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">Bridge ID: {{ node?.id }}</li>
+
+              <li class="list-group-item">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Branch Address :</span>
                   </div>
-                  <button class="btn btn-sm-success" (click)="editNodeId(node.id, node.nodeType, mNode.id)">Change</button>
-                  <!-- IP ADDRESS: {{node?.ipAddress}} -->
-                </li>
-                <li class="list-group-item">
-                  <h5>Node Type:</h5>
-                  {{ mNode?.type }}
+                  <input type="text" class="form-control" id="branch_address" value="{{ node.ipAddress }}" />
+                </div>
+                <!-- IP ADDRESS: {{node?.ipAddress}} -->
+              </li>
 
-                  <select class="selectpicker form-control" id="mNodeSelectType_{{mNode.id}}">
-                    <option selected="selected">{{ mNode?.type }}</option>
-                    <option *ngFor="let type of nodeTypes">{{type}}</option>
-                  </select>
-                  <button class="btn btn-sm-success" (click)="editNodeType(node.id, node.nodeType, mNode.id)">Change</button>
-
-
-
-
-                </li>
-                <li class="list-group-item">
-                  <h5>Last Updated:</h5>
-                  {{ mNode?.lastUpdated | date: "medium" }}
-                </li>
-                <li class="list-group-item">
-                  <h5>Free Memory:</h5>
-                  {{ mNode?.memory }}
-                </li>
-
-                <li class="list-group-item">
-                  <h3>Send Action</h3>
-
-                  <!-- Relay controls -->
-                  <div *ngIf="mNode.type == 'relay'">
-                    <div *ngFor="let action of actionRelayActions">
-                      <button *ngFor="let data of actionRelayData" (click)="sendActionToNode(node.id, node.nodeType, mNode.id, action, 'relay', data)">{{action}}
-                        {{data}}</button>
-                    </div>
-
-
-
+              <li class="list-group-item">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Bridge Type :</span>
                   </div>
-                </li>
-              </ul>
+                  <input type="text" class="form-control" id="branch_address" value="{{ node?.nodeType }}" />
+                </div>
+
+                <!-- Bridge Type: {{node?.nodeType}} -->
+              </li>
+            </ul>
+            <h4>Mesh Nodes:</h4>
+            <div *ngFor="let mNode of selectedBranchMeshNodes">
+              <div class="card">
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">
+                    <h5>Hardware Id:</h5>
+                    {{ mNode?.hardwareId }}
+                  </li>
+                  <li class="list-group-item">
+                    <h5>Common Id:</h5>
+                    {{ mNode?.id }}
+
+
+
+                  <li class="list-group-item">
+                    <div class="input-group input-group-sm">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">Node Id</span>
+                      </div>
+                      <input type="text" class="form-control" id="mNodeId_{{mNode.id}}" value="{{ mNode.id }}" />
+                    </div>
+                    <button class="btn btn-sm-success"
+                      (click)="editNodeId(node.id, node.nodeType, mNode.id)">Change</button>
+                    <!-- IP ADDRESS: {{node?.ipAddress}} -->
+                  </li>
+                  <li class="list-group-item">
+                    <h5>Node Type:</h5>
+                    {{ mNode?.type }}
+
+                    <select class="selectpicker form-control" id="mNodeSelectType_{{mNode.id}}">
+                      <option selected="selected">{{ mNode?.type }}</option>
+                      <option *ngFor="let type of nodeTypes">{{type}}</option>
+                    </select>
+                    <button class="btn btn-sm-success"
+                      (click)="editNodeType(node.id, node.nodeType, mNode.id)">Change</button>
+
+
+
+
+                  </li>
+                  <li class="list-group-item">
+                    <h5>Last Updated:</h5>
+                    {{ mNode?.lastUpdated | date: "medium" }}
+                  </li>
+                  <li class="list-group-item">
+                    <h5>Free Memory:</h5>
+                    {{ mNode?.memory }}
+                  </li>
+
+                  <li class="list-group-item">
+                    <h3>Send Action</h3>
+
+                    <!-- Relay controls -->
+                    <div *ngIf="mNode.type == 'relay'">
+                      <div *ngFor="let action of actionRelayActions">
+                        <button *ngFor="let data of actionRelayData"
+                          (click)="sendActionToNode(node.id, node.nodeType, mNode.id, action, 'relay', data)">{{action}}
+                          {{data}}</button>
+                      </div>
+
+
+
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <hr />
             </div>
-            <hr />
           </div>
         </div>
       </div>
     </div>
+
+    <ng-template #newBranchModal let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title">New Script</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h3>Branch Name</h3>
+        <div class="form-group">
+          <label for="hintName"> Name </label>
+          <input type="text" class="form-control" id="hintName" [(ngModel)]="newBranchName"
+            placeholder="Branch Name...." />
+        </div>
+
+        <h3>Branch IP Address</h3>
+        <div class="form-group">
+          <label for="hintName"> IP Address </label>
+          <input type="text" class="form-control" id="hintName" [(ngModel)]="newBranchIp"
+            placeholder="E.g. http://192.168.0.10:4300" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" (click)="createNewBranch(); modal.close('Close click')">
+          Save
+        </button>
+        <button type="button" class="btn btn-light" (click)="modal.close('Close click')">
+          Close
+        </button>
+      </div>
+    </ng-template>
+
+    <ng-template #branchConfigModal let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title">{{ selectedBranch?.name }}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="input-group input-group-sm">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Branch Name :</span>
+          </div>
+          <input type="text" class="form-control" id="hintName" [(ngModel)]="selectedBranch.name"
+            placeholder="Branch Name...." />
+        </div>
+
+        <div class="input-group input-group-sm">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Branch IP Address :</span>
+          </div>
+          <input type="text" class="form-control" id="branch_address" [(ngModel)]="selectedBranch.ip_address"
+            value="{{ selectedBranch.ipAddress }}" />
+        </div>
+
+        <div class="input-group input-group-sm">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Root Server IP :</span>
+          </div>
+          <input type="text" class="form-control" id="hintName" [(ngModel)]="selectedBranch.config.server_url"
+            placeholder="E.g. http://192.168.0.10:4300" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" (click)="updateBRanchConfig(); modal.close('Close click')">
+          Save
+        </button>
+        <button type="button" class="btn btn-light" (click)="modal.close('Close click')">
+          Close
+        </button>
+      </div>
+    </ng-template>
   </div>
-
-  <ng-template #newBranchModal let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title">New Script</h4>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <h3>Branch Name</h3>
-      <div class="form-group">
-        <label for="hintName"> Name </label>
-        <input type="text" class="form-control" id="hintName" [(ngModel)]="newBranchName" placeholder="Branch Name...." />
-      </div>
-
-      <h3>Branch IP Address</h3>
-      <div class="form-group">
-        <label for="hintName"> IP Address </label>
-        <input type="text" class="form-control" id="hintName" [(ngModel)]="newBranchIp" placeholder="E.g. http://192.168.0.10:4300" />
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-default" (click)="createNewBranch(); modal.close('Close click')">
-        Save
-      </button>
-      <button type="button" class="btn btn-light" (click)="modal.close('Close click')">
-        Close
-      </button>
-    </div>
-  </ng-template>
-
-  <ng-template #branchConfigModal let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title">{{ selectedBranch?.name }}</h4>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-
-    <div class="modal-body">
-      <div class="input-group input-group-sm">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Branch Name :</span>
-        </div>
-        <input type="text" class="form-control" id="hintName" [(ngModel)]="selectedBranch.name" placeholder="Branch Name...." />
-      </div>
-
-      <div class="input-group input-group-sm">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Branch IP Address :</span>
-        </div>
-        <input type="text" class="form-control" id="branch_address" [(ngModel)]="selectedBranch.ip_address" value="{{ selectedBranch.ipAddress }}" />
-      </div>
-
-      <div class="input-group input-group-sm">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Root Server IP :</span>
-        </div>
-        <input type="text" class="form-control" id="hintName" [(ngModel)]="selectedBranch.config.server_url"
-          placeholder="E.g. http://192.168.0.10:4300" />
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-default" (click)="updateBRanchConfig(); modal.close('Close click')">
-        Save
-      </button>
-      <button type="button" class="btn btn-light" (click)="modal.close('Close click')">
-        Close
-      </button>
-    </div>
-  </ng-template>
-</div>
