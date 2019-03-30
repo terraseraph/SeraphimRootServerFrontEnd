@@ -47,6 +47,8 @@ export class ScriptEditorComponent implements OnInit {
 
   newScriptName: any;
 
+  branchIpToDisplay:any;
+
   @ViewChild("actionModal") actionModal: any;
   @ViewChild("eventModal") eventModal: any;
   @ViewChild("triggerModal") triggerModal: any;
@@ -90,9 +92,17 @@ export class ScriptEditorComponent implements OnInit {
       (script: any) => {
         console.log("selected script for editing: ", script);
         this.scriptInstance = script;
+        this.makeScreenUrl();
         this.scriptLoaded = true;
       }
     );
+  }
+
+  makeScreenUrl(){
+    if(this.scriptInstance == undefined) {return;};
+    if(this.scriptInstance.branch_address == undefined) {return;};
+    var addr = this.scriptInstance.branch_address.split(':');
+    this.branchIpToDisplay = addr[0]+addr[1]+":4200"
   }
 
   loadScript(scriptName) {
@@ -508,7 +518,7 @@ export class ScriptEditorComponent implements OnInit {
       let sc: any;
       sc = screenConfigModel;
       sc.name = "UNSET ScreenConfig";
-      this.scriptInstance.ScreenConfigs.push(sc);
+      this.scriptInstance.screenConfigs.push(sc);
     });
   }
 

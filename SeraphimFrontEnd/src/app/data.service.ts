@@ -83,13 +83,11 @@ export class DataService {
     });
   }
 
-
-
   branch_getScriptsForUploading(cb) {
     this.server.getFreshScriptsForEditing().subscribe((scriptList: any) => {
       this.scriptEditor_allScripts = scriptList;
       console.log(scriptList);
-      cb(scriptList)
+      cb(scriptList);
     });
   }
 
@@ -227,10 +225,10 @@ export class DataService {
     });
   }
 
-  branch_deleteVideo(name, branchIp, cb) {
+  branch_deleteVideo(name, id, cb) {
     let msg = {
       name: name,
-      branchIp: branchIp,
+      id: id,
       type: "video"
     };
     this.server.branchDeleteMedia(msg).subscribe(result => {
@@ -239,10 +237,10 @@ export class DataService {
     });
   }
 
-  branch_deleteAudio(name, branchIp, cb) {
+  branch_deleteAudio(name, id, cb) {
     let msg = {
       name: name,
-      branchIp: branchIp,
+      id: id,
       type: "audio"
     };
     this.server.branchDeleteMedia(msg).subscribe(result => {
@@ -266,24 +264,24 @@ export class DataService {
     });
   }
 
-  branch_uploadScript(scriptName, ip) {
+  branch_uploadScript(scriptName, id) {
     this.findScript(scriptName).then(script => {
       let msg = {
-        branchIp: ip,
+        id: id,
         script: script
-      }
+      };
       console.log(msg);
       this.server.branchUploadScript(msg).subscribe(result => {
         console.log(result);
-      })
-    })
+      });
+    });
   }
 
-  branch_deleteScript(scriptName, ip) {
+  branch_deleteScript(scriptName, id) {
     let msg = {
-      branchIp: ip,
+      id: id,
       scriptName: scriptName
-    }
+    };
     console.log(msg);
 
     this.server.branchDeleteScript(msg).subscribe(result => {
@@ -291,43 +289,33 @@ export class DataService {
     });
   }
 
-
   branch_shellRestartBranch(ip) {
     let msg = {
       branchIp: ip
-    }
-    this.server.branchShellRestartBranch(msg).subscribe(result =>{
-
-    })
+    };
+    this.server.branchShellRestartBranch(msg).subscribe(result => {});
   }
 
   branch_shellReloadBranchScreen(ip) {
     let msg = {
       branchIp: ip
-    }
-    this.server.branchShellReloadBranchScreen(msg).subscribe(result =>{
-
-    })
+    };
+    this.server.branchShellReloadBranchScreen(msg).subscribe(result => {});
   }
 
   branch_shellCustomCommand(ip, cmd) {
     let msg = {
       branchIp: ip,
       command: cmd
-    }
-    this.server.branchShellCustomCommand(msg).subscribe(result =>{
-
-    })
+    };
+    this.server.branchShellCustomCommand(msg).subscribe(result => {});
   }
 
-
-    branch_shellUpdateFromGit(ip) {
+  branch_shellUpdateFromGit(ip) {
     let msg = {
       branchIp: ip
-    }
-    this.server.branchShellUpdateFromGit(msg).subscribe(result =>{
-
-    })
+    };
+    this.server.branchShellUpdateFromGit(msg).subscribe(result => {});
   }
 
   // ==============================

@@ -130,6 +130,7 @@ export class OverviewInstanceListComponent implements OnInit {
       .getMessages()
       .subscribe((message: any) => {
         this.parseSocketMessage(message);
+        console.log(message);
         // foreach instance check if the name matches, then update the time
       });
   }
@@ -145,6 +146,7 @@ export class OverviewInstanceListComponent implements OnInit {
         script.timeUpdate = msg.instance_update.time;
         script.ended = msg.instance_update.ended;
         script.states = msg.instance_update.states;
+        script.displayedHint = msg.instance_update.displayedHint;
       }
     }
     this.server.updateLocalScripts(msg.instance_update);

@@ -106,7 +106,7 @@ export class SettingsComponent implements OnInit {
     return new Promise((resolve, reject) => {
       let fd: FormData = new FormData();
       fd.append("file", this.selectedFile, this.selectedFile.name);
-      fd.append("branchIp", this.selectedBranch.ip_address);
+      fd.append("id", this.selectedBranch.id);
       console.log(this.selectedFile, this.selectedFile.name);
       resolve(fd);
     });
@@ -186,7 +186,7 @@ export class SettingsComponent implements OnInit {
     this.modalService.open(this.branchConfigModal, { size: "lg" });
   }
 
-  updateBRanchConfig() {
+  updateBranchConfig() {
     this.dataService.branch_updateSelectedBranch(this.selectedBranch);
   }
 
@@ -207,7 +207,7 @@ export class SettingsComponent implements OnInit {
   branchDeleteVideo(name) {
     this.dataService.branch_deleteVideo(
       name,
-      this.selectedBranch.ip_address,
+      this.selectedBranch.id,
       result => {
         this.loadBranch(this.selectedBranch.id);
       }
@@ -217,7 +217,7 @@ export class SettingsComponent implements OnInit {
   branchDeleteAudio(name) {
     this.dataService.branch_deleteAudio(
       name,
-      this.selectedBranch.ip_address,
+      this.selectedBranch.id,
       result => {
         this.loadBranch(this.selectedBranch.id);
       }
@@ -225,17 +225,11 @@ export class SettingsComponent implements OnInit {
   }
 
   branchDeleteScript(scriptName: any) {
-    this.dataService.branch_deleteScript(
-      scriptName,
-      this.selectedBranch.ip_address
-    );
+    this.dataService.branch_deleteScript(scriptName, this.selectedBranch.id);
   }
 
   branchAddScript(script) {
-    this.dataService.branch_uploadScript(
-      script,
-      this.selectedBranch.ip_address
-    );
+    this.dataService.branch_uploadScript(script, this.selectedBranch.id);
   }
 
   // =============================
@@ -285,13 +279,6 @@ export class SettingsComponent implements OnInit {
     return new Promise((resolve, reject) => {
       let result = $(elemId).val();
       resolve(result);
-      // while (result == "" || result == undefined) {
-      //   result = $(elemId).val();
-      //   if (result != "" && result != undefined) {
-      //     resolve(result);
-      //     return;
-      //   }
-      // }
     });
   }
 
