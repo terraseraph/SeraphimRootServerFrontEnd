@@ -61,7 +61,7 @@ export class SettingsComponent implements OnInit {
   //Selected branch
   @ViewChild("branchConfigModal") branchConfigModal: any;
   selectedBridgeToEdit: any;
-  selectedBranchMeshNodes = [];
+  selectedBranchMeshNodes: any;
   meshNodeToEdit: any;
 
   // Action packets
@@ -169,17 +169,21 @@ export class SettingsComponent implements OnInit {
       branch => {
         if (branch != undefined) {
           console.log("GOT BRANCH");
+          this.selectedBranch = branch;
+          this.branchLoaded = true;
           if (branch.nodes != undefined) {
             console.log("GOT NODE");
             for (let i = 0; i < branch.nodes.length; i++) {
               let node = branch.nodes[i];
-              this.makeArr(node.meshNodes).then(arr => {});
+              this.makeArr(node.meshNodes).then(nodes => {
+                this.selectedBranchMeshNodes = nodes;
+              });
             }
+          } else {
+            console.log("NO NODES....");
           }
         }
-        this.selectedBranch = branch;
         console.log("selected branch for editing: ", branch);
-        this.branchLoaded = true;
       }
     );
   }
@@ -188,20 +192,40 @@ export class SettingsComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.selectedBranchMeshNodes = [];
       var nodes = [];
-      for (var x in meshNodes) {
-        console.log("pushing", x);
-        this.selectedBranchMeshNodes.push(meshNodes[x]);
-        nodes.push(meshNodes[x]);
+      if (meshNodes.length == 0) {
+        resolve(nodes);
       }
-      resolve(nodes);
+      var cnt = 0;
+      for (var n in meshNodes) {
+        cnt++;
+      }
+      var iCnt = 0;
+      for (var i in meshNodes) {
+        console.log("pushing", meshNodes[i]);
+        nodes.push(meshNodes[i]);
+        this.selectedBranchMeshNodes.push(meshNodes[i]);
+        if (iCnt == cnt) {
+          resolve(nodes);
+        }
+      }
     });
   }
 
   loadBranch(id) {
+    //TODO: this is borked = loads on the second try
+    // this.dataService.branch_getSelectedBranchWithNodes(id).then(branch => {
+    //   this.selectedBranch = branch;
+    //   this.selectedBranchMeshNodes = branch["nodes"]["meshNodes"];
+    //   console.log(branch);
+    // });
     this.dataService.branch_setSelectedBranch(id);
     this.dataService.branch_getAllBranchNodes(id);
     // this is now read as selectedBranch
     this.branchLoaded = true;
+  }
+
+  loadNodes(id) {
+    this.dataService.branch_getAllBranchNodes(id);
   }
 
   deleteBranch(id) {

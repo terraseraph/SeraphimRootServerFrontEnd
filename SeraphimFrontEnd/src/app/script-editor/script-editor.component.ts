@@ -47,7 +47,9 @@ export class ScriptEditorComponent implements OnInit {
 
   newScriptName: any;
 
-  branchIpToDisplay:any;
+  branchIpToDisplay: any;
+  branchList: any;
+  selectedBranch: any;
 
   @ViewChild("actionModal") actionModal: any;
   @ViewChild("eventModal") eventModal: any;
@@ -74,6 +76,7 @@ export class ScriptEditorComponent implements OnInit {
     this.scriptSubscribe();
     this.scriptLoaded = false;
     this.toggleFormPanelOff();
+    this.loadBranches();
   }
 
   // ================================= //
@@ -98,15 +101,26 @@ export class ScriptEditorComponent implements OnInit {
     );
   }
 
-  makeScreenUrl(){
-    if(this.scriptInstance == undefined) {return;};
-    if(this.scriptInstance.branch_address == undefined) {return;};
-    var addr = this.scriptInstance.branch_address.split(':');
-    this.branchIpToDisplay = addr[0]+addr[1]+":4200"
+  makeScreenUrl() {
+    if (this.scriptInstance == undefined) {
+      return;
+    }
+    if (this.scriptInstance.branch_address == undefined) {
+      return;
+    }
+    var addr = this.scriptInstance.branch_address.split(":");
+    this.branchIpToDisplay = addr[0] + addr[1] + ":4200";
   }
 
   loadScript(scriptName) {
     this.dataService.scriptEditor_setSelectedScript(scriptName);
+    this.loadBranches();
+  }
+
+  loadBranches() {
+    this.dataService.branch_serverGetAllBranches();
+    this.branchList = this.dataService.branch_getAllBranches();
+    console.log(this.branchList);
   }
 
   deleteScript(scriptName) {
@@ -130,6 +144,11 @@ export class ScriptEditorComponent implements OnInit {
       this.scriptLoaded = true;
       this.scriptInstanceList.push(script);
     });
+  }
+
+  selectBranchToPopulate() {
+    console.log(this.selectedBranch);
+    this.scriptInstance.branch_address = this.selectedBranch.ip_address;
   }
 
   // ================================================= //

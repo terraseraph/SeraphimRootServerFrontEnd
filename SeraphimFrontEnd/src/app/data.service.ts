@@ -82,6 +82,19 @@ export class DataService {
     });
   }
 
+  branch_getSelectedBranchWithNodes(branchId) {
+    return new Promise((resolve, reject) => {
+      var branch;
+      this.findBranch(branchId).then(b => {
+        branch = b;
+        this.server.getBridgeNodes(branchId).subscribe(nodes => {
+          branch["nodes"] = nodes;
+          resolve(branch);
+        });
+      });
+    });
+  }
+
   branch_serverGetAllBranches() {
     this.server.readAllBranches().subscribe(branchList => {
       this.branch_allBranches = branchList;

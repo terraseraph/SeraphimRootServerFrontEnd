@@ -28,6 +28,18 @@
       <div id="event_action_list">
         <div *ngIf="scriptLoaded">
 
+
+          <div class="form-group">
+            <label for="gs_trigger_select_state"> Select Branch: </label>
+            <select class="selectpicker form-control" id="branchList" [(ngModel)]="selectedBranch">
+              <option *ngFor="let branch of branchList">{{branch.name}} |
+                {{branch.ip_address}}</option>
+            </select>
+          </div>
+          <button class="btn btn-sm btn-primary" (click)="selectBranchToPopulate()">Insert Branch
+            IP</button>
+
+
           <div class="input-group input-group-sm">
             <div class="input-group-prepend">
               <span class="input-group-text">Branch Address :</span>
@@ -57,32 +69,32 @@
             <div class="input-group-prepend">
               <span class="input-group-text">Master ID (Bridge):</span>
             </div>
-            <input type="text" class="form-control form-control-sm" id="branch_masterId" [(ngModel)]="scriptInstance.masterId"
-              value="{{ scriptInstance.masterId }}" />
+            <input type="text" class="form-control form-control-sm" id="branch_masterId"
+              [(ngModel)]="scriptInstance.masterId" value="{{ scriptInstance.masterId }}" />
           </div>
 
           <div class="form-row">
             <div class="col">
               <div class="form-group form-control-sm">
                 <label for="branch_hours"> Hours : </label>
-                <input type="text" class="form-control form-control-sm" id="branch_hours" [(ngModel)]="scriptInstance.time.hours"
-                  value="{{ scriptInstance.time.hours }}" />
+                <input type="text" class="form-control form-control-sm" id="branch_hours"
+                  [(ngModel)]="scriptInstance.time.hours" value="{{ scriptInstance.time.hours }}" />
               </div>
 
             </div>
             <div class="col">
               <div class="form-group form-control-sm">
                 <label for="branch_minutes"> Minutes : </label>
-                <input type="text" class="form-control form-control-sm" id="branch_minutes" [(ngModel)]="scriptInstance.time.minutes"
-                  value="{{ scriptInstance.time.minutes }}" />
+                <input type="text" class="form-control form-control-sm" id="branch_minutes"
+                  [(ngModel)]="scriptInstance.time.minutes" value="{{ scriptInstance.time.minutes }}" />
               </div>
 
             </div>
             <div class="col">
               <div class="form-group form-control-sm">
                 <label for="branch_seconds"> Seconds : </label>
-                <input type="text" class="form-control form-control-sm" id="branch_seconds" [(ngModel)]="scriptInstance.time.seconds"
-                  value="{{ scriptInstance.time.seconds }}" />
+                <input type="text" class="form-control form-control-sm" id="branch_seconds"
+                  [(ngModel)]="scriptInstance.time.seconds" value="{{ scriptInstance.time.seconds }}" />
               </div>
 
             </div>
@@ -267,12 +279,14 @@
       <h3>Edit Trigger</h3>
       <div class="form-group">
         <label for="triggerName"> Name </label>
-        <input type="text" class="form-control" id="triggerName" [(ngModel)]="triggerToEdit.name" value="{{ triggerToEdit.name }}" />
+        <input type="text" class="form-control" id="triggerName" [(ngModel)]="triggerToEdit.name"
+          value="{{ triggerToEdit.name }}" />
       </div>
 
       <div class="form-group">
         <label for="gs_trigger_select_state"> State (To listen for) </label>
-        <select #triggerStateSelector class="selectpicker form-control" id="gs_trigger_select_state" [(ngModel)]="triggerToEdit.trigger">
+        <select #triggerStateSelector class="selectpicker form-control" id="gs_trigger_select_state"
+          [(ngModel)]="triggerToEdit.trigger">
           <option selected="selected">{{ triggerToEdit.trigger }}</option>
           <option *ngFor="let state of scriptInstance.states">{{state.name}}</option>
         </select>
@@ -280,7 +294,8 @@
 
       <div class="form-group">
         <label for="gs_trigger_select_state"> Screen to trigger on) </label>
-        <select #triggerStateSelector class="selectpicker form-control" id="gs_trigger_select_state" [(ngModel)]="triggerToEdit.screenName">
+        <select #triggerStateSelector class="selectpicker form-control" id="gs_trigger_select_state"
+          [(ngModel)]="triggerToEdit.screenName">
           <option selected="selected">{{ triggerToEdit.screenName }}</option>
           <option *ngFor="let config of scriptInstance.screenConfigs">{{config.name}}</option>
         </select>
@@ -288,14 +303,15 @@
 
       <div class="form-group">
         <label for="triggerAudio"> Audio file </label>
-        <input type="text" class="form-control" id="triggerAudio" [(ngModel)]="triggerToEdit.audio" value="{{ triggerToEdit.audio }}" />
+        <input type="text" class="form-control" id="triggerAudio" [(ngModel)]="triggerToEdit.audio"
+          value="{{ triggerToEdit.audio }}" />
       </div>
 
       <div class="form-group">
         <label for="gs_trigger_loop_audio"> Loop Audio </label>
         <div *ngIf="triggerToEdit.loop_audio">
-          <button type="button" class="btn btn-lg btn-toggle active" (click)="triggerToggleLoopAudio()" data-toggle="button"
-            aria-pressed="false" autocomplete="off">
+          <button type="button" class="btn btn-lg btn-toggle active" (click)="triggerToggleLoopAudio()"
+            data-toggle="button" aria-pressed="false" autocomplete="off">
             <div class="handle"></div>
           </button>
         </div>
@@ -310,7 +326,8 @@
 
       <div class="form-group">
         <label for="gs_trigger_audio_type"> Audio Type </label>
-        <select #eventTypeSelector class="selectpicker form-control" id="gs_event_type_event" [(ngModel)]="triggerToEdit.audio_type">
+        <select #eventTypeSelector class="selectpicker form-control" id="gs_event_type_event"
+          [(ngModel)]="triggerToEdit.audio_type">
           <option selected="selected">{{ triggerToEdit.audio_type }}</option>
           <option>background</option>
           <option>start</option>
@@ -323,15 +340,16 @@
       <hr />
       <div class="form-group">
         <label for="triggerVideo"> Video file </label>
-        <input type="text" class="form-control" id="triggerVideo" [(ngModel)]="triggerToEdit.video" value="{{ triggerToEdit.video }}" />
+        <input type="text" class="form-control" id="triggerVideo" [(ngModel)]="triggerToEdit.video"
+          value="{{ triggerToEdit.video }}" />
       </div>
 
 
       <div class="form-group">
         <label for="gs_trigger_loop_video"> Loop Video </label>
         <div *ngIf="triggerToEdit.loop_video">
-          <button type="button" class="btn btn-lg btn-toggle active" (click)="triggerToggleLoopVideo()" data-toggle="button"
-            aria-pressed="false" autocomplete="off">
+          <button type="button" class="btn btn-lg btn-toggle active" (click)="triggerToggleLoopVideo()"
+            data-toggle="button" aria-pressed="false" autocomplete="off">
             <div class="handle"></div>
           </button>
         </div>
@@ -346,7 +364,8 @@
 
       <div class="form-group">
         <label for="triggerVideoType"> Video Type </label>
-        <select #eventTypeSelector class="selectpicker form-control" id="triggerVideoType" [(ngModel)]="triggerToEdit.video_type">
+        <select #eventTypeSelector class="selectpicker form-control" id="triggerVideoType"
+          [(ngModel)]="triggerToEdit.video_type">
           <option selected="selected">{{ triggerToEdit.video_type }}</option>
           <option>background</option>
           <option>custom</option>
@@ -358,8 +377,8 @@
       <div class="form-group">
         <label for="triggerPauseTimer"> Pause timer while playing video </label>
         <div *ngIf="triggerToEdit.pause_timer">
-          <button type="button" class="btn btn-lg btn-toggle active" (click)="triggerTogglePauseTimer()" data-toggle="button"
-            aria-pressed="false" autocomplete="off">
+          <button type="button" class="btn btn-lg btn-toggle active" (click)="triggerTogglePauseTimer()"
+            data-toggle="button" aria-pressed="false" autocomplete="off">
             <div class="handle"></div>
           </button>
         </div>
@@ -376,15 +395,16 @@
 
       <div class="form-group">
         <label for="triggerHint"> Hint </label>
-        <input type="text" class="form-control" id="triggerHint" [(ngModel)]="triggerToEdit.hint" value="{{ triggerToEdit.hint }}" />
+        <input type="text" class="form-control" id="triggerHint" [(ngModel)]="triggerToEdit.hint"
+          value="{{ triggerToEdit.hint }}" />
       </div>
 
 
       <div class="form-group">
         <label for="triggerToggle"> Can toggle (Is repeatable)</label>
         <div *ngIf="triggerToEdit.can_toggle">
-          <button type="button" class="btn btn-lg btn-toggle active" (click)="triggerToggleRepeatable()" data-toggle="button"
-            aria-pressed="false" autocomplete="off">
+          <button type="button" class="btn btn-lg btn-toggle active" (click)="triggerToggleRepeatable()"
+            data-toggle="button" aria-pressed="false" autocomplete="off">
             <div class="handle"></div>
           </button>
         </div>
@@ -401,7 +421,8 @@
       <h3>Advanced:</h3>
       <div class="form-group">
         <label for="gs_trigger_audio_type"> Http Request Method </label>
-        <select #eventTypeSelector class="selectpicker form-control" id="gs_event_type_event" [(ngModel)]="triggerToEdit.httpRequestType">
+        <select #eventTypeSelector class="selectpicker form-control" id="gs_event_type_event"
+          [(ngModel)]="triggerToEdit.httpRequestType">
           <option selected="selected">{{ triggerToEdit.httpRequestType }}</option>
           <option>GET</option>
           <option>POST</option>
@@ -415,12 +436,14 @@
 
       <div class="form-group">
         <label for="triggerHint"> Http Request URL: </label>
-        <input type="text" class="form-control" id="triggerHint" [(ngModel)]="triggerToEdit.httpRequestUrl" value="{{ triggerToEdit.httpRequestUrl }}" />
+        <input type="text" class="form-control" id="triggerHint" [(ngModel)]="triggerToEdit.httpRequestUrl"
+          value="{{ triggerToEdit.httpRequestUrl }}" />
       </div>
 
       <div class="form-group">
         <label for="triggerHint"> Http Request Body: </label>
-        <textarea type="text" class="form-control" id="triggerHint" [(ngModel)]="triggerToEdit.httpRequestBody" value="{{ triggerToEdit.httpRequestBody }}"></textarea>
+        <textarea type="text" class="form-control" id="triggerHint" [(ngModel)]="triggerToEdit.httpRequestBody"
+          value="{{ triggerToEdit.httpRequestBody }}"></textarea>
       </div>
 
 
@@ -455,7 +478,8 @@
       <h3>Edit State</h3>
       <div class="form-group">
         <label for="stateName"> Name </label>
-        <input type="text" class="form-control" id="stateName" [(ngModel)]="stateToEdit.name" value="{{ stateToEdit.name }}" />
+        <input type="text" class="form-control" id="stateName" [(ngModel)]="stateToEdit.name"
+          value="{{ stateToEdit.name }}" />
       </div>
     </div>
 
@@ -487,11 +511,13 @@
       <h3>Edit Hint</h3>
       <div class="form-group">
         <label for="hintName"> Name </label>
-        <input type="text" class="form-control" id="hintName" [(ngModel)]="hintToEdit.name" value="{{ hintToEdit.name }}" />
+        <input type="text" class="form-control" id="hintName" [(ngModel)]="hintToEdit.name"
+          value="{{ hintToEdit.name }}" />
       </div>
       <div class="form-group">
         <label for="hintText"> Hint Text </label>
-        <input type="text" class="form-control" id="hintText" [(ngModel)]="hintToEdit.hint" value="{{ hintToEdit.hint }}" />
+        <input type="text" class="form-control" id="hintText" [(ngModel)]="hintToEdit.hint"
+          value="{{ hintToEdit.hint }}" />
       </div>
 
     </div>
@@ -528,12 +554,14 @@
       <h3>Edit Event</h3>
       <div class="form-group">
         <label for="gs_event_action_name"> Name </label>
-        <input type="text" class="form-control" id="gs_event_action_name" value="{{ eventToEdit.name }}" [(ngModel)]="eventToEdit.name" />
+        <input type="text" class="form-control" id="gs_event_action_name" value="{{ eventToEdit.name }}"
+          [(ngModel)]="eventToEdit.name" />
       </div>
 
       <div class="form-group">
         <label for="gs_event_type_event"> Event Type / Event </label>
-        <select #eventTypeSelector class="selectpicker form-control" id="gs_event_type_event" [(ngModel)]="eventEventTypeSelect">
+        <select #eventTypeSelector class="selectpicker form-control" id="gs_event_type_event"
+          [(ngModel)]="eventEventTypeSelect">
           <option selected="selected">{{ eventToEdit.eventType }}/{{ eventToEdit.event }}</option>
           <option>button/toggle</option>
           <option>keypad/code</option>
@@ -552,17 +580,20 @@
 
       <div class="form-group">
         <label for="gs_device_id"> Device Id </label>
-        <input type="text" class="form-control" id="gs_device_id" [(ngModel)]="eventToEdit.device_id" value="{{ eventToEdit.device_id }}" />
+        <input type="text" class="form-control" id="gs_device_id" [(ngModel)]="eventToEdit.device_id"
+          value="{{ eventToEdit.device_id }}" />
       </div>
 
       <div class="form-group">
         <label for="gs_data"> Data </label>
-        <input type="text" class="form-control" id="gs_data" [(ngModel)]="eventToEdit.data" value="{{ eventToEdit.data }}" />
+        <input type="text" class="form-control" id="gs_data" [(ngModel)]="eventToEdit.data"
+          value="{{ eventToEdit.data }}" />
       </div>
 
       <div class="form-group">
         <label for="gs_description"> Description </label>
-        <input type="text" class="form-control" id="gs_description" [(ngModel)]="eventToEdit.description" value="{{ eventToEdit.description }}" />
+        <input type="text" class="form-control" id="gs_description" [(ngModel)]="eventToEdit.description"
+          value="{{ eventToEdit.description }}" />
       </div>
 
       <div class="form-group">
@@ -602,8 +633,8 @@
               </button>
             </div>
             <div *ngIf="!state.active">
-              <button type="button" class="btn btn-lg btn-toggle" (click)="toggleEventState(state.name)" data-toggle="button"
-                aria-pressed="false" autocomplete="off">
+              <button type="button" class="btn btn-lg btn-toggle" (click)="toggleEventState(state.name)"
+                data-toggle="button" aria-pressed="false" autocomplete="off">
                 <div class="handle"></div>
               </button>
             </div>
@@ -675,7 +706,8 @@
           <h3>Edit Action</h3>
           <div class="form-group">
             <label for="gs_event_action_name"> Name </label>
-            <input type="text" class="form-control" id="gs_event_action_name" [(ngModel)]="actionToEdit.name" value="{{ actionToEdit.name }}" />
+            <input type="text" class="form-control" id="gs_event_action_name" [(ngModel)]="actionToEdit.name"
+              value="{{ actionToEdit.name }}" />
           </div>
 
           <div class="form-group">
@@ -700,17 +732,20 @@
 
           <div class="form-group">
             <label for="gs_device_id"> Device Id </label>
-            <input type="text" class="form-control" id="gs_device_id" [(ngModel)]="actionToEdit.device_id" value="{{ actionToEdit.device_id }}" />
+            <input type="text" class="form-control" id="gs_device_id" [(ngModel)]="actionToEdit.device_id"
+              value="{{ actionToEdit.device_id }}" />
           </div>
 
           <div class="form-group">
             <label for="gs_data"> Data </label>
-            <input type="text" class="form-control" id="gs_data" [(ngModel)]="actionToEdit.data" value="{{ actionToEdit.data }}" />
+            <input type="text" class="form-control" id="gs_data" [(ngModel)]="actionToEdit.data"
+              value="{{ actionToEdit.data }}" />
           </div>
 
           <div class="form-group">
             <label for="gs_description"> Description </label>
-            <input type="text" class="form-control" id="gs_description" [(ngModel)]="actionToEdit.description" value="{{ actionToEdit.description }}" />
+            <input type="text" class="form-control" id="gs_description" [(ngModel)]="actionToEdit.description"
+              value="{{ actionToEdit.description }}" />
           </div>
 
           <div class="form-group">
@@ -772,14 +807,14 @@
             <label for="gs_state"> Repeatable : </label>
             {{actionToEdit.repeatable}}
             <div *ngIf="actionToEdit.repeatable == true">
-              <button type="button" class="btn btn-lg btn-toggle active" (click)="toggleActionRepeatable()" data-toggle="button"
-                aria-pressed="false" autocomplete="off">
+              <button type="button" class="btn btn-lg btn-toggle active" (click)="toggleActionRepeatable()"
+                data-toggle="button" aria-pressed="false" autocomplete="off">
                 <div class="handle"></div>
               </button>
             </div>
             <div *ngIf="actionToEdit.repeatable == false">
-              <button type="button" class="btn btn-lg btn-toggle" (click)="toggleActionRepeatable()" data-toggle="button"
-                aria-pressed="false" autocomplete="off">
+              <button type="button" class="btn btn-lg btn-toggle" (click)="toggleActionRepeatable()"
+                data-toggle="button" aria-pressed="false" autocomplete="off">
                 <div class="handle"></div>
               </button>
             </div>
@@ -867,12 +902,14 @@
     <h3>Screen Config</h3>
     <div class="form-group">
       <label for="hintName"> Name </label>
-      <input type="text" class="form-control" id="screenConfigName" [(ngModel)]="screenConfigToEdit.name" placeholder="Script Name...." />
+      <input type="text" class="form-control" id="screenConfigName" [(ngModel)]="screenConfigToEdit.name"
+        placeholder="Script Name...." />
     </div>
 
     <div class="form-group">
       <label for="hintName"> Background Type </label>
-      <select class="selectpicker form-control" id="gs_action_type_action" [(ngModel)]="screenConfigToEdit.backgroundType">
+      <select class="selectpicker form-control" id="gs_action_type_action"
+        [(ngModel)]="screenConfigToEdit.backgroundType">
         <option selected="selected">{{ screenConfigToEdit.backgroundType }}</option>
         <option>Video</option>
         <option>Image</option>
@@ -936,14 +973,15 @@
 
     <div class="form-group">
       <label for="hintName"> Audio path *optional </label>
-      <input type="text" class="form-control" id="screenConfigName" [(ngModel)]="screenConfigToEdit.audio" placeholder="Audio path" />
+      <input type="text" class="form-control" id="screenConfigName" [(ngModel)]="screenConfigToEdit.audio"
+        placeholder="Audio path" />
     </div>
 
     <div class="form-group">
       <label for="hintName"> Show Timer </label>
       <div *ngIf="screenConfigToEdit.showTimer == true">
-        <button type="button" class="btn btn-lg btn-toggle active" (click)="toggleScreenConfigShowtimer()" data-toggle="button"
-          aria-pressed="false" autocomplete="off">
+        <button type="button" class="btn btn-lg btn-toggle active" (click)="toggleScreenConfigShowtimer()"
+          data-toggle="button" aria-pressed="false" autocomplete="off">
           <div class="handle"></div>
         </button>
       </div>
@@ -959,8 +997,8 @@
     <div class="form-group">
       <label for="hintName"> Show Hints </label>
       <div *ngIf="screenConfigToEdit.showHints == true">
-        <button type="button" class="btn btn-lg btn-toggle active" (click)="toggleScreenConfigShowHints()" data-toggle="button"
-          aria-pressed="false" autocomplete="off">
+        <button type="button" class="btn btn-lg btn-toggle active" (click)="toggleScreenConfigShowHints()"
+          data-toggle="button" aria-pressed="false" autocomplete="off">
           <div class="handle"></div>
         </button>
       </div>

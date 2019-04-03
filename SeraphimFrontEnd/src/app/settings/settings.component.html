@@ -2,27 +2,36 @@
   <div class="row">
     <h3>Server Config</h3>
 
-    <div *ngIf="rootServerModel != undefined">
-      <div class="input-group input-group-sm">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Root Server Name :</span>
-        </div>
-        <input type="text" class="form-control" id="rootName" [(ngModel)]="rootServerModel.name"
-          placeholder="Root Server Name..." />
-      </div>
 
-      <div class="input-group input-group-sm">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Root Server IP Address :</span>
+    <div class="col-md-6">
+      <div *ngIf="rootServerModel != undefined">
+        <div class="input-group input-group-sm">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Root Server Name :</span>
+          </div>
+
+          <input type="text" class="form-control" id="rootName" [(ngModel)]="rootServerModel.name"
+            placeholder="Root Server Name..." />
         </div>
-        <input type="text" class="form-control" id="rootName" [(ngModel)]="rootServerModel.ip_address"
-          placeholder="Root Server IP address..." />
+
+        <div class="input-group input-group-sm">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Root Server IP Address :</span>
+          </div>
+          <input type="text" class="form-control" id="rootName" [(ngModel)]="rootServerModel.ip_address"
+            placeholder="Root Server IP address..." />
+        </div>
+        <button class="btn btn-sm btn-primary" (click)="updateRootConfig()">Update</button>
       </div>
-      <button class="btn btn-sm btn-primary" (click)="updateRootConfig()">Update</button>
+    </div>
+    <div class="col-md-6">
     </div>
 
-
   </div>
+
+
+
+
   <hr />
   <div class="row">
     <div class="col-md-4">
@@ -73,14 +82,15 @@
                 <p class="card-text">{{selectedBranch?.id}}</p>
                 <h5 class="card-title">IP Address : </h5>
                 <p class="card-text">{{selectedBranch?.ip_address}}</p>
+                <button class="btn btn-sm btn-info" (click)="loadBranch(selectedBranch.id)">Load Nodes</button>
               </div>
               <div class="col-6">
-                <button class="btn btn-warning" (click)="shellRestartBranch()">Restart Branch Server</button>
-                <button class="btn btn-warning" (click)="shellReloadBranchScreen()">Reload Branch Screen</button>
-                <button class="btn btn-warning" (click)="shellUpdateFromGit()">Update Server From Git</button>
-
+                <button class="btn btn-warning btn-sm" (click)="shellRestartBranch()">Restart Branch Server</button>
+                <button class="btn btn-warning btn-sm" (click)="shellReloadBranchScreen()">Reload Branch Screen</button>
+                <button class="btn btn-warning btn-sm" (click)="shellUpdateFromGit()">Update Server From Git</button>
+                <hr />
                 <input type="text" class="form-control" id="shell_command_input" [(ngModel)]="tempShellCommand" />
-                <button class="btn btn-warning" (click)="shellCustomCommand()">Send Custom Command</button>
+                <button class="btn btn-primary btn-block" (click)="shellCustomCommand()">Send Custom Command</button>
               </div>
             </div>
             <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
@@ -268,6 +278,7 @@
                     <div [ngSwitch]="mNode.type">
 
                       <div *ngSwitchCase="nodeActionTypes.mp3">
+                        <h6 class="text">Must be numbers E.g. folder = 1 | file = 4</h6>
                         <div class="input-group input-group-sm">
                           <div class="input-group-prepend">
                             <span class="input-group-text">Folder number :</span>
