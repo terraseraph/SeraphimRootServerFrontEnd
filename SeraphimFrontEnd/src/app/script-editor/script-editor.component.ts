@@ -147,8 +147,9 @@ export class ScriptEditorComponent implements OnInit {
   }
 
   selectBranchToPopulate() {
-    console.log(this.selectedBranch);
-    this.scriptInstance.branch_address = this.selectedBranch.ip_address;
+    let str = this.branchIpToDisplay.split("|");
+    console.log(str[1]);
+    this.scriptInstance.branch_address = str[1];
   }
 
   // ================================================= //

@@ -31,9 +31,8 @@
 
           <div class="form-group">
             <label for="gs_trigger_select_state"> Select Branch: </label>
-            <select class="selectpicker form-control" id="branchList" [(ngModel)]="selectedBranch">
-              <option *ngFor="let branch of branchList">{{branch.name}} |
-                {{branch.ip_address}}</option>
+            <select class="selectpicker form-control" id="branchList" [(ngModel)]="branchIpToDisplay">
+              <option *ngFor="let branch of branchList">{{branch.name}} |{{branch.ip_address}}</option>
             </select>
           </div>
           <button class="btn btn-sm btn-primary" (click)="selectBranchToPopulate()">Insert Branch
@@ -51,7 +50,7 @@
 
           <div class="input-group input-group-sm">
             <div class="input-group-prepend">
-              <span class="input-group-text">Branch Name :</span>
+              <span class="input-group-text">Script Name :</span>
             </div>
             <input type="text" class="form-control form-control-sm" id="branch_name" [(ngModel)]="scriptInstance.name"
               value="{{ scriptInstance.name }}" />
