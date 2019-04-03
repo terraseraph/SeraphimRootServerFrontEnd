@@ -145,6 +145,18 @@ export class ServerService {
   }
 
   // ==========================================//
+  // ======== Settings =======================//
+  // =========================================//
+  settingsGetRootModel(): Observable<any> {
+    return this.http.get(`${this.api}/config`);
+  }
+
+  settingsUpdateRootModel(msg): Observable<any> {
+    console.log(msg);
+    return this.http.put(`${this.api}/config`, msg);
+  }
+
+  // ==========================================//
   // ======== Overview =======================//
   // =========================================//
   loadOverview(scriptName): Observable<any> {

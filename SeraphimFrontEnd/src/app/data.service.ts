@@ -26,6 +26,10 @@ export class DataService {
   public branch_observableSelectedBranch: any;
   public branch_observableBranchList: any;
 
+  //========== Settings
+  public settings_rootServerModel: RootServerModel;
+  public settings_observableRootServerConfig: any;
+
   constructor(public server: ServerService, public socket: SocketsService) {
     this.observableScriptInstance = new BehaviorSubject<any>(
       this.selectedScriptInstance
@@ -42,6 +46,9 @@ export class DataService {
     );
     this.branch_observableSelectedBranch = new BehaviorSubject<any>(
       this.branch_selectedBranch
+    );
+    this.settings_observableRootServerConfig = new BehaviorSubject<any>(
+      this.settings_rootServerModel
     );
     this.scriptEditor_getAllScripts();
   }
@@ -111,8 +118,8 @@ export class DataService {
     });
   }
 
-  branch_createNewBranch(name, ip) {
-    let branch = new BranchModel(name, 1, ip);
+  branch_createNewBranch(name, ip, rootserver_id) {
+    let branch = new BranchModel(name, rootserver_id, ip);
     this.server.createBranch(branch).subscribe(result => {
       console.log(result);
       this.branch_allBranches.push(branch);
@@ -316,6 +323,28 @@ export class DataService {
       branchIp: ip
     };
     this.server.branchShellUpdateFromGit(msg).subscribe(result => {});
+  }
+
+  // ==============================
+  // Settings
+  // ==============================
+  settings_getRootModel() {
+    this.server.settingsGetRootModel().subscribe(result => {
+      var r = new RootServerModel();
+      r.id = result.id;
+      r.name = result.name;
+      r.ip_address = result.ip_address;
+      this.settings_rootServerModel = r;
+      this.settings_observableRootServerConfig.next(r);
+      return r;
+    });
+  }
+
+  settings_updateRootConfig(model) {
+    this.server.settingsUpdateRootModel(model).subscribe(result => {
+      this.settings_rootServerModel = model;
+      this.settings_observableRootServerConfig.next(model);
+    });
   }
 
   // ==============================
@@ -788,6 +817,12 @@ export class BranchModel {
     this.rootserver_id = rootId;
     this.ip_address = ipAddress;
   }
+}
+
+export class RootServerModel {
+  public id: any;
+  public name: any;
+  public ip_address: any;
 }
 
 export class NodeBridgeModel {

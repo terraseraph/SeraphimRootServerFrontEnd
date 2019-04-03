@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { DataService } from "../data.service";
+import { DataService, RootServerModel } from "../data.service";
 import { Subscription } from "rxjs";
 import { NgbModal, ModalDismissReasons } from "@ng-bootstrap/ng-bootstrap";
 import {
@@ -23,6 +23,8 @@ export class SettingsComponent implements OnInit {
   branchList: any;
   branchLoaded: boolean;
 
+  rootServerModel: any;
+
   // Editing nodes
   nodeTypes = [
     "relay",
@@ -33,6 +35,16 @@ export class SettingsComponent implements OnInit {
     "rfid",
     "mp3"
   ];
+
+  nodeActionTypes = {
+    relay: "relay",
+    bridge: "bridge",
+    button: "button",
+    keypad: "keypad",
+    magSwitch: "magSwitch",
+    rfid: "rfid",
+    mp3: "mp3"
+  };
   tempNodeType: any;
 
   tempAction: any;
@@ -57,6 +69,10 @@ export class SettingsComponent implements OnInit {
   actionRelayActions = ["start", "stop", "toggleA"];
   actionRelayActionType = "relay";
 
+  actionMp3Type = "mp3";
+  actionMp3Folder: Number;
+  actionMp3File: Number;
+
   // Branch Media
   selectedFile: any;
   selectedVideoName: any;
@@ -77,6 +93,7 @@ export class SettingsComponent implements OnInit {
     this.branchListSubscribe();
     this.branchSubscribe();
     this.branchLoaded = false;
+    this.rootServerConfigSubscribe();
   }
 
   onFileSelected(event) {
@@ -84,6 +101,16 @@ export class SettingsComponent implements OnInit {
     console.log(event);
     this.selectedFile = event.target.files[0];
     this.selectedFilePath = event.target.files[0].path;
+  }
+
+  rootServerConfigSubscribe() {
+    this.dataService.settings_getRootModel();
+    this.dataService.settings_observableRootServerConfig.subscribe(
+      rootModel => {
+        console.log(rootModel);
+        this.rootServerModel = rootModel;
+      }
+    );
   }
 
   updateMedia() {
@@ -199,7 +226,8 @@ export class SettingsComponent implements OnInit {
   createNewBranch() {
     this.dataService.branch_createNewBranch(
       this.newBranchName,
-      this.newBranchIp
+      this.newBranchIp,
+      this.rootServerModel.id
     );
     this.dataService.branch_serverGetAllBranches();
   }
@@ -283,6 +311,10 @@ export class SettingsComponent implements OnInit {
   }
 
   sendActionToNode(bridgeId, bridgeType, nodeId, action, actionType, data) {
+    if (actionType == this.nodeActionTypes.mp3) {
+      data.file = Number(data.file);
+      data.folder = Number(data.folder);
+    }
     let node = {
       branchAddress: this.selectedBranch.ip_address,
       bridgeId: bridgeId,
@@ -293,6 +325,7 @@ export class SettingsComponent implements OnInit {
       data: data
     };
     this.dataService.branch_sendNodeAction(node);
+    console.log(node);
   }
 
   getMeshNodeToEdit(hardwareId, cb) {
@@ -302,6 +335,13 @@ export class SettingsComponent implements OnInit {
         cb(node);
       }
     }
+  }
+
+  // =============================
+  // ===== ROOT CONFIG FUNCTIONS =
+  // =============================
+  updateRootConfig() {
+    this.dataService.settings_updateRootConfig(this.rootServerModel);
   }
 
   // =============================
