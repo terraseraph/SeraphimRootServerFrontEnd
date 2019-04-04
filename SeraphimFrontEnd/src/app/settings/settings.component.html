@@ -41,6 +41,7 @@
           <ul class="list-group list-group-flush">
             <li *ngFor="let branch of branchList" class="list-group-item">
               <h4>{{ branch?.name }}</h4>
+              <h5 *ngIf="branch.config == false">(OFFLINE)</h5>
               <ul class="list-group list-group-flush">
                 <li>ID: {{ branch?.id }}</li>
                 <li>IP ADDRESS: {{ branch?.ip_address }}</li>
