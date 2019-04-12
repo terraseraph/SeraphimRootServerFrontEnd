@@ -776,6 +776,7 @@ export class ScreenConfigModel {
   public font_colour = "white";
   public showTimer = true;
   public showHints = true;
+  public defaultHintAudioPath = "";
 }
 
 export class ScriptTriggerModel {

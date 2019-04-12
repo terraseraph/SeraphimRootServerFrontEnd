@@ -1009,6 +1009,12 @@
       </div>
     </div>
 
+    <div class="form-group">
+      <label for="hintName"> Hint Audio Path *optional </label>
+      <input type="text" class="form-control" id="screenConfigName"
+        [(ngModel)]="screenConfigToEdit.defaultHintAudioPath" placeholder="Audio path" />
+    </div>
+
   </div>
   <div class="modal-footer">
     <button class="btn btn-default" (click)="saveEditedScreenConfig();modal.close('Close click')">
