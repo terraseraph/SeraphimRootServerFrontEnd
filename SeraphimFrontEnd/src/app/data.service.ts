@@ -783,7 +783,10 @@ export class ScriptTriggerModel {
   public name: string;
   public trigger: string;
   public audio: string;
+  public loop_audio: boolean;
   public video: string;
+  public loop_video: boolean;
+  public pause_timer: boolean;
   public hint: string;
   public can_toggle: string;
   public screenName: String;
@@ -791,11 +794,22 @@ export class ScriptTriggerModel {
   public httpRequestUrl: string;
   public httpRequestBody: string;
 
+  public AudioTypes = {
+    BACKGROUND: "background",
+    START: "start",
+    END: "end",
+    HINT: "hint",
+    CUSTOM: "custom"
+  };
+
   constructor() {
     this.name = "";
     this.trigger = "";
     this.audio = "";
+    this.loop_audio = false;
     this.video = "";
+    this.loop_video = false;
+    this.pause_timer = false;
     this.hint = "";
     this.can_toggle = "";
     this.screenName = "";

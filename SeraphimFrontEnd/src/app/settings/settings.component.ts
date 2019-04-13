@@ -261,6 +261,7 @@ export class SettingsComponent implements OnInit {
       name,
       this.selectedBranch.id,
       result => {
+        this.updateBranchConfig();
         this.loadBranch(this.selectedBranch.id);
       }
     );
@@ -271,16 +272,19 @@ export class SettingsComponent implements OnInit {
       name,
       this.selectedBranch.id,
       result => {
+        this.updateBranchConfig();
         this.loadBranch(this.selectedBranch.id);
       }
     );
   }
 
   branchDeleteScript(scriptName: any) {
+    this.updateBranchConfig();
     this.dataService.branch_deleteScript(scriptName, this.selectedBranch.id);
   }
 
   branchAddScript(script) {
+    this.updateBranchConfig();
     this.dataService.branch_uploadScript(script, this.selectedBranch.id);
   }
 
