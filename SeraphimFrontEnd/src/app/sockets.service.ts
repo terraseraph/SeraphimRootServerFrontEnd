@@ -13,6 +13,7 @@ export class SocketsService {
   constructor(public config: ConfigService) {
     this.socket = io(this.url);
     this.url = this.config.getApiUrl();
+    this.joinLoggingChannel();
   }
 
   /** Send a message over sockets */
@@ -29,6 +30,9 @@ export class SocketsService {
   //     message: msg
   //   });
   // }
+  joinLoggingChannel() {
+    this.socket.emit("logSubscribe");
+  }
 
   sendForcedEvent(scriptName: any, eventName: any) {
     const msg = `{"name": "${scriptName}", "forceEvent": "true", "eventName":"${eventName}"}`;
@@ -63,11 +67,20 @@ export class SocketsService {
     });
   }
 
+  getLogs() {
+    return Observable.create(observer => {
+      this.socket.on("log", message => {
+        // console.log("LOG: ", message);
+        observer.next(message);
+      });
+    });
+  }
+
   /** Get all messages for the channel */
   getMessages() {
     return Observable.create(observer => {
       this.socket.on("message", message => {
-        // console.log("Socket", message);
+        console.log("Socket", message);
         observer.next(message);
       });
     });

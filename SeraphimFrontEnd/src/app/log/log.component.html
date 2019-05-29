@@ -1,4 +1,51 @@
-<div *ngIf="dataLoaded">
+  <div class="row">
+    <div class="col-md-3">
+      Status : {{logStatus.length}}
+      <div *ngFor="let s of logStatus">
+        <hr>
+        {{s.time}} : {{s.text}}
+      </div>
+    </div>
+    <div class="col-md-3">
+      Info : {{logInfo.length}}
+      <div *ngFor="let i of logInfo">
+        <hr>
+        {{i.text}}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    Data : {{logData.length}}
+    <div *ngFor="let d of logData">
+      <hr>
+      {{d.text}}
+    </div>
+  </div>
+  <div class="col-md-3">
+    Warnings : {{logWarning.length}}
+    <div *ngFor="let w of logWarning">
+      <hr>
+      {{w.text}}
+    </div>
+  </div>
+
+
+  <!-- <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Log {{logData.length}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let log of logData">
+        <td>{{log.text}}</td>
+      </tr>
+    </tbody>
+  </table> -->
+
+
+
+  <!-- <div *ngIf="dataLoaded">
 <table class="table">
     <thead>
       <tr>
@@ -21,4 +68,4 @@
       </tr>
     </tbody>
   </table>
-</div>
+</div> -->

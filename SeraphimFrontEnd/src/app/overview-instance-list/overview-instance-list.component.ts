@@ -177,7 +177,8 @@ export class OverviewInstanceListComponent implements OnInit {
     let hintText = $(`#${scriptName}_hintInput`).val();
     const msg = {
       scriptName: scriptName,
-      hintText: hintText
+      hintText: hintText,
+      screenName: "all"
     };
     this.server.hintSendCustomHint(msg).subscribe(result => {
       console.log("Sending hint: ", result);
@@ -292,6 +293,7 @@ export class OverviewInstanceListComponent implements OnInit {
   }
 
   endInstance(scriptName) {
+    this.sendEvent(scriptName, "end_instance", 0);
     this.server.endGame(scriptName).subscribe(result => {
       console.log(result);
     });

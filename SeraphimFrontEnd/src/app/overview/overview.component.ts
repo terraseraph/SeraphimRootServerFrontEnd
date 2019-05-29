@@ -268,7 +268,8 @@ export class OverviewComponent implements OnInit {
   hintSendHint(hint) {
     const msg = {
       scriptName: this.script.name,
-      hintText: this.hintText
+      hintText: this.hintText,
+      screenName: "all"
     };
     this.hintText = hint.hint;
     this.server.hintSendHint(msg).subscribe(result => {
@@ -279,7 +280,8 @@ export class OverviewComponent implements OnInit {
   hintSendCustomHint() {
     const msg = {
       scriptName: this.script.name,
-      hintText: this.hintText
+      hintText: this.hintText,
+      screenName: "all"
     };
     this.server.hintSendCustomHint(msg).subscribe(result => {
       console.log("Sending hint: ", result);

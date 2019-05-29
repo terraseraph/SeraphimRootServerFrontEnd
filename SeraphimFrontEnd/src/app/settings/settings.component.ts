@@ -66,7 +66,13 @@ export class SettingsComponent implements OnInit {
 
   // Action packets
   actionRelayData = [15, 2, 4, 5, 27, 14, 12, 13];
-  actionRelayActions = ["start", "stop", "toggleA"];
+  actionRelayActions = [
+    "start",
+    "stop",
+    "toggleA",
+    "toggleOnOff",
+    "toggleOffOn"
+  ];
   actionRelayActionType = "relay";
 
   actionMp3Type = "mp3";

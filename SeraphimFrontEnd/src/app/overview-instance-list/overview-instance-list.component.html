@@ -59,58 +59,79 @@
             {{script?.name}}</h4>
           <div class="card-body">
 
-
-            <!-- TIME DISPLAY -->
-            <h3>{{script.timeUpdate?.hours}}:{{script.timeUpdate?.minutes}}:{{script.timeUpdate?.seconds}}</h3>
+            <!-- START / END INSTANCE -->
+            <div class="btn-group btn-group-lg" role="group" aria-label="Start/End" style="width:100%">
+              <button type="button" class="btn btn-success" (click)="startNewInstance(script.name)">Start
+                Game</button>
+              <button type="button" class="btn btn-danger" (click)="endInstance(script.name)">End
+                Game</button>
+            </div>
+            <hr />
 
             <!-- HINT DISPLAY -->
-            <h6 id="{{script.name}}_hintDisplay">{{script.displayedHint}}</h6>
-            <hr />
-            <!-- TIME UPDATE -->
-            <div class="input-group input-group-sm">
-              <input type="text" aria-label="hours" placeholder="Hours" id="{{script.name}}_inputHours" class="form-control">
-              <input type="text" aria-label="Minutes" placeholder="Minutes" id="{{script.name}}_inputMinutes" class="form-control">
-              <input type="text" aria-label="Seconds" placeholder="Seconds" id="{{script.name}}_inputSeconds" class="form-control">
-              <div class="input-group-append">
-                <button class="btn btn-outline-info" (click)="updateTime(script.name)" type="button">Update</button>
-              </div>
-            </div>
-
-
-            <!-- PAUSE / RESUME TIME -->
-            <div class="btn-group btn-group-sm" role="group" aria-label="Start/End">
-              <button type="button" class="btn btn-outline-success" (click)="pauseGameTimer(script.name)">Pause
-                Time</button>
-              <button type="button" class="btn btn-outline-warning" (click)="resumeGameTimer(script.name)">Resume
-                Time</button>
-            </div>
-
+            <h6 id="{{script.name}}_hintDisplay"><strong>Hint: </strong>{{script.displayedHint}}</h6>
             <hr />
 
             <!-- HINT INPUT-->
             <div class="input-group input-group-sm">
-              <input type="text" class="form-control" placeholder="Hint text" aria-label="Type the hint to display" id="{{script.name}}_hintInput">
+              <input type="text" class="form-control" placeholder="Hint text" aria-label="Type the hint to display"
+                id="{{script.name}}_hintInput">
               <div class="input-group-append">
                 <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <div class="dropdown-menu">
-                  <button class="dropdown-item" *ngFor="let hint of script.hints" (click)="insertHint(script.name, hint.hint)">{{hint.name}}</button>
+                  <button class="dropdown-item" *ngFor="let hint of script.hints"
+                    (click)="insertHint(script.name, hint.hint)">{{hint.name}}</button>
                 </div>
                 <button class="btn btn-outline-info" (click)="sendHint(script.name)" type="button">Send</button>
                 <button class="btn btn-outline-danger" (click)="clearHint(script.name)" type="button">Clear</button>
               </div>
             </div>
-
             <hr />
 
-            <!-- START / END INSTANCE -->
-            <div class="btn-group btn-group-sm" role="group" aria-label="Start/End">
-              <button type="button" class="btn btn-success" (click)="startNewInstance(script.name)">Start
-                Instance</button>
-              <button type="button" class="btn btn-danger" (click)="endInstance(script.name)">End Instance</button>
-            </div>
+            <!-- TIME DISPLAY -->
+            <ngb-accordion #acc="ngbAccordion">
+              <ngb-panel title="Time controls">
+                <ng-template ngbPanelContent>
+                  <div class="card" style="width: 100%;">
+
+                    <h3>{{script.timeUpdate?.hours}}:{{script.timeUpdate?.minutes}}:{{script.timeUpdate?.seconds}}</h3>
+
+                    <!-- TIME UPDATE -->
+                    <div class="input-group input-group-sm">
+                      <input type="text" aria-label="hours" placeholder="Hours" id="{{script.name}}_inputHours"
+                        class="form-control">
+                      <input type="text" aria-label="Minutes" placeholder="Minutes" id="{{script.name}}_inputMinutes"
+                        class="form-control">
+                      <input type="text" aria-label="Seconds" placeholder="Seconds" id="{{script.name}}_inputSeconds"
+                        class="form-control">
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-info" (click)="updateTime(script.name)"
+                          type="button">Update</button>
+                      </div>
+                    </div>
+
+
+                    <!-- PAUSE / RESUME TIME -->
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Start/End">
+                      <button type="button" class="btn btn-outline-success" (click)="pauseGameTimer(script.name)">Pause
+                        Time</button>
+                      <button type="button" class="btn btn-outline-warning"
+                        (click)="resumeGameTimer(script.name)">Resume
+                        Time</button>
+                    </div>
+                  </div>
+                </ng-template>
+              </ngb-panel>
+            </ngb-accordion>
+
+
+
+
+
+
 
             <hr />
 
@@ -119,15 +140,18 @@
               <div class="col-md-12">
                 <ul class="list-group">
                   <li class="list-group-item" *ngFor="let event of script.events">
-                    <div class="btn-group btn-group-sm btn-group-block" style="width:100%" role="group" aria-label="Start/End">
-                      <button class="btn btn-primary btn-sm btn-block" (click)="sendEvent(script.name, event.name, script.timeUpdate)">{{event?.name}}
+                    <div class="btn-group btn-group-sm btn-group-block" style="width:100%" role="group"
+                      aria-label="Start/End">
+                      <button class="btn btn-primary btn-sm btn-block"
+                        (click)="sendEvent(script.name, event.name, script.timeUpdate)">{{event?.name}}
                         {{event?.status}} -
                         {{event.completed_time?.hours}}
                         : {{event.completed_time?.minutes}}
                         : {{event.completed_time?.seconds}}
                       </button>
                       <div class="button-group-append">
-                        <button type="button" class="btn btn-info btn-sm" (click)="showActionsModal(script.name, event)">Actions</button>
+                        <button type="button" class="btn btn-info btn-sm"
+                          (click)="showActionsModal(script.name, event)">Actions</button>
                       </div>
                     </div>
                   </li>
@@ -137,9 +161,12 @@
 
             <hr />
             <div class="btn-group btn-group-sm btn-group-block" style="width:100%" role="group" aria-label="Triggers">
-              <button type="button" class="btn btn-outline-success btn-sm" (click)="showTriggersModal(script.name, script.triggers)">Triggers</button>
-              <button type="button" class="btn btn-outline-success btn-sm" (click)="showAudioModal(script.name, script.triggers)">Audio</button>
-              <button type="button" class="btn btn-outline-success btn-sm" (click)="showVideoModal(script.name, script.triggers)">Video</button>
+              <button type="button" class="btn btn-outline-success btn-sm"
+                (click)="showTriggersModal(script.name, script.triggers)">Triggers</button>
+              <button type="button" class="btn btn-outline-success btn-sm"
+                (click)="showAudioModal(script.name, script.triggers)">Audio</button>
+              <button type="button" class="btn btn-outline-success btn-sm"
+                (click)="showVideoModal(script.name, script.triggers)">Video</button>
             </div>
 
             <hr />
@@ -230,7 +257,8 @@
       <!-- AUDIO -->
       <ul class="list-group">
         <li class="list-group-item list-group-item" *ngFor="let trigger of tempTriggersToShow">
-          <button class="btn btn-info" (click)="sendAudio(tempScriptName, trigger.audio, trigger.screenName)">Play</button>{{trigger.audio}}
+          <button class="btn btn-info"
+            (click)="sendAudio(tempScriptName, trigger.audio, trigger.screenName)">Play</button>{{trigger.audio}}
         </li>
       </ul>
 
@@ -254,7 +282,8 @@
       <!-- VIDEO -->
       <ul class="list-group">
         <li class="list-group-item list-group-item" *ngFor="let trigger of tempTriggersToShow">
-          <button class="btn btn-info" (click)="triggerPlayVideo(tempScriptName, trigger.video, trigger.screenName)">Play</button>
+          <button class="btn btn-info"
+            (click)="triggerPlayVideo(tempScriptName, trigger.video, trigger.screenName)">Play</button>
           {{trigger.video}}
         </li>
       </ul>
