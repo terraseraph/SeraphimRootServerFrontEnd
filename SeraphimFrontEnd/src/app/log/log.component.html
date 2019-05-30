@@ -1,33 +1,46 @@
-  <div class="row">
-    <div class="col-md-3">
-      Status : {{logStatus.length}}
-      <div *ngFor="let s of logStatus">
-        <hr>
-        {{s.time}} : {{s.text}}
-      </div>
-    </div>
-    <div class="col-md-3">
-      Info : {{logInfo.length}}
-      <div *ngFor="let i of logInfo">
-        <hr>
-        {{i.text}}
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    Data : {{logData.length}}
-    <div *ngFor="let d of logData">
-      <hr>
-      {{d.text}}
-    </div>
-  </div>
-  <div class="col-md-3">
-    Warnings : {{logWarning.length}}
-    <div *ngFor="let w of logWarning">
-      <hr>
-      {{w.text}}
-    </div>
-  </div>
+  <ngb-tabset>
+    <ngb-tab title="Status {{logStatus.length}}">
+      <ng-template ngbTabContent>
+        <div *ngFor="let s of logStatus">
+          <hr>
+          {{s.time | date :'hh:mm:ss'}} : {{s.text}}
+        </div>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab>
+      <ng-template ngbTabTitle>Info : {{logInfo.length}}</ng-template>
+      <ng-template ngbTabContent>
+        <div *ngFor="let i of logInfo">
+          <hr>
+          {{i.time | date :'hh:mm:ss'}} {{i.text}}
+        </div>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab title="Warning : {{logWarning.length}}">
+      <ng-template ngbTabContent>
+        <div *ngFor="let w of logWarning">
+          <hr>
+          {{w.time | date :'hh:mm:ss'}} {{w.text}}
+        </div>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab title="Log Data : {{logData.length}}">
+      <ng-template ngbTabContent>
+        <div *ngFor="let d of logData">
+          <hr>
+          {{d.time | date :'hh:mm:ss'}} {{d.text}}
+        </div>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab title="Critical : {{logCritical.length}}">
+      <ng-template ngbTabContent>
+        <div *ngFor="let c of logCritical">
+          <hr>
+          {{c.time | date :'hh:mm:ss'}} {{c.text}}
+        </div>
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
 
 
   <!-- <table class="table">
