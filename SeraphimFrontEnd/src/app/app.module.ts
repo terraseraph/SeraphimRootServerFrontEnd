@@ -4,6 +4,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { HttpClientModule } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
 import { SlickCarouselModule } from "ngx-slick-carousel";
+import { CommonModule } from "@angular/common";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -17,6 +18,8 @@ import { SocketsService } from "./sockets.service";
 import { OverviewEventActionListComponent } from "./overview-event-action-list/overview-event-action-list.component";
 import { OverviewInstanceListComponent } from "./overview-instance-list/overview-instance-list.component";
 import { ScriptEditorComponent } from "./script-editor/script-editor.component";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { ToastrModule } from "ngx-toastr";
 
 @NgModule({
   declarations: [
@@ -36,7 +39,9 @@ import { ScriptEditorComponent } from "./script-editor/script-editor.component";
     NgbModule,
     HttpClientModule,
     FormsModule,
-    SlickCarouselModule
+    SlickCarouselModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
   providers: [InitService],
   bootstrap: [AppComponent]
