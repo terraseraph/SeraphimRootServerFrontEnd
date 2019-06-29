@@ -1,27 +1,25 @@
 # SeraphimFrontEnd
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.1.4.
+This is an angular project that relies on the Seraphim Root Server.
 
-## Development server
+## Installing
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Navigate to the project directory, and run `npm install` this "should" install the proper packaged required.
 
-## Code scaffolding
+- Note \* This was built using Node 10.15.0
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Running
 
-## Build
+To run, navigate to the project directory, and run `npm start` This will start up an AOT (Ahead Of Time compiled) local angular server on port 4201.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+## Using the UI
 
-## Running unit tests
+Needs work here......
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Quick rundown
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+- Add a Branch server
+- Create a script
+- add script to branch sever
+- script will appear in the overview
+- Refreshing the page might help where things dont update correctly

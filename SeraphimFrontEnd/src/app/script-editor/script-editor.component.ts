@@ -51,13 +51,13 @@ export class ScriptEditorComponent implements OnInit {
   branchList: any;
   selectedBranch: any;
 
-  @ViewChild("actionModal") actionModal: any;
-  @ViewChild("eventModal") eventModal: any;
-  @ViewChild("triggerModal") triggerModal: any;
-  @ViewChild("stateModal") stateModal: any;
-  @ViewChild("hintModal") hintModal: any;
-  @ViewChild("newScriptModal") newScriptModal: any;
-  @ViewChild("screenConfigModal") screenConfigModal: any;
+  @ViewChild("actionModal", { static: true }) actionModal: any;
+  @ViewChild("eventModal", { static: true }) eventModal: any;
+  @ViewChild("triggerModal", { static: true }) triggerModal: any;
+  @ViewChild("stateModal", { static: true }) stateModal: any;
+  @ViewChild("hintModal", { static: true }) hintModal: any;
+  @ViewChild("newScriptModal", { static: true }) newScriptModal: any;
+  @ViewChild("screenConfigModal", { static: true }) screenConfigModal: any;
 
   // newEventFlag: boolean;
 

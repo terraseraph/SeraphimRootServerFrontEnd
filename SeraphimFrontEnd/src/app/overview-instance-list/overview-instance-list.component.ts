@@ -35,12 +35,12 @@ export class OverviewInstanceListComponent implements OnInit {
 
   routeSubscription: Subscription;
 
-  @ViewChild("slickModal") slickModal: any;
-  @ViewChild("actionModal") actionModal: any;
-  @ViewChild("eventModal") eventModal: any;
-  @ViewChild("triggerModal") triggerModal: any;
-  @ViewChild("audioModal") audioModal: any;
-  @ViewChild("videoModal") videoModal: any;
+  @ViewChild("slickModal", { static: false }) slickModal: any;
+  @ViewChild("actionModal", { static: false }) actionModal: any;
+  @ViewChild("eventModal", { static: false }) eventModal: any;
+  @ViewChild("triggerModal", { static: false }) triggerModal: any;
+  @ViewChild("audioModal", { static: false }) audioModal: any;
+  @ViewChild("videoModal", { static: false }) videoModal: any;
 
   //For modal views
   tempScriptName: any;

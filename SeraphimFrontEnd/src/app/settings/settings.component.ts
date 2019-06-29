@@ -9,7 +9,7 @@ import {
   Validators
 } from "@angular/forms";
 import * as $ from "jquery";
-import { load } from "@angular/core/src/render3";
+// import { load } from "@angular/core/src/render3";
 
 @Component({
   selector: "app-settings",
@@ -54,12 +54,12 @@ export class SettingsComponent implements OnInit {
   tempShellCommand: any;
 
   // New Branch
-  @ViewChild("newBranchModal") newBranchModal: any;
+  @ViewChild("newBranchModal", { static: true }) newBranchModal: any;
   newBranchName: any;
   newBranchIp: any;
 
   //Selected branch
-  @ViewChild("branchConfigModal") branchConfigModal: any;
+  @ViewChild("branchConfigModal", { static: true }) branchConfigModal: any;
   selectedBridgeToEdit: any;
   selectedBranchMeshNodes: any;
   meshNodeToEdit: any;
