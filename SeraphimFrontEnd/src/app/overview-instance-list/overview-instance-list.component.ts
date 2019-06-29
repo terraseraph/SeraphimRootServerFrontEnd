@@ -11,6 +11,7 @@ import { SocketsService } from "../sockets.service";
 import { DataService } from "../data.service";
 import { InitService } from "../init.service";
 import { Subscription } from "rxjs";
+import { ToastrService } from "ngx-toastr";
 import {
   RouterModule,
   Routes,
@@ -42,7 +43,7 @@ export class OverviewInstanceListComponent implements OnInit {
   @ViewChild("audioModal", { static: false }) audioModal: any;
   @ViewChild("videoModal", { static: false }) videoModal: any;
 
-  //For modal views
+  // For modal views
   tempScriptName: any;
   tempEventToShow: any;
   tempTriggersToShow: any;
@@ -79,7 +80,8 @@ export class OverviewInstanceListComponent implements OnInit {
     public init: InitService,
     public router: Router,
     public route: ActivatedRoute,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private toastr: ToastrService
   ) {}
   ngOnInit() {
     this.loadAllScripts().then(scripts => {
@@ -136,20 +138,22 @@ export class OverviewInstanceListComponent implements OnInit {
   }
 
   parseSocketMessage(msg: any) {
-    if (!msg.hasOwnProperty("instance_update")) {
-      return;
+    if (msg.hasOwnProperty("toaster") || msg.hasOwnProperty("alert")) {
+      this.showToaster(msg);
     }
-    for (const script of this.scripts) {
-      if (script.name === msg.instance_update.script.name) {
-        script.events = msg.instance_update.script.events;
-        script.actions = msg.instance_update.script.actions;
-        script.timeUpdate = msg.instance_update.time;
-        script.ended = msg.instance_update.ended;
-        script.states = msg.instance_update.states;
-        script.displayedHint = msg.instance_update.displayedHint;
+    if (msg.hasOwnProperty("instance_update")) {
+      for (const script of this.scripts) {
+        if (script.name === msg.instance_update.script.name) {
+          script.events = msg.instance_update.script.events;
+          script.actions = msg.instance_update.script.actions;
+          script.timeUpdate = msg.instance_update.time;
+          script.ended = msg.instance_update.ended;
+          script.states = msg.instance_update.states;
+          script.displayedHint = msg.instance_update.displayedHint;
+        }
       }
+      this.server.updateLocalScripts(msg.instance_update);
     }
-    this.server.updateLocalScripts(msg.instance_update);
   }
 
   loadScript(name) {
@@ -159,6 +163,53 @@ export class OverviewInstanceListComponent implements OnInit {
       this.router.navigateByUrl(`/overview`);
       console.log(script);
     });
+  }
+
+  showToaster(msg) {
+    /*message will look like
+     * alert:true.
+     * message : "some text",
+     * scriptName : "some name",
+     * eventName : " event to fire on dismiss",
+     * type :"success/warning/info...etc"
+     */
+    switch (msg.type) {
+      case "success":
+        this.toastr
+          .success(msg.message, msg.scriptName)
+          .onTap.subscribe(toastClicked => {
+            this.sendEvent(msg.scriptName, msg.eventName, "0:0:0");
+          });
+        break;
+      case "warning":
+        this.toastr
+          .warning(msg.message, msg.scriptName)
+          .onTap.subscribe(toastClicked => {
+            this.sendEvent(msg.scriptName, msg.eventName, "0:0:0");
+          });
+        break;
+      case "info":
+        this.toastr
+          .info(msg.message, msg.scriptName)
+          .onTap.subscribe(toastClicked => {
+            this.sendEvent(msg.scriptName, msg.eventName, "0:0:0");
+          });
+        break;
+      case "danger":
+        this.toastr
+          .error(msg.message, msg.scriptName)
+          .onTap.subscribe(toastClicked => {
+            this.sendEvent(msg.scriptName, msg.eventName, "0:0:0");
+          });
+        break;
+      default:
+        this.toastr
+          .info(msg.message, msg.scriptName)
+          .onTap.subscribe(toastClicked => {
+            this.sendEvent(msg.scriptName, msg.eventName, "0:0:0");
+          });
+        break;
+    }
   }
 
   setDisplayedHint(scriptName, hintText) {

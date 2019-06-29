@@ -41,7 +41,11 @@ import { ToastrModule } from "ngx-toastr";
     FormsModule,
     SlickCarouselModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot({
+      closeButton: true,
+      disableTimeOut: true,
+      enableHtml: true
+    })
   ],
   providers: [InitService],
   bootstrap: [AppComponent]
