@@ -56,7 +56,10 @@
         <div class="card" style="width: 100%;">
           <h4 class="card-header">
             <!-- <button (click)="slickSetCardState(script.name, false, i)" class="btn btn-danger btn-sm">-</button> -->
-            {{script?.name}}</h4>
+            {{script?.name}} -
+            {{script.timeUpdate?.hours}}:{{script.timeUpdate?.minutes}}:{{script.timeUpdate?.seconds}}
+
+          </h4>
           <div class="card-body">
 
             <!-- START / END INSTANCE -->
