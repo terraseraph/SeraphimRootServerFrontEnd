@@ -166,6 +166,10 @@ export class OverviewInstanceListComponent implements OnInit {
   }
 
   showToaster(msg) {
+    if (msg.sound == null || msg.sound == undefined) {
+      msg.sound = "../../../assets/audio/alarm-beeps.mp3";
+    }
+    var soundTimeout = 3000;
     /*message will look like
      * alert:true.
      * message : "some text",
@@ -173,12 +177,17 @@ export class OverviewInstanceListComponent implements OnInit {
      * eventName : " event to fire on dismiss",
      * type :"success/warning/info...etc"
      */
+    const alarm = setInterval(() => {
+      this.toastrPlaySound(msg.sound);
+    }, soundTimeout);
+
     switch (msg.type) {
       case "success":
         this.toastr
           .success(msg.message, msg.scriptName)
           .onTap.subscribe(toastClicked => {
             this.sendEvent(msg.scriptName, msg.eventName, "0:0:0");
+            clearInterval(alarm);
           });
         break;
       case "warning":
@@ -186,6 +195,7 @@ export class OverviewInstanceListComponent implements OnInit {
           .warning(msg.message, msg.scriptName)
           .onTap.subscribe(toastClicked => {
             this.sendEvent(msg.scriptName, msg.eventName, "0:0:0");
+            clearInterval(alarm);
           });
         break;
       case "info":
@@ -193,6 +203,7 @@ export class OverviewInstanceListComponent implements OnInit {
           .info(msg.message, msg.scriptName)
           .onTap.subscribe(toastClicked => {
             this.sendEvent(msg.scriptName, msg.eventName, "0:0:0");
+            clearInterval(alarm);
           });
         break;
       case "danger":
@@ -200,6 +211,7 @@ export class OverviewInstanceListComponent implements OnInit {
           .error(msg.message, msg.scriptName)
           .onTap.subscribe(toastClicked => {
             this.sendEvent(msg.scriptName, msg.eventName, "0:0:0");
+            clearInterval(alarm);
           });
         break;
       default:
@@ -207,9 +219,17 @@ export class OverviewInstanceListComponent implements OnInit {
           .info(msg.message, msg.scriptName)
           .onTap.subscribe(toastClicked => {
             this.sendEvent(msg.scriptName, msg.eventName, "0:0:0");
+            clearInterval(alarm);
           });
         break;
     }
+  }
+
+  toastrPlaySound(audioSrc) {
+    const audio = new Audio();
+    audio.src = audioSrc;
+    audio.load();
+    audio.play();
   }
 
   setDisplayedHint(scriptName, hintText) {
@@ -261,7 +281,7 @@ export class OverviewInstanceListComponent implements OnInit {
   // ============= EVENT CONTROLS ===========================
   // ========================================================
   sendEvent(scriptName, eventName, timeUpdate) {
-    console.log(eventName);
+    console.log("==== Sending event ====", eventName);
     this.server
       .sendForcedEvent(scriptName, eventName, timeUpdate)
       .subscribe(event => {
@@ -329,17 +349,18 @@ export class OverviewInstanceListComponent implements OnInit {
       let s: any;
       s = script;
       let t = s.time;
-      this.server
-        .startNewGame(
-          script,
-          parseInt(t.hours, 10),
-          parseInt(t.minutes, 10),
-          parseInt(t.seconds, 10)
-        )
-        .subscribe(status => {
-          console.log(status);
-          this.sendEvent(scriptName, "start_instance", 0);
-        });
+      this.sendEvent(scriptName, "start_instance", 0);
+      // this.server
+      //   .startNewGame(
+      //     script,
+      //     parseInt(t.hours, 10),
+      //     parseInt(t.minutes, 10),
+      //     parseInt(t.seconds, 10)
+      //   )
+      //   .subscribe(status => {
+      //     console.log(status);
+      //     // this.sendEvent(scriptName, "start_instance", 0);
+      //   });
     });
   }
 

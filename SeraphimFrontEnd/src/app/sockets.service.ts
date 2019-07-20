@@ -11,8 +11,8 @@ export class SocketsService {
   private socket;
 
   constructor(public config: ConfigService) {
-    this.socket = io(this.url);
     this.url = this.config.getApiUrl();
+    this.socket = io(this.url);
     this.joinLoggingChannel();
   }
 

@@ -179,9 +179,10 @@ export class ServerService {
       forceEvent: eventName,
       completedTime: completedTime
     };
-    console.log(msg);
+    const postUrl = `${this.api}/game/force/event`;
+    console.log("==== forcing event ====", msg, postUrl);
     // return this.http.post(`${this.api}/force/event`, msg);
-    return this.http.post(`${this.api}/game/force/event`, msg);
+    return this.http.post(postUrl, msg);
   }
 
   startCustomTime(scriptName: any, h: any, m: any, s: any): Observable<any> {
@@ -210,7 +211,7 @@ export class ServerService {
         seconds: s
       }
     };
-    console.log(msg);
+    console.log("====Starting====", msg, this.api);
     return this.http.post(`${this.api}/game`, msg);
   }
 
