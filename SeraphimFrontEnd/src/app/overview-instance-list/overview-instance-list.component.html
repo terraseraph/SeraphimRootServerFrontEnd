@@ -147,7 +147,7 @@
                       aria-label="Start/End">
                       <button class="btn btn-primary btn-sm btn-block"
                         (click)="sendEvent(script.name, event.name, script.timeUpdate)">{{event?.name}}
-                        {{event?.status}} -
+                        {{event?.status}} - {{event?.alive}}
                         {{event.completed_time?.hours}}
                         : {{event.completed_time?.minutes}}
                         : {{event.completed_time?.seconds}}

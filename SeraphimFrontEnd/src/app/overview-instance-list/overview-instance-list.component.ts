@@ -34,6 +34,9 @@ export class OverviewInstanceListComponent implements OnInit {
   socketSubscription: Subscription;
   isDataAvailable = false;
 
+  branchNodeSubscription: Subscription;
+  allBranches: any;
+
   routeSubscription: Subscription;
 
   @ViewChild("slickModal", { static: false }) slickModal: any;
@@ -135,6 +138,41 @@ export class OverviewInstanceListComponent implements OnInit {
         console.log(message);
         // foreach instance check if the name matches, then update the time
       });
+  }
+
+  branchNodeSubscribe() {
+    this.branchNodeSubscription = this.dataService
+      .branch_ObservableNodeSubscription()
+      .subscribe((branches: any) => {
+        this.allBranches = branches;
+        this.getEventActionNodeStatus();
+      });
+  }
+
+  //TODO: Not working yet....
+  getEventActionNodeStatus() {
+    if (this.allBranches == undefined || this.allBranches == null) {
+      return;
+    }
+    for (let i = 0; i < this.allBranches.length; i++) {
+      let branch = this.allBranches[i];
+      for (let j = 0; j < this.scripts.length; j++) {
+        let script = this.scripts[j];
+        if (script.name == branch.name) {
+          /// filter events
+          for (let k = 0; k < script.events.length; k++) {
+            let evt = script.events[k];
+            for (let n = 0; n < branch.nodes.meshNodes.length; n++) {
+              if (n["id"] == evt.device_id) {
+                if (new Date().getTime() - n["lastUpdated"] < 1000 * 40) {
+                  evt.alive = "green";
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   parseSocketMessage(msg: any) {

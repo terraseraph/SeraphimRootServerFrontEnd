@@ -13,6 +13,8 @@ export class DataService {
   public observableScriptInstance: any;
   public observableScriptInstanceList: any;
   public socketSubscription: Subscription;
+  public branchNodeUpdates: any;
+  public branch_ObservableNodeSubscription: any;
 
   // ======== Script editor data
   public scriptEditor_selectedScript: any;
@@ -50,7 +52,11 @@ export class DataService {
     this.settings_observableRootServerConfig = new BehaviorSubject<any>(
       this.settings_rootServerModel
     );
+    this.branch_ObservableNodeSubscription = new BehaviorSubject<any>(
+      this.branchNodeUpdates
+    );
     this.scriptEditor_getAllScripts();
+    this.updateAllBranchNodes();
   }
 
   // flow:
@@ -157,6 +163,24 @@ export class DataService {
         this.branch_observableListUpdate();
       });
     });
+  }
+
+  updateAllBranchNodes() {
+    this.branchNodeUpdates = [];
+    setTimeout(this.updateAllBranchNodes, 1000 * 10);
+    if (this.branch_allBranches == undefined) {
+      return;
+    }
+    for (let i = 0; i < this.branch_allBranches.length; i++) {
+      this.findBranch(this.branch_allBranches[i].id).then(branch => {
+        const dat = {
+          id: branch["id"],
+          name: branch["name"],
+          nodes: branch["nodes"]
+        };
+        this.branchNodeUpdates.push(dat);
+      });
+    }
   }
 
   branch_editNodeCommonId(node) {
@@ -337,7 +361,6 @@ export class DataService {
     };
     this.server.branchShellUpdateFromGit(msg).subscribe(result => {});
   }
-
   // ==============================
   // Settings
   // ==============================
