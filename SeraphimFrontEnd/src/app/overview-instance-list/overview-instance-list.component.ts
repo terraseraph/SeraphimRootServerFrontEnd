@@ -51,6 +51,10 @@ export class OverviewInstanceListComponent implements OnInit {
   tempEventToShow: any;
   tempTriggersToShow: any;
 
+  // For node updates on events/actions
+  eventNodeUpdates: any;
+  actionNodeUpdates: any;
+
   showCards = false;
 
   slideConfig = {
@@ -98,6 +102,9 @@ export class OverviewInstanceListComponent implements OnInit {
       this.socketSubscribe();
     });
     this.routeSubscribe();
+    this.branchNodeSubscribe();
+    this.eventNodeUpdates = [];
+    this.actionNodeUpdates = [];
   }
 
   routeSubscribe() {
@@ -135,44 +142,9 @@ export class OverviewInstanceListComponent implements OnInit {
       .getMessages()
       .subscribe((message: any) => {
         this.parseSocketMessage(message);
-        console.log(message);
+        // console.log(message);
         // foreach instance check if the name matches, then update the time
       });
-  }
-
-  branchNodeSubscribe() {
-    this.branchNodeSubscription = this.dataService
-      .branch_ObservableNodeSubscription()
-      .subscribe((branches: any) => {
-        this.allBranches = branches;
-        this.getEventActionNodeStatus();
-      });
-  }
-
-  //TODO: Not working yet....
-  getEventActionNodeStatus() {
-    if (this.allBranches == undefined || this.allBranches == null) {
-      return;
-    }
-    for (let i = 0; i < this.allBranches.length; i++) {
-      let branch = this.allBranches[i];
-      for (let j = 0; j < this.scripts.length; j++) {
-        let script = this.scripts[j];
-        if (script.name == branch.name) {
-          /// filter events
-          for (let k = 0; k < script.events.length; k++) {
-            let evt = script.events[k];
-            for (let n = 0; n < branch.nodes.meshNodes.length; n++) {
-              if (n["id"] == evt.device_id) {
-                if (new Date().getTime() - n["lastUpdated"] < 1000 * 40) {
-                  evt.alive = "green";
-                }
-              }
-            }
-          }
-        }
-      }
-    }
   }
 
   parseSocketMessage(msg: any) {
@@ -190,7 +162,20 @@ export class OverviewInstanceListComponent implements OnInit {
           script.displayedHint = msg.instance_update.displayedHint;
         }
       }
+      this.updateEventNodeStatus();
       this.server.updateLocalScripts(msg.instance_update);
+    }
+  }
+
+  updateEventNodeStatus() {
+    for (const script of this.scripts) {
+      for (let event of script.events) {
+        for (const nEvt of this.eventNodeUpdates) {
+          if (nEvt.eventName === event.name) {
+            event.alive = nEvt.nodeStatus;
+          }
+        }
+      }
     }
   }
 
@@ -279,6 +264,76 @@ export class OverviewInstanceListComponent implements OnInit {
     }
   }
 
+  // ========================================================
+  // ============= Node Updates =============================
+  // ========================================================
+
+  branchNodeSubscribe() {
+    // this.branchNodeSubscription = this.dataService
+    //   .branch_ObservableNodeSubscription()
+    //   .subscribe((branches: any) => {
+    //     this.allBranches = branches;
+    //     // this.getEventActionNodeStatus();
+    //   });
+    console.log("Subscribing to branch node updates");
+    this.branchNodeSubscription = this.dataService.branch_ObservableNodeSubscription.subscribe(
+      branches => {
+        this.allBranches = branches;
+        this.getEventActionNodeStatus();
+      }
+    );
+  }
+
+  // Updates the event with the active status of the node
+  getEventActionNodeStatus() {
+    this.eventNodeUpdates = [];
+    if (this.allBranches == undefined || this.allBranches == null) {
+      return;
+    }
+    for (let i = 0; i < this.allBranches.length; i++) {
+      let branch = this.allBranches[i];
+      if (branch.nodes == undefined) {
+        continue;
+      }
+      for (let j = 0; j < this.scripts.length; j++) {
+        let script = this.scripts[j];
+        if (script.name == branch.name) {
+          /// filter events
+          for (let k = 0; k < script.events.length; k++) {
+            let evt = script.events[k];
+            try {
+              for (let node in branch.nodes[0].meshNodes) {
+                if (branch.nodes[0].meshNodes[`${node}`] != undefined) {
+                  let mNode = branch.nodes[0].meshNodes[`${node}`];
+                  if (mNode["id"] == evt.device_id) {
+                    let eNode = {
+                      eventName: evt.name,
+                      nodeId: evt.device_id,
+                      nodeStatus: ""
+                    };
+                    let time = new Date().getTime();
+                    let nTime = mNode["lastUpdated"];
+                    let lastSeen = time - nTime;
+                    if (lastSeen < 1000 * 40) {
+                      evt.alive = "green";
+                      eNode.nodeStatus = "green";
+                    } else if (lastSeen > 1000 * 40 && lastSeen < 1000 * 90) {
+                      evt.alive = "amber";
+                      eNode.nodeStatus = "amber";
+                    } else if (lastSeen > 1000 * 90) {
+                      evt.alive = "red";
+                      eNode.nodeStatus = "red";
+                    }
+                    this.eventNodeUpdates.push(eNode);
+                  }
+                }
+              }
+            } catch {}
+          }
+        }
+      }
+    }
+  }
   // ========================================================
   // ============= HINT CONTROLS ============================
   // ========================================================

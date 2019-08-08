@@ -51,6 +51,9 @@ export class ScriptEditorComponent implements OnInit {
   branchList: any;
   selectedBranch: any;
 
+  tempModalDeleteData: any;
+  tempModalDeleteFunction: any;
+
   @ViewChild("actionModal", { static: true }) actionModal: any;
   @ViewChild("eventModal", { static: true }) eventModal: any;
   @ViewChild("triggerModal", { static: true }) triggerModal: any;
@@ -58,6 +61,7 @@ export class ScriptEditorComponent implements OnInit {
   @ViewChild("hintModal", { static: true }) hintModal: any;
   @ViewChild("newScriptModal", { static: true }) newScriptModal: any;
   @ViewChild("screenConfigModal", { static: true }) screenConfigModal: any;
+  @ViewChild("confirmDeleteModal", { static: true }) confirmDeleteModal: any;
 
   // newEventFlag: boolean;
 
@@ -611,6 +615,29 @@ export class ScriptEditorComponent implements OnInit {
       default:
         break;
     }
+  }
+
+  switchDeleteConfirmModal() {
+    switch (this.tempModalDeleteFunction) {
+      case "script":
+        this.deleteScript(this.tempModalDeleteData);
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  clearDeleteData() {
+    // this.tempModalDeleteData = null;
+    // this.tempModalDeleteFunction = null;
+  }
+
+  deleteScriptModal(scriptName) {
+    this.tempModalDeleteData = scriptName;
+    this.tempModalDeleteFunction = "script";
+    this.modalService.open(this.confirmDeleteModal, { size: "lg" });
+    console.log(this.tempModalDeleteData, this.tempModalDeleteFunction);
   }
 
   toggleFormPanelOff() {

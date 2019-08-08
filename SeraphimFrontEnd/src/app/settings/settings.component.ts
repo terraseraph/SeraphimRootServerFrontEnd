@@ -23,6 +23,9 @@ export class SettingsComponent implements OnInit {
   branchList: any;
   branchLoaded: boolean;
 
+  tempDeleteData: any; // for modal data passing - set to null after use
+  tempDeleteFunction: any; // to put a function on the confirm delete button
+
   rootServerModel: any;
 
   // Editing nodes
@@ -60,6 +63,7 @@ export class SettingsComponent implements OnInit {
 
   //Selected branch
   @ViewChild("branchConfigModal", { static: true }) branchConfigModal: any;
+  @ViewChild("confirmDeleteModal", { static: true }) confirmDeleteModal: any;
   selectedBridgeToEdit: any;
   selectedBranchMeshNodes: any;
   meshNodeToEdit: any;
@@ -234,8 +238,33 @@ export class SettingsComponent implements OnInit {
     this.dataService.branch_getAllBranchNodes(id);
   }
 
+  switchDeleteConfirmModal() {
+    switch (this.tempDeleteFunction) {
+      case "branch":
+        this.deleteBranch(this.tempDeleteData);
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  deleteBranchModal(id) {
+    this.tempDeleteData = id;
+    this.tempDeleteFunction = "branch";
+    this.modalService.open(this.confirmDeleteModal, { size: "lg" });
+    console.log(this.tempDeleteData, this.tempDeleteFunction);
+  }
+
+  clearDeleteData() {
+    // this.tempDeleteData = null;
+    // this.tempDeleteFunction = null;
+  }
+
   deleteBranch(id) {
-    this.dataService.branch_deleteBranch(id);
+    const i = id;
+    console.log("deleting branch", i);
+    this.dataService.branch_deleteBranch(i);
   }
 
   configBranch(id) {

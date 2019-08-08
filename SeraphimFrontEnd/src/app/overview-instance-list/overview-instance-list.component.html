@@ -145,13 +145,62 @@
                   <li class="list-group-item" *ngFor="let event of script.events">
                     <div class="btn-group btn-group-sm btn-group-block" style="width:100%" role="group"
                       aria-label="Start/End">
-                      <button class="btn btn-primary btn-sm btn-block"
-                        (click)="sendEvent(script.name, event.name, script.timeUpdate)">{{event?.name}}
-                        {{event?.status}} - {{event?.alive}}
-                        {{event.completed_time?.hours}}
-                        : {{event.completed_time?.minutes}}
-                        : {{event.completed_time?.seconds}}
+
+
+                      <!-- <button *ngIf="event?.alive == 'green'" class="btn btn-success btn-sm btn-block">
+
                       </button>
+
+                      <button *ngIf="event?.alive == 'amber'" class="btn btn-warning btn-sm btn-block">
+
+                      </button> -->
+                      <ng-container [ngSwitch]="event?.alive">
+                        <button *ngSwitchCase="'green'" class="btn btn-success btn-sm btn-block"
+                          (click)="sendEvent(script.name, event.name, script.timeUpdate)">
+                          {{event?.name}}
+                          {{event?.status}} -
+                          {{event.completed_time?.hours}}
+                          : {{event.completed_time?.minutes}}
+                          : {{event.completed_time?.seconds}}
+
+                        </button>
+                        <button *ngSwitchCase="'amber'" class="btn btn-warning btn-sm btn-block"
+                          (click)="sendEvent(script.name, event.name, script.timeUpdate)">
+                          {{event?.name}}
+                          {{event?.status}} -
+                          {{event.completed_time?.hours}}
+                          : {{event.completed_time?.minutes}}
+                          : {{event.completed_time?.seconds}}
+
+                        </button>
+                        <button *ngSwitchCase="'red'" class="btn btn-danger btn-sm btn-block"
+                          (click)="sendEvent(script.name, event.name, script.timeUpdate)">
+                          {{event?.name}}
+                          {{event?.status}} -
+                          {{event.completed_time?.hours}}
+                          : {{event.completed_time?.minutes}}
+                          : {{event.completed_time?.seconds}}
+
+                        </button>
+                        <button *ngSwitchDefault class="btn btn-primary btn-sm btn-block"
+                          (click)="sendEvent(script.name, event.name, script.timeUpdate)">
+                          {{event?.name}}
+                          {{event?.status}} -
+                          {{event.completed_time?.hours}}
+                          : {{event.completed_time?.minutes}}
+                          : {{event.completed_time?.seconds}}
+                        </button>
+                      </ng-container>
+
+
+
+                      <!-- <button class="btn btn-primary btn-sm btn-block"
+                            (click)="sendEvent(script.name, event.name, script.timeUpdate)">{{event?.name}}
+                            {{event?.status}} - {{event?.alive}} -
+                            {{event.completed_time?.hours}}
+                            : {{event.completed_time?.minutes}}
+                            : {{event.completed_time?.seconds}}
+                          </button> -->
                       <div class="button-group-append">
                         <button type="button" class="btn btn-info btn-sm"
                           (click)="showActionsModal(script.name, event)">Actions</button>

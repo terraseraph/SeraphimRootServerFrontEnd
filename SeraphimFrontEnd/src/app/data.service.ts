@@ -7,6 +7,7 @@ import { promise } from "protractor";
   providedIn: "root"
 })
 export class DataService {
+  SECOND = 1000;
   // ======= instance overview data TODO: implement
   public scriptInstances: any; // JSON objct of instances
   public selectedScriptInstance: any;
@@ -57,6 +58,8 @@ export class DataService {
     );
     this.scriptEditor_getAllScripts();
     this.updateAllBranchNodes();
+    this.branch_serverGetAllBranches();
+    this.branch_updateAllBranches();
   }
 
   // flow:
@@ -74,6 +77,10 @@ export class DataService {
 
   branch_observableListUpdate() {
     this.branch_observableBranchList.next(this.branch_getAllBranches());
+  }
+
+  branch_observableNodesUpdate() {
+    this.branch_ObservableNodeSubscription.next(this.branch_getUpdatedNodes());
   }
   branch_subscribe(): Observable<any> {
     return this.branch_selectedBranch;
@@ -125,6 +132,10 @@ export class DataService {
     return this.branch_allBranches;
   }
 
+  branch_getUpdatedNodes() {
+    return this.branchNodeUpdates;
+  }
+
   branch_updateSelectedBranch(branch) {
     this.server.updateBranch(branch).subscribe(result => {
       console.log(result);
@@ -165,10 +176,26 @@ export class DataService {
     });
   }
 
+  branch_updateAllBranches() {
+    console.log(this.branch_allBranches);
+    const updateTime = this.SECOND * 10;
+    setTimeout(() => {
+      this.branch_updateAllBranches();
+    }, updateTime);
+    if (this.branch_allBranches == undefined) {
+      return;
+    }
+    for (let i = 0; i < this.branch_allBranches.length; i++) {
+      this.branch_getAllBranchNodes(this.branch_allBranches[i].id);
+    }
+    this.updateAllBranchNodes();
+  }
+
   updateAllBranchNodes() {
     this.branchNodeUpdates = [];
-    setTimeout(this.updateAllBranchNodes, 1000 * 10);
+    // setTimeout(t.updateAllBranchNodes, 1000 * 10);
     if (this.branch_allBranches == undefined) {
+      console.log("All branches undefined");
       return;
     }
     for (let i = 0; i < this.branch_allBranches.length; i++) {
@@ -178,7 +205,9 @@ export class DataService {
           name: branch["name"],
           nodes: branch["nodes"]
         };
+        console.log(`Data = `, dat);
         this.branchNodeUpdates.push(dat);
+        this.branch_observableNodesUpdate();
       });
     }
   }

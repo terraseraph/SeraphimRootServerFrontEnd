@@ -2,7 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { ServerService } from "../server.service";
 import { SocketsService } from "../sockets.service";
 import { InitService } from "../init.service";
-import { Subscription } from "rxjs";
+import { timeout } from "q";
+import { Subscription, TimeoutError } from "rxjs";
 import { DataService } from "../data.service";
 import {
   RouterModule,
