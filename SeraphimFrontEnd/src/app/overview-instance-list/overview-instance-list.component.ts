@@ -302,29 +302,31 @@ export class OverviewInstanceListComponent implements OnInit {
           for (let k = 0; k < script.events.length; k++) {
             let evt = script.events[k];
             try {
-              for (let node in branch.nodes[0].meshNodes) {
-                if (branch.nodes[0].meshNodes[`${node}`] != undefined) {
-                  let mNode = branch.nodes[0].meshNodes[`${node}`];
-                  if (mNode["id"] == evt.device_id) {
-                    let eNode = {
-                      eventName: evt.name,
-                      nodeId: evt.device_id,
-                      nodeStatus: ""
-                    };
-                    let time = new Date().getTime();
-                    let nTime = mNode["lastUpdated"];
-                    let lastSeen = time - nTime;
-                    if (lastSeen < 1000 * 40) {
-                      evt.alive = "green";
-                      eNode.nodeStatus = "green";
-                    } else if (lastSeen > 1000 * 40 && lastSeen < 1000 * 90) {
-                      evt.alive = "amber";
-                      eNode.nodeStatus = "amber";
-                    } else if (lastSeen > 1000 * 90) {
-                      evt.alive = "red";
-                      eNode.nodeStatus = "red";
+              for (let i = 0; i < branch.nodes.length; i++) {
+                for (let node in branch.nodes[i].meshNodes) {
+                  if (branch.nodes[i].meshNodes[`${node}`] != undefined) {
+                    let mNode = branch.nodes[i].meshNodes[`${node}`];
+                    if (mNode["id"] == evt.device_id) {
+                      let eNode = {
+                        eventName: evt.name,
+                        nodeId: evt.device_id,
+                        nodeStatus: ""
+                      };
+                      let time = new Date().getTime();
+                      let nTime = mNode["lastUpdated"];
+                      let lastSeen = time - nTime;
+                      if (lastSeen < 1000 * 40) {
+                        evt.alive = "green";
+                        eNode.nodeStatus = "green";
+                      } else if (lastSeen > 1000 * 40 && lastSeen < 1000 * 90) {
+                        evt.alive = "amber";
+                        eNode.nodeStatus = "amber";
+                      } else if (lastSeen > 1000 * 90) {
+                        evt.alive = "red";
+                        eNode.nodeStatus = "red";
+                      }
+                      this.eventNodeUpdates.push(eNode);
                     }
-                    this.eventNodeUpdates.push(eNode);
                   }
                 }
               }
