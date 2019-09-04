@@ -14,6 +14,22 @@ To run, navigate to the project directory, and run `npm start` This will start u
 
 ## Using the UI
 
+## Build
+
+Run `npm run-script build` The build artifacts will be stored in the `dist/app`. TS errors may appear not finding mappings, this is fine. To manually run the built server run `node server.js`.
+
+## Build Standalone Executable
+
+Run `npm run-script build-exe`, this will build an executable for the current host platform.
+
+## Angular Serve
+
+Run `npm run-script ng-aot-server` This will run the angular server uting the Ahead of time compiler. Useful for development. Does not build to dist, this is a dev function only.
+
+## Angular only build
+
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+
 Needs work here......
 
 ## Quick rundown
