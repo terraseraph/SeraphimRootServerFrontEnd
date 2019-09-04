@@ -66,6 +66,7 @@ export class SettingsComponent implements OnInit {
   @ViewChild("confirmDeleteModal", { static: true }) confirmDeleteModal: any;
   selectedBridgeToEdit: any;
   selectedBranchMeshNodes: any;
+  allNodes: any;
   meshNodeToEdit: any;
 
   // Action packets
@@ -97,7 +98,7 @@ export class SettingsComponent implements OnInit {
   constructor(
     public dataService: DataService,
     private modalService: NgbModal
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.branchListSubscribe();
@@ -183,8 +184,13 @@ export class SettingsComponent implements OnInit {
           this.branchLoaded = true;
           if (branch.nodes != undefined) {
             console.log("GOT NODE");
+            this.allNodes = [];
             for (let i = 0; i < branch.nodes.length; i++) {
               let node = branch.nodes[i];
+              // this.allNodes.push(node.details);
+              for (var n in node.meshNodes) {
+                this.allNodes.push(node.meshNodes[n]);
+              }
               this.makeArr(node.meshNodes).then(nodes => {
                 this.selectedBranchMeshNodes = nodes;
               });
@@ -326,7 +332,7 @@ export class SettingsComponent implements OnInit {
   // =============================
   // ===== QUERY NODE FUNCTIONS ==
   // =============================
-  getNodeSubconnections(bridgeId) {}
+  getNodeSubconnections(bridgeId) { }
 
   getNodeNodeList(bridgeId) {
     //type = getMeshNodes
@@ -377,6 +383,9 @@ export class SettingsComponent implements OnInit {
     if (actionType == this.nodeActionTypes.mp3) {
       data.file = Number(data.file);
       data.folder = Number(data.folder);
+    }
+    if (bridgeType == undefined) {
+      bridgeType = "mqtt";
     }
     let node = {
       branchAddress: this.selectedBranch.ip_address,

@@ -197,7 +197,8 @@
 
 
           <!-- BRANCH NODE MESHES -->
-          <div *ngFor="let node of selectedBranch?.nodes">
+          <!-- <div *ngFor="let node of selectedBranch?.nodes"> -->
+          <div *ngFor="let node of allNodes">
             <ul class="list-group list-group-flush">
               <li class="list-group-item">Bridge ID: {{ node?.id }}</li>
 
@@ -220,10 +221,107 @@
                 </div>
 
                 <!-- Bridge Type: {{node?.nodeType}} -->
+                <div class="card">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                      <h5>Hardware Id:</h5>
+                      {{ node?.hardwareId }}
+                    </li>
+                    <li class="list-group-item">
+                      <h5>Common Id:</h5>
+                      {{ node?.id }}
+
+
+
+                    <li class="list-group-item">
+                      <div class="input-group input-group-sm">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">Node Id</span>
+                        </div>
+                        <input type="text" class="form-control" id="nodeId_{{node.id}}" value="{{ node.id }}" />
+                      </div>
+                      <button class="btn btn-sm-success"
+                        (click)="editNodeId(node.id, node.nodeType, node.id)">Change</button>
+                      <!-- IP ADDRESS: {{node?.ipAddress}} -->
+                    </li>
+                    <li class="list-group-item">
+                      <h5>Node Type:</h5>
+                      {{ node?.type }}
+
+                      <select class="selectpicker form-control" id="nodeSelectType_{{node.id}}">
+                        <option selected="selected">{{ node?.type }}</option>
+                        <option *ngFor="let type of nodeTypes">{{type}}</option>
+                      </select>
+                      <button class="btn btn-sm-success"
+                        (click)="editNodeType(node.id, node.nodeType, node.id)">Change</button>
+
+
+
+
+                    </li>
+                    <li class="list-group-item">
+                      <h5>Last Updated:</h5>
+                      {{ node?.lastUpdated | date: "medium" }}
+                    </li>
+                    <li class="list-group-item">
+                      <h5>Free Memory:</h5>
+                      {{ node?.memory }}
+                    </li>
+
+                    <li class="list-group-item">
+                      <h3>Send Action</h3>
+
+                      <!-- MP3 controls -->
+
+                      <!-- Relay controls -->
+
+                      <div [ngSwitch]="node.type">
+
+                        <div *ngSwitchCase="nodeActionTypes.mp3">
+                          <h6 class="text">Must be numbers E.g. folder = 1 | file = 4</h6>
+                          <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">Folder number :</span>
+                            </div>
+                            <input type="text" class="form-control" id="branch_address" value="1"
+                              [(ngModel)]="actionMp3Folder" />
+                          </div>
+                          <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">File number :</span>
+                            </div>
+                            <input type="text" class="form-control" id="branch_address" value="1"
+                              [(ngModel)]="actionMp3File" />
+                          </div>
+                          <button
+                            (click)="sendActionToNode(node.id, node.nodeType, node.id, 'play', 'mp3', {folder:actionMp3Folder, file:actionMp3File})">Play</button>
+                          <button
+                            (click)="sendActionToNode(node.id, node.nodeType, node.id, 'pause', 'mp3', {})">Pause</button>
+                          <button
+                            (click)="sendActionToNode(node.id, node.nodeType, node.id, 'resume', 'mp3', {})">Resume</button>
+                        </div>
+
+                        <div *ngSwitchCase="nodeActionTypes.relay">
+                          <div *ngFor="let action of actionRelayActions">
+                            <button *ngFor="let data of actionRelayData"
+                              (click)="sendActionToNode(node.id, node.nodeType, node.id, action, 'relay', data)">{{action}}
+                              {{data}}</button>
+
+                          </div>
+                        </div>
+                      </div>
+
+
+
+
+                    </li>
+                  </ul>
+                </div>
+                <hr />
               </li>
             </ul>
             <h4>Mesh Nodes:</h4>
-            <div *ngFor="let mNode of selectedBranchMeshNodes">
+            <!-- <div *ngFor="let mNode of selectedBranchMeshNodes">
               <div class="card">
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item">
@@ -245,7 +343,6 @@
                     </div>
                     <button class="btn btn-sm-success"
                       (click)="editNodeId(node.id, node.nodeType, mNode.id)">Change</button>
-                    <!-- IP ADDRESS: {{node?.ipAddress}} -->
                   </li>
                   <li class="list-group-item">
                     <h5>Node Type:</h5>
@@ -274,9 +371,7 @@
                   <li class="list-group-item">
                     <h3>Send Action</h3>
 
-                    <!-- MP3 controls -->
 
-                    <!-- Relay controls -->
 
                     <div [ngSwitch]="mNode.type">
 
@@ -321,7 +416,7 @@
                 </ul>
               </div>
               <hr />
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
