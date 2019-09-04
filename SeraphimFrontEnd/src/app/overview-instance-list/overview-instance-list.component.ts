@@ -89,7 +89,7 @@ export class OverviewInstanceListComponent implements OnInit {
     public route: ActivatedRoute,
     private modalService: NgbModal,
     private toastr: ToastrService
-  ) {}
+  ) { }
   ngOnInit() {
     this.loadAllScripts().then(scripts => {
       this.isDataAvailable = true;
@@ -330,7 +330,7 @@ export class OverviewInstanceListComponent implements OnInit {
                   }
                 }
               }
-            } catch {}
+            } catch { }
           }
         }
       }
@@ -340,7 +340,24 @@ export class OverviewInstanceListComponent implements OnInit {
   // ============= HINT CONTROLS ============================
   // ========================================================
   sendHint(scriptName) {
+
+    var dispHint;
     let hintText = $(`#${scriptName}_hintInput`).val();
+    for (let i = 0; i < this.scripts.length; i++) {
+      const script = this.scripts[i];
+      if (script.name == scriptName) {
+        dispHint = script.displayedHint;
+      }
+    }
+    if (hintText === dispHint) {
+      console.log("Hints are similar");
+      if (dispHint[dispHint.length - 1] === " ") {
+        hintText = hintText.slice(0, dispHint.length - 2);
+      }
+      else {
+        hintText += " ";
+      }
+    }
     const msg = {
       scriptName: scriptName,
       hintText: hintText,
@@ -539,7 +556,7 @@ export class OverviewInstanceListComponent implements OnInit {
       .then(() => {
         this.router.navigate(["/overview"]);
       })
-      .then(() => {});
+      .then(() => { });
   }
 
   beforeChange(e) {
