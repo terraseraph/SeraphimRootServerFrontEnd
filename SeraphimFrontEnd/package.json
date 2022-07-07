@@ -32,7 +32,7 @@
     "es6-shim": "^0.35.5",
     "express-serve-static-core": "^0.1.1",
     "jquery": "^3.3.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "ngx-slick-carousel": "^0.4.4",
     "ngx-toastr": "^10.0.4",
     "pkg": "^4.4.0",
